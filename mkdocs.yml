@@ -1,0 +1,41 @@
+site_name: EMR Containers Best Practices Guides
+repo_name: "aws/aws-emr-containers-best-practices"
+repo_url: "https://github.com/aws/aws-emr-containers-best-practices"
+docs_dir: "content"
+theme:
+  name: material
+  features:
+    - tabs
+nav:
+  - Guides:
+      - Introduction: 'index.md'
+  - Security:
+      - Home: 'security/docs/index.md'
+      - Data Encryption: 'security/docs/spark/data-encryption.md'
+      - Network Security: 'security/docs/spark/network-security.md'
+  - Submit Spark applications:
+      - Home: 'submit-spark-applications/docs/index.md'
+      - Java and Scala: 'submit-spark-applications/docs/java-and-scala.md'
+      - Pyspark: 'submit-spark-applications/docs/pyspark.md'
+      - SparkR: 'submit-spark-applications/docs/sparkr.md'
+      - SparkSQL: 'submit-spark-applications/docs/sparksql.md'
+  - Storage:
+      - Home: 'storage/docs/index.md'
+      - EBS: 'storage/docs/spark/ebs.md'
+      - FSx for Lustre: 'storage/docs/spark/fsx-lustre.md'
+  - Metastore Integrations:
+      - Home: 'metastore-integrations/docs/index.md'
+      - Hive Metastore: 'metastore-integrations/docs/hive-metastore.md'
+      - AWS Glue: 'metastore-integrations/docs/aws-glue.md'
+  - Debugging:
+      - Home: 'debugging/docs/index.md'
+      - Change Log Level: 'debugging/docs/change-log-level.md'
+  - Node Placement:
+      - Home: 'node-placement/docs/index.md'
+      - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
+      - Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite

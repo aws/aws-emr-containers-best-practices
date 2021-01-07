@@ -1,17 +1,11 @@
-## My Project
+## Amazon EMR on Amazon EKS Best Practices
 
-TODO:Test Fill this README out!
+A best practices guide for submitting spark applications, integration with hive metastore, security, storage options, debugging options and performance considerations.
 
-Be sure to:
+Return to [Live Docs](https://aws.github.io/aws-emr-containers-best-practices/).
 
-* Change the title in this README
-* Edit your repository description on GitHub
+## License Summary
 
-## Security
+The documentation is made available under the Creative Commons Attribution-ShareAlike 4.0 International License. See the LICENSE file.
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## License
-
-This library is licensed under the MIT-0 License. See the LICENSE file.
-
+The sample code within this documentation is made available under the MIT-0 license. See the LICENSE-SAMPLECODE file.
