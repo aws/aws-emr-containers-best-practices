@@ -1,11 +1,11 @@
-site_name: EMR Containers Best Practices Guides
+site_name: "EMR Containers Best Practices Guides"
 repo_name: "aws/aws-emr-containers-best-practices"
 repo_url: "https://github.com/aws/aws-emr-containers-best-practices"
 docs_dir: "content"
 theme:
   name: material
   features:
-    - tabs
+    - navigation.tabs
 nav:
   - Guides:
       - Introduction: 'index.md'
