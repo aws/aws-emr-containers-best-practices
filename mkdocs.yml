@@ -14,19 +14,19 @@ nav:
       - Data Encryption: 'security/docs/spark/data-encryption.md'
       - Network Security: 'security/docs/spark/network-security.md'
   - Submit Spark applications:
-      - Home: 'submit-spark-applications/docs/index.md'
-      - Java and Scala: 'submit-spark-applications/docs/java-and-scala.md'
-      - Pyspark: 'submit-spark-applications/docs/pyspark.md'
-      - SparkR: 'submit-spark-applications/docs/sparkr.md'
-      - SparkSQL: 'submit-spark-applications/docs/sparksql.md'
+      - Home: 'submit-applications/docs/index.md'
+      - Java and Scala: 'submit-applications/docs/java-and-scala.md'
+      - Pyspark: 'submit-applications/docs/pyspark.md'
+      - SparkR: 'submit-applications/docs/sparkr.md'
+      - SparkSQL: 'submit-applications/docs/sparksql.md'
   - Storage:
       - Home: 'storage/docs/index.md'
       - EBS: 'storage/docs/spark/ebs.md'
       - FSx for Lustre: 'storage/docs/spark/fsx-lustre.md'
-  - Metastore Integrations:
-      - Home: 'metastore-integrations/docs/index.md'
-      - Hive Metastore: 'metastore-integrations/docs/hive-metastore.md'
-      - AWS Glue: 'metastore-integrations/docs/aws-glue.md'
+  - Metastore Integration:
+      - Home: 'metastore-integration/docs/index.md'
+      - Hive Metastore: 'metastore-integration/docs/hive-metastore.md'
+      - AWS Glue: 'metastore-integration/docs/aws-glue.md'
   - Debugging:
       - Home: 'debugging/docs/index.md'
       - Change Log Level: 'debugging/docs/change-log-level.md'
@@ -34,6 +34,9 @@ nav:
       - Home: 'node-placement/docs/index.md'
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
+  - Performance:
+      - Home: 'performance/docs/index.md'
+      - Dynamic Resource Allocation: 'performance/docs/dra.md'
 markdown_extensions:
   - toc:
       permalink: true
