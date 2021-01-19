@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#mount-ebs-volume-to-spark-driver-and-executor-pods" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -189,8 +194,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../submit-spark-applications/docs/" class="md-tabs__link">
-        Submit Spark applications
+      <a href="../../../../submit-applications/docs/spark/" class="md-tabs__link">
+        Submit applications
       </a>
     </li>
   
@@ -224,7 +229,7 @@
   
     <li class="md-tabs__item">
       <a href="../../../../metastore-integrations/docs/" class="md-tabs__link">
-        Metastore Integrations
+        Metastore Integration
       </a>
     </li>
   
@@ -257,6 +262,22 @@
     <li class="md-tabs__item">
       <a href="../../../../node-placement/docs/" class="md-tabs__link">
         Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../performance/docs/" class="md-tabs__link">
+        Performance
       </a>
     </li>
   
@@ -400,19 +421,6 @@
   </li>
 
         
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
-      Network Security
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -431,13 +439,13 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     
     <label class="md-nav__link" for="nav-3">
-      Submit Spark applications
+      Submit applications
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Submit Spark applications" data-md-level="1">
+    <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        Submit Spark applications
+        Submit applications
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -449,7 +457,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../../submit-spark-applications/docs/" class="md-nav__link">
+    <a href="../../../../submit-applications/docs/spark/" class="md-nav__link">
       Home
     </a>
   </li>
@@ -462,47 +470,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../../submit-spark-applications/docs/java-and-scala/" class="md-nav__link">
-      Java and Scala
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../../submit-spark-applications/docs/pyspark/" class="md-nav__link">
+    <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
       Pyspark
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../../submit-spark-applications/docs/sparkr/" class="md-nav__link">
-      SparkR
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../../submit-spark-applications/docs/sparksql/" class="md-nav__link">
-      SparkSQL
     </a>
   </li>
 
@@ -563,10 +532,82 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        EBS
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
       EBS
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning-" class="md-nav__link">
+    Static Provisioning -
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Provisioning -">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks" class="md-nav__link">
+    EKS Admin Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks" class="md-nav__link">
+    Spark Developer Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-provisioning" class="md-nav__link">
+    Dynamic Provisioning:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks_1" class="md-nav__link">
+    EKS Admin Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks_1" class="md-nav__link">
+    Spark Developer Tasks:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -602,13 +643,13 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
     
     <label class="md-nav__link" for="nav-5">
-      Metastore Integrations
+      Metastore Integration
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Metastore Integrations" data-md-level="1">
+    <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
-        Metastore Integrations
+        Metastore Integration
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -762,6 +803,35 @@
   </li>
 
         
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+    
+    <label class="md-nav__link" for="nav-8">
+      Performance
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Performance" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Performance
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
           
           
           
@@ -769,8 +839,21 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
-      Fargate Node placement
+    <a href="../../../../performance/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../performance/docs/dra/" class="md-nav__link">
+      Dynamic Resource Allocation
     </a>
   </li>
 
@@ -787,6 +870,78 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning-" class="md-nav__link">
+    Static Provisioning -
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Provisioning -">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks" class="md-nav__link">
+    EKS Admin Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks" class="md-nav__link">
+    Spark Developer Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-provisioning" class="md-nav__link">
+    Dynamic Provisioning:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks_1" class="md-nav__link">
+    EKS Admin Tasks:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks_1" class="md-nav__link">
+    Spark Developer Tasks:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -797,9 +952,209 @@
                   </a>
                 
                 
-                  <h1>EBS</h1>
-                
-                
+                <h1 id="mount-ebs-volume-to-spark-driver-and-executor-pods"><strong>Mount EBS Volume to spark driver and executor pods</strong><a class="headerlink" href="#mount-ebs-volume-to-spark-driver-and-executor-pods" title="Permanent link">&para;</a></h1>
+<p>EBS Volumes can be mounted on spark driver and executor pods through static and dynamic provisioning - 
+<strong>Difference between static and dynamic provisioning of Persistent Volumes:</strong>
+(Refer - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#provisioning)</p>
+<p>EKS support for EBS CSI driver - https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
+Documentation for EBS CSI driver - https://github.com/kubernetes-sigs/aws-ebs-csi-driver</p>
+<h2 id="static-provisioning-"><strong>Static Provisioning</strong> -<a class="headerlink" href="#static-provisioning-" title="Permanent link">&para;</a></h2>
+<h3 id="eks-admin-tasks">EKS Admin Tasks:<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h3>
+<p>Create EBS volumes</p>
+<div class="codehilite"><pre><span></span><code><span class="err">aws ec2 --region &lt;region&gt; create-volume --availability-zone &lt;availability zone&gt; --size 50</span>
+<span class="err">{</span>
+<span class="err">    &quot;AvailabilityZone&quot;: &quot;&lt;availability zone&gt;&quot;, </span>
+<span class="err">    &quot;MultiAttachEnabled&quot;: false, </span>
+<span class="err">    &quot;Tags&quot;: [], </span>
+<span class="err">    &quot;Encrypted&quot;: false, </span>
+<span class="err">    &quot;VolumeType&quot;: &quot;gp2&quot;, </span>
+<span class="err">    &quot;VolumeId&quot;: &quot;&lt;vol -id&gt;&quot;, </span>
+<span class="err">    &quot;State&quot;: &quot;creating&quot;, </span>
+<span class="err">    &quot;Iops&quot;: 150, </span>
+<span class="err">    &quot;SnapshotId&quot;: &quot;&quot;, </span>
+<span class="err">    &quot;CreateTime&quot;: &quot;2020-11-03T18:36:21.000Z&quot;, </span>
+<span class="err">    &quot;Size&quot;: 50</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>Create Persistent Volume(PV) that has the EBS volume created above hardcoded</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">PersistentVolume</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">capacity</span><span class="p">:</span>
+    <span class="k">storage</span><span class="p">:</span> <span class="mi">5</span><span class="n">Gi</span>
+  <span class="n">accessModes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">ReadWriteOnce</span>
+  <span class="n">storageClassName</span><span class="p">:</span> <span class="n">gp2</span>
+  <span class="n">awsElasticBlockStore</span><span class="p">:</span>
+    <span class="n">fsType</span><span class="p">:</span> <span class="n">ext4</span>
+    <span class="n">volumeID</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">vol</span> <span class="o">-</span><span class="n">id</span><span class="o">&gt;</span>
+<span class="n">EOF</span>
+
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span><span class="p">.</span><span class="n">yaml</span> <span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>Create Persistent Volume Claim(PVC) for the Persistent Volume created above</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pvc</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">PersistentVolumeClaim</span>
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pvc</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">accessModes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">ReadWriteOnce</span>
+  <span class="n">resources</span><span class="p">:</span>
+    <span class="n">requests</span><span class="p">:</span>
+      <span class="k">storage</span><span class="p">:</span> <span class="mi">5</span><span class="n">Gi</span>
+  <span class="n">volumeName</span><span class="p">:</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span>
+<span class="n">EOF</span>
+
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pvc</span><span class="p">.</span><span class="n">yaml</span> <span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>PVC - ebs-static-pvc can be used by spark developer to mount to the spark pod
+<strong>NOTE: Pods running in EKS worker nodes can attach to only EBS volume provisioned in the same AZ as the EKS worker Node. Use node selector to schedule pods on a EKS worker node in a specified AZ</strong></p>
+<h3 id="spark-developer-tasks">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h3>
+<p><strong>Sample Request</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-ebs-static-localdir.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-ebs-static-localdir&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count-fsx.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5 --conf spark.executor.instances=10 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 &quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">          &quot;spark.kubernetes.node.selector.topology.kubernetes.io/zone&quot;:&quot;&lt;availability zone&gt;&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.options.claimName&quot;:&quot;ebs-static-pvc&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.path&quot;:&quot;/var/spark/spill/&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.readOnly&quot;:&quot;false&quot;,</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-ebs-static-localdir.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong>
+When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <a href="http://topology.kubernetes.io/zone">topology.kubernetes.io/zone</a>: <availability zone>.
+This ensures the spark job is run within a single AZ. If there are not enough resource within the AZ the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.</p>
+<p>You can verify that the EBS volume created is mounted to driver pod and you can exec into the driver container to verify that the EBS volume is mounted. Also can verify from driver pod spec</p>
+<div class="codehilite"><pre><span></span><code><span class="err">kubectl get pod &lt;driver pod name&gt; -n &lt;namespace&gt; -o yaml --export</span>
+</code></pre></div>
+
+<h3 id="dynamic-provisioning">Dynamic Provisioning:<a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h3>
+<h3 id="eks-admin-tasks_1">EKS Admin Tasks:<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h3>
+<p>Create EBS Storage Class</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span><span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">sc</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="n">apiVersion</span><span class="p">:</span> <span class="k">storage</span><span class="p">.</span><span class="n">k8s</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">StorageClass</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">sc</span>
+<span class="n">provisioner</span><span class="p">:</span> <span class="n">kubernetes</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">aws</span><span class="o">-</span><span class="n">ebs</span>
+<span class="k">parameters</span><span class="p">:</span>
+  <span class="k">type</span><span class="p">:</span> <span class="n">gp2</span>
+<span class="n">reclaimPolicy</span><span class="p">:</span> <span class="n">Retain</span>
+<span class="n">allowVolumeExpansion</span><span class="p">:</span> <span class="k">true</span>
+<span class="n">mountOptions</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">debug</span>
+<span class="n">volumeBindingMode</span><span class="p">:</span> <span class="k">Immediate</span>
+<span class="n">EOF</span>
+
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">sc</span><span class="p">.</span><span class="n">yaml</span>
+</code></pre></div>
+
+<p>create Persistent Volume for the EBS storage class - demo-gp2-sc</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span><span class="n">ebs</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">claim</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">PersistentVolumeClaim</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">ebs</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">claim</span>
+  <span class="n">labels</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">:</span> <span class="n">chicago</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">storageClassName</span><span class="p">:</span> <span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">sc</span>
+  <span class="n">accessModes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">ReadWriteOnce</span>
+  <span class="n">resources</span><span class="p">:</span>
+    <span class="n">requests</span><span class="p">:</span>
+      <span class="k">storage</span><span class="p">:</span> <span class="mi">100</span><span class="n">Gi</span>
+<span class="n">EOF</span>
+
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">ebs</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">gp2</span><span class="o">-</span><span class="n">claim</span><span class="p">.</span><span class="n">yaml</span> <span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h3 id="spark-developer-tasks_1">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks_1" title="Permanent link">&para;</a></h3>
+<p><strong>Sample Request</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-ebs-dynamic-localdir.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-ebs-dynamic-localdir&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count-fsx.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5 --conf spark.executor.instances=10 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">          &quot;spark.kubernetes.node.selector.topology.kubernetes.io/zone&quot;:&quot;&lt;availability zone&gt;&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.options.claimName&quot;:&quot;ebs-demo-gp2-claim&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.path&quot;:&quot;/var/spark/spill/&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.readOnly&quot;:&quot;false&quot;,</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-ebs-dynamic-localdir.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong>
+When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <a href="http://topology.kubernetes.io/zone">topology.kubernetes.io/zone</a>: <availability zone>
+This ensures the spark job is run within a single AZ. If there are not enough resource within the AZ the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.</p>
+<p>You can verify that the a EBS volume is provisioned dynamically by the EBS CSI driver and mounted to the driver pod. Also can verify from driver pod spec</p>
+<div class="codehilite"><pre><span></span><code><span class="err">kubectl get pod &lt;driver pod name&gt; -n &lt;namespace&gt; -o yaml --export</span>
+</code></pre></div>
+
+<p><strong>POINT TO NOTE: It is not possible to use this dynamic provisioning strategy for EBS to spark executors. Not possible to mount a new EBS volume to every Spark executor. Instead use a distributed file system like Lustre, EFS, NFS to mount to executors.</strong> </p>
                 
               
               

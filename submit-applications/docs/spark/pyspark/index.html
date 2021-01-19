@@ -1,0 +1,1567 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
+    
+    
+      
+        <title>Pyspark - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.3b61ea93.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.39b8e14a.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pyspark-job-submission" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-header-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Pyspark
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/aws/aws-emr-containers-best-practices/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../security/docs/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link md-tabs__link--active">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../storage/docs/" class="md-tabs__link">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../metastore-integrations/docs/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../debugging/docs/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../node-placement/docs/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../performance/docs/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/aws/aws-emr-containers-best-practices/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" >
+    
+    <label class="md-nav__link" for="nav-1">
+      Guides
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Guides" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon"></span>
+        Guides
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../.." class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+    
+    <label class="md-nav__link" for="nav-2">
+      Security
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Security" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        Security
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../security/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
+      Data Encryption
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Submit applications
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        Submit applications
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Pyspark
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Pyspark
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-self-contained-in-a-single-py-file" class="md-nav__link">
+    Python code self contained in a single .py file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-and-passed-in-through-py-files-spark-configuration" class="md-nav__link">
+    Python code with dependencies bundled and passed in through —py-files spark configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comma-separated-list-of-py-files" class="md-nav__link">
+    comma separated list of .py files
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-zip-file" class="md-nav__link">
+    Bundled as a zip file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-egg-file" class="md-nav__link">
+    Bundled as a .egg file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-whl-file" class="md-nav__link">
+    Bundled as a .whl file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-sparkpysparkvirtualenvenabledtrue" class="md-nav__link">
+    Python code with dependencies bundled - "spark.pyspark.virtualenv.enabled":"true"
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-as-a-pex-file" class="md-nav__link">
+    Python code with dependencies bundled as a PEX file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-as-a-targz-file-with-conda-pack" class="md-nav__link">
+    Python code with dependencies bundled as a tar.gz file with conda-pack
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
+    
+    <label class="md-nav__link" for="nav-4">
+      Storage
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Storage" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        Storage
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../storage/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../storage/docs/spark/ebs/" class="md-nav__link">
+      EBS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+      FSx for Lustre
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
+    
+    <label class="md-nav__link" for="nav-5">
+      Metastore Integration
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon"></span>
+        Metastore Integration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../metastore-integrations/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+      Hive Metastore
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+      AWS Glue
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" >
+    
+    <label class="md-nav__link" for="nav-6">
+      Debugging
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        <span class="md-nav__icon md-icon"></span>
+        Debugging
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../debugging/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../debugging/docs/change-log-level/" class="md-nav__link">
+      Change Log Level
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+    
+    <label class="md-nav__link" for="nav-7">
+      Node Placement
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        <span class="md-nav__icon md-icon"></span>
+        Node Placement
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../node-placement/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+      EKS Node placement
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+    
+    <label class="md-nav__link" for="nav-8">
+      Performance
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Performance" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Performance
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../performance/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../../performance/docs/dra/" class="md-nav__link">
+      Dynamic Resource Allocation
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-self-contained-in-a-single-py-file" class="md-nav__link">
+    Python code self contained in a single .py file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-and-passed-in-through-py-files-spark-configuration" class="md-nav__link">
+    Python code with dependencies bundled and passed in through —py-files spark configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comma-separated-list-of-py-files" class="md-nav__link">
+    comma separated list of .py files
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-zip-file" class="md-nav__link">
+    Bundled as a zip file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-egg-file" class="md-nav__link">
+    Bundled as a .egg file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bundled-as-a-whl-file" class="md-nav__link">
+    Bundled as a .whl file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-sparkpysparkvirtualenvenabledtrue" class="md-nav__link">
+    Python code with dependencies bundled - "spark.pyspark.virtualenv.enabled":"true"
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-as-a-pex-file" class="md-nav__link">
+    Python code with dependencies bundled as a PEX file
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-code-with-dependencies-bundled-as-a-targz-file-with-conda-pack" class="md-nav__link">
+    Python code with dependencies bundled as a tar.gz file with conda-pack
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/submit-applications/docs/spark/pyspark.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="pyspark-job-submission">Pyspark Job submission<a class="headerlink" href="#pyspark-job-submission" title="Permanent link">&para;</a></h1>
+<p>Python interpreter is bundled in the EMR containers spark image that is used to run the spark job.</p>
+<h3 id="python-code-self-contained-in-a-single-py-file">Python code self contained in a single .py file<a class="headerlink" href="#python-code-self-contained-in-a-single-py-file" title="Permanent link">&para;</a></h3>
+<p>To start with, in the most simplest scenario - the example below shows how to submit a pi.py file that is self contained and doesn't need any other dependencies. In this example pi.py is part of the spark image and is passed to the start-job-run command using local:// path prefix.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">image</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-image&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;local:///usr/lib/spark/examples/src/main/python/pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-image.json</span>
+</code></pre></div>
+
+<p>In the below example - pi.py is placed in a mounted volume. FSx for Lustre is mounted as a Persistent Volume on the driver pod under <code>/var/data/</code> and will be referenced by local:// file prefix. For more information on how to mount FSx for lustre - refer - <a href="../../../../storage/docs/spark/fsx-lustre/">EMR-Containers-integration-with-FSx-for-Lustre</a></p>
+<blockquote>
+<p>This approach can be used to reference spark code and dependencies from remote locations if s3 access from driver and executor pods is not desired</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">FSx</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-FSx&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;local:///var/data/FSxLustre-pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="ss">&quot;fsx-claim&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-Fsx.json</span>
+</code></pre></div>
+
+<h3 id="python-code-with-dependencies-bundled-and-passed-in-through-py-files-spark-configuration">Python code with dependencies bundled and passed in through —py-files spark configuration<a class="headerlink" href="#python-code-with-dependencies-bundled-and-passed-in-through-py-files-spark-configuration" title="Permanent link">&para;</a></h3>
+<p>Refer - https://spark.apache.org/docs/latest/submitting-applications.html
+All dependencies for the pyspark code can be passed in the below ways</p>
+<ol>
+<li>comma separated list of .py files</li>
+<li>Bundled as a zip file</li>
+<li>Bundled as a .egg file</li>
+<li>Bundled as a .whl file</li>
+</ol>
+<h3 id="comma-separated-list-of-py-files">comma separated list of .py files<a class="headerlink" href="#comma-separated-list-of-py-files" title="Permanent link">&para;</a></h3>
+<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify any of transitive dependencies.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">py</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="n">pi</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
+
+<span class="kn">import</span> <span class="nn">dependentFunc</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Usage: pi [partitions]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
+    <span class="n">partitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100000</span> <span class="o">*</span> <span class="n">partitions</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">partitions</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+    <span class="n">dependentFunc</span><span class="o">.</span><span class="n">message</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Pi is roughly </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+
+    <span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+  <span class="n">EOF</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">dependentFunc</span><span class="p">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="n">def</span> <span class="n">message</span><span class="p">():</span>
+  <span class="n">print</span><span class="p">(</span><span class="ss">&quot;Printing from inside the dependent python file&quot;</span><span class="p">)</span>
+
+<span class="n">EOF</span>
+</code></pre></div>
+
+<p>Upload dependentFunc.py and py-files-pi.py to s3
+Request</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">dependency</span><span class="o">-</span><span class="n">files</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-dependency-files&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/py-files-pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--py-files s3://&lt;s3 prefix&gt;/dependentFunc.py --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///spark-python-in-s3-dependency-files.json</span>
+</code></pre></div>
+
+<h3 id="bundled-as-a-zip-file">Bundled as a zip file<a class="headerlink" href="#bundled-as-a-zip-file" title="Permanent link">&para;</a></h3>
+<p>Points to Note:
+Each dependency folder should have <strong>init</strong>.py file - https://docs.python.org/3/reference/import.html#regular-packages
+Zip should be done at the top folder level and using the -r option for all dependency folders.
+dependentFunc.py from earlier example has been bundled into a zip with package folders and attached below.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">zip -r pyspark-packaged-dependency-src.zip . </span>
+<span class="err">  adding: dependent/ (stored 0%)</span>
+<span class="err">  adding: dependent/__init__.py (stored 0%)</span>
+<span class="err">  adding: dependent/dependentFunc.py (deflated 7%)</span>
+</code></pre></div>
+
+<p><a href="../../../resources/pyspark-packaged-dependency-src.zip">pyspark-packaged-dependency-src.zip</a> - Place this file in a s3 location</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">py</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="nb">zip</span><span class="o">-</span><span class="n">pi</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark</span> <span class="kn">import</span> <span class="n">SparkContext</span>
+
+<span class="o">**</span><span class="kn">from</span> <span class="nn">dependent</span> <span class="kn">import</span> <span class="n">dependentFunc</span><span class="o">**</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Usage: pi [partitions]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span>
+    <span class="n">partitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100000</span> <span class="o">*</span> <span class="n">partitions</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">partitions</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+    <span class="n">dependentFunc</span><span class="o">.</span><span class="n">message</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Pi is roughly </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+
+    <span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+  <span class="n">EOF</span>
+</code></pre></div>
+
+<p>Request</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">dependency</span><span class="o">-</span><span class="n">zip</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-dependency-zip&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/py-files-zip-pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--py-files s3://&lt;s3 prefix&gt;/pyspark-packaged-dependency-src.zip --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+          <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///spark-python-in-s3-dependency-zip.json</span>
+</code></pre></div>
+
+<h3 id="bundled-as-a-egg-file">Bundled as a .egg file<a class="headerlink" href="#bundled-as-a-egg-file" title="Permanent link">&para;</a></h3>
+<p>Create a folder structure as in the below screenshot with the code from the previous example - py-files-zip-pi.py, dependentFunc.py
+<img alt="" src="../../../resources/images/pyspark-packaged-example-zip-folder-structure.png" />Steps to create .egg file</p>
+<div class="codehilite"><pre><span></span><code><span class="err">cd /pyspark-packaged-example</span>
+<span class="err">pip install setuptools</span>
+<span class="err">python setup.py bdist_egg</span>
+</code></pre></div>
+
+<p>Copy <code>dist/pyspark_packaged_example-0.0.3-py3.8.egg</code> to a s3 location</p>
+<p>Request</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">dependency</span><span class="o">-</span><span class="n">egg</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-dependency-egg&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/py-files-zip-pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--py-files s3://&lt;s3 prefix&gt;/pyspark_packaged_example-0.0.3-py3.8.egg --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///spark-python-in-s3-dependency-egg.json</span>
+</code></pre></div>
+
+<h3 id="bundled-as-a-whl-file">Bundled as a .whl file<a class="headerlink" href="#bundled-as-a-whl-file" title="Permanent link">&para;</a></h3>
+<p>Create a folder structure as in the below screenshot with the code from the previous example - py-files-zip-pi.py, dependentFunc.py
+[Image: Screen Shot 2020-11-16 at 3.34.12 PM.png]Steps to create .egg file</p>
+<div class="codehilite"><pre><span></span><code><span class="err">cd /pyspark-packaged-example</span>
+<span class="err">`pip install wheel`</span>
+<span class="err">python setup.py bdist_wheel</span>
+</code></pre></div>
+
+<p>Copy <code>dist/</code><a href="https://s3.console.aws.amazon.com/s3/object/sathysar-spark-testing?region=us-west-2&amp;prefix=jobs/pyspark_packaged_example-0.0.3-py3-none-any.whl"><code>pyspark_packaged_example-0.0.3-py3-none-any.whl</code></a> to a s3 location</p>
+<p>Request</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">dependency</span><span class="o">-</span><span class="n">wheel</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-dependency-wheel&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/py-files-zip-pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--py-files s3://&lt;s3 prefix&gt;/pyspark_packaged_example-0.0.3-py3-none-any.whl --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///spark-python-in-s3-dependency-wheel.json</span>
+</code></pre></div>
+
+<h3 id="python-code-with-dependencies-bundled-sparkpysparkvirtualenvenabledtrue">Python code with dependencies bundled - "spark.pyspark.virtualenv.enabled":"true"<a class="headerlink" href="#python-code-with-dependencies-bundled-sparkpysparkvirtualenvenabledtrue" title="Permanent link">&para;</a></h3>
+<p>This will not work - this feature only works with YARN - cluster mode
+In this implementation for YARN - the dependencies will be installed from the repository for every driver and executor. This might not be a more scalable model as per https://issues.apache.org/jira/browse/SPARK-25433. Recommended solution is to pass in the dependencies as PEX file.</p>
+<h3 id="python-code-with-dependencies-bundled-as-a-pex-file">Python code with dependencies bundled as a PEX file<a class="headerlink" href="#python-code-with-dependencies-bundled-as-a-pex-file" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="ss">`docker run ``-``it ``-``v $``(``pwd``):``/workdir python:3.7.9-buster /``bin``/``bash ``#python 3.7.9 is installed in EMR 6.1.0`</span>
+<span class="ss">`pip3 install pex`</span>
+<span class="ss">`pex ``--``python``=``python3`` ``--``inherit``-``path``=prefer`` ``-``v numpy ``-``o numpy_dep.pex`</span>
+</code></pre></div>
+
+<p>For the commands used above -
+Refer - https://github.com/pantsbuild/pex
+https://readthedocs.org/projects/manypex/downloads/pdf/latest/
+http://www.legendu.net/misc/blog/tips-on-pex/
+http://www.legendu.net/misc/blog/packaging-python-dependencies-for-pyspark-using-pex/</p>
+<p>Place <code>numpy_dep.pex</code> in a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_dep.pex</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.
+Request</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-pex-fsx&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span>
+      <span class="ss">&quot;entryPointArguments&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="ss">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span>
+        <span class="ss">&quot;2&quot;</span><span class="p">,</span>
+        <span class="ss">&quot;3&quot;</span>
+       <span class="p">],</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.executor.instances&quot;</span><span class="p">:</span> <span class="ss">&quot;3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="ss">&quot;3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="ss">&quot;./tmp&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="ss">&quot;./tmp&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="ss">&quot;prefer&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="ss">&quot;prefer&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_VERBOSE&quot;</span><span class="p">:</span><span class="ss">&quot;10&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="ss">&quot;python3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="ss">&quot;python3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="ss">&quot;fsx-claim&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="ss">&quot;fsx-claim&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span> 
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:////Spark-Python-in-s3-pex-fsx.json</span>
+</code></pre></div>
+
+<p>Point to Note:
+PEX files don’t have the python interpreter bundled with it. Using the PEX env variables we pass in the python interpreter installed in the spark driver and executor docker image.
+Conda-pack has the python interpreter bundled in the package.</p>
+<blockquote>
+<p>pex vs conda-pack
+A pex file contain only Python packages but not a Python interpreter in it while a conda-pack environment has a Python interpreter as well, so with the same Python packages a conda-pack environment is much larger than a pex file.
+A conda-pack environment is a tar.gz file and need to be decompressed before being used while a pex file can be used directly.
+If a Python interpreter exists, pex is a better option than conda-pack. However, conda-pack is the ONLY CHOICE if you need a specific version of Python interpreter which does not exist and you do not have permission to install one (e.g., when you need to use a specific version of Python interpreter with an enterprise PySpark cluster). If the pex file or conda-pack environment needs to be distributed to machines on demand, there are some overhead before running your application. With the same Python packages, a conda-pack environment has large overhead/latency than the pex file as the conda-pack environment is usually much larger and need to be decompressed before being used.</p>
+</blockquote>
+<p>For more information - refer http://www.legendu.net/misc/blog/tips-on-pex/ </p>
+<h3 id="python-code-with-dependencies-bundled-as-a-targz-file-with-conda-pack">Python code with dependencies bundled as a tar.gz file with conda-pack<a class="headerlink" href="#python-code-with-dependencies-bundled-as-a-targz-file-with-conda-pack" title="Permanent link">&para;</a></h3>
+<p>Refer - https://conda.github.io/conda-pack/spark.html
+Install conda through Miniconda - https://conda.io/miniconda.html
+Open a new terminal and execute the below commands</p>
+<div class="codehilite"><pre><span></span><code><span class="err">conda create -y -n example python=3.5 numpy</span>
+<span class="err">conda activate example</span>
+<span class="err">pip install conda-pack</span>
+<span class="err">conda pack -f -o numpy_environment.tar.gz</span>
+</code></pre></div>
+
+<p>Place <code>numpy_environment.tar.gz</code> in a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_dep.pex</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.
+Request</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-conda-fsx&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;,</span>
+<span class="err">      &quot;entryPointArguments&quot;: [</span>
+<span class="err">        &quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;,</span>
+<span class="err">        &quot;2&quot;,</span>
+<span class="err">        &quot;3&quot;</span>
+<span class="err">       ], </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--verbose --archives /var/data/numpy_environment.tar.gz#environment --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">          &quot;spark.executor.instances&quot;: &quot;3&quot;,</span>
+<span class="err">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;,</span>
+<span class="err">          &quot;spark.files&quot;:&quot;/var/data/numpy_environment.tar.gz#environment&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.pyspark.pythonVersion&quot;:&quot;3&quot;,</span>
+<span class="err">          &quot;spark.pyspark.driver.python&quot;:&quot;./environment/bin/python&quot;,</span>
+<span class="err">          &quot;spark.pyspark.python&quot;:&quot;./environment/bin/python&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;:&quot;fsx-claim&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;:&quot;/var/data/&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;:&quot;false&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;:&quot;fsx-claim&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;:&quot;/var/data/&quot;,</span>
+<span class="err">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;:&quot;false&quot;</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p><strong>The above request doesn't WORK with spark on kubernetes</strong></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../../../storage/docs/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Home
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../../../..",
+          features: ['navigation.tabs'],
+          search: Object.assign({
+            worker: "../../../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

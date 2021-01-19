@@ -14,7 +14,7 @@
     
     
       
-        <title>SparkSQL - EMR Containers Best Practices Guides</title>
+        <title>Dynamic Resource Allocation - EMR Containers Best Practices Guides</title>
       
     
     
@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#dynamic-resource-allocation" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              SparkSQL
+              Dynamic Resource Allocation
             
           </span>
         </div>
@@ -183,16 +188,14 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../" class="md-tabs__link md-tabs__link--active">
-        Submit Spark applications
+      <a href="../../../submit-applications/docs/spark/" class="md-tabs__link">
+        Submit applications
       </a>
     </li>
   
@@ -224,7 +227,7 @@
   
     <li class="md-tabs__item">
       <a href="../../../metastore-integrations/docs/" class="md-tabs__link">
-        Metastore Integrations
+        Metastore Integration
       </a>
     </li>
   
@@ -257,6 +260,24 @@
     <li class="md-tabs__item">
       <a href="../../../node-placement/docs/" class="md-tabs__link">
         Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link md-tabs__link--active">
+        Performance
       </a>
     </li>
   
@@ -400,19 +421,6 @@
   </li>
 
         
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
-      Network Security
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -423,23 +431,21 @@
       
 
 
-  
-
 
   
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     
     <label class="md-nav__link" for="nav-3">
-      Submit Spark applications
+      Submit applications
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Submit Spark applications" data-md-level="1">
+    <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        Submit Spark applications
+        Submit applications
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -451,7 +457,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../" class="md-nav__link">
+    <a href="../../../submit-applications/docs/spark/" class="md-nav__link">
       Home
     </a>
   </li>
@@ -464,55 +470,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../java-and-scala/" class="md-nav__link">
-      Java and Scala
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../pyspark/" class="md-nav__link">
+    <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
       Pyspark
     </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../sparkr/" class="md-nav__link">
-      SparkR
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
-      SparkSQL
-    </a>
-    
   </li>
 
         
@@ -602,13 +562,13 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" >
     
     <label class="md-nav__link" for="nav-5">
-      Metastore Integrations
+      Metastore Integration
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Metastore Integrations" data-md-level="1">
+    <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
-        Metastore Integrations
+        Metastore Integration
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -762,6 +722,37 @@
   </li>
 
         
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" checked>
+    
+    <label class="md-nav__link" for="nav-8">
+      Performance
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Performance" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Performance
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
           
           
           
@@ -769,9 +760,31 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
-      Fargate Node placement
+    <a href="../" class="md-nav__link">
+      Home
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Dynamic Resource Allocation
+    </a>
+    
   </li>
 
         
@@ -787,19 +800,87 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/submit-spark-applications/docs/sparksql.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/performance/docs/dra.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                  <h1>SparkSQL</h1>
-                
-                
+                <h1 id="dynamic-resource-allocation">Dynamic Resource Allocation<a class="headerlink" href="#dynamic-resource-allocation" title="Permanent link">&para;</a></h1>
+<p>DRA is available in spark 3 (EMR 6.x) without the need for an external shuffle service. EMR containers doesn't support external shuffle service for GA, but DRA can be achieved by enabling <a href="https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation">shuffle tracking</a>.</p>
+<p><strong>Spark DRA without external shuffle service:</strong>
+With DRA - spark driver spawns the initial number of executors and then scales the number until the maximum number as needed to process the pending tasks. Once there are no pending tasks and executor idle time exceeds the idle timeout(<code>spark.dynamicAllocation.executorIdleTimeout)</code>and doesn't have any cached or shuffle data, then the idle executor is terminated.</p>
+<p>If the executor idle threshold is reached and it has cached data, then it has to exceed the executor with cache data idle timeout(<code>spark.dynamicAllocation.cachedExecutorIdleTimeout)</code> and if the executor doesn't have shuffle data, then the idle executor is terminated.</p>
+<p>If the executor idle threshold is reached and it has shuffle data, then without external shuffle service the executor will never be terminated. This behavior is enforced by <code>"spark.dynamicAllocation.shuffleTracking.enabled":"true" and "spark.dynamicAllocation.enabled":"true"</code></p>
+<p>If <code>"spark.dynamicAllocation.shuffleTracking.enabled":"false"and "spark.dynamicAllocation.enabled":"true"</code> then spark will error out if external shuffle service is not running.</p>
+<p><strong>Sample Request</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-dra.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-dra&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;true&quot;,</span>
+<span class="err">          &quot;spark.dynamicAllocation.shuffleTracking.enabled&quot;:&quot;true&quot;,</span>
+<span class="err">          &quot;spark.dynamicAllocation.minExecutors&quot;:&quot;5&quot;,</span>
+<span class="err">          &quot;spark.dynamicAllocation.maxExecutors&quot;:&quot;100&quot;,</span>
+<span class="err">          &quot;spark.dynamicAllocation.initialExecutors&quot;:&quot;10&quot;</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dra.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong>
+When the job gets started the driver pod gets created and then 10 executors are created to start with ("spark.dynamicAllocation.initialExecutors":"10") and then the number of executors can scale up to a maximum of 100 ("spark.dynamicAllocation.maxExecutors":"100"). 
+Configurations to note - <strong>Please note that this feature is marked as Experimental as of Spark 3.0.0</strong></p>
+<p><code>spark.dynamicAllocation.shuffleTracking.enabled -</code><strong><code>Experimental</code></strong><code>. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.</code></p>
+<p><code>spark.dynamicAllocation.shuffleTracking.timeout - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.</code></p>
                 
               
               
@@ -818,7 +899,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../sparkr/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -827,25 +908,11 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                SparkR
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../../../storage/docs/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
                 Home
               </div>
             </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
           </a>
+        
         
       </nav>
     </div>

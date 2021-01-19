@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#emr-containers-integration-with-hive-metastore" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -189,8 +194,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../submit-spark-applications/docs/" class="md-tabs__link">
-        Submit Spark applications
+      <a href="../../../submit-applications/docs/spark/" class="md-tabs__link">
+        Submit applications
       </a>
     </li>
   
@@ -224,7 +229,7 @@
   
     <li class="md-tabs__item">
       <a href="../" class="md-tabs__link md-tabs__link--active">
-        Metastore Integrations
+        Metastore Integration
       </a>
     </li>
   
@@ -257,6 +262,22 @@
     <li class="md-tabs__item">
       <a href="../../../node-placement/docs/" class="md-tabs__link">
         Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../performance/docs/" class="md-tabs__link">
+        Performance
       </a>
     </li>
   
@@ -400,19 +421,6 @@
   </li>
 
         
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
-      Network Security
-    </a>
-  </li>
-
-        
       </ul>
     </nav>
   </li>
@@ -431,13 +439,13 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     
     <label class="md-nav__link" for="nav-3">
-      Submit Spark applications
+      Submit applications
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Submit Spark applications" data-md-level="1">
+    <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        Submit Spark applications
+        Submit applications
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -449,7 +457,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../submit-spark-applications/docs/" class="md-nav__link">
+    <a href="../../../submit-applications/docs/spark/" class="md-nav__link">
       Home
     </a>
   </li>
@@ -462,47 +470,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../submit-spark-applications/docs/java-and-scala/" class="md-nav__link">
-      Java and Scala
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../submit-spark-applications/docs/pyspark/" class="md-nav__link">
+    <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
       Pyspark
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../submit-spark-applications/docs/sparkr/" class="md-nav__link">
-      SparkR
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-
-  <li class="md-nav__item">
-    <a href="../../../submit-spark-applications/docs/sparksql/" class="md-nav__link">
-      SparkSQL
     </a>
   </li>
 
@@ -595,13 +564,13 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
     
     <label class="md-nav__link" for="nav-5">
-      Metastore Integrations
+      Metastore Integration
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Metastore Integrations" data-md-level="1">
+    <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
       <label class="md-nav__title" for="nav-5">
         <span class="md-nav__icon md-icon"></span>
-        Metastore Integrations
+        Metastore Integration
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -631,10 +600,48 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Hive Metastore
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
       Hive Metastore
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configure-spark-to-connect-to-hive-metastore-database-through-jdbc" class="md-nav__link">
+    Configure Spark to connect to Hive metastore Database through JDBC
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-spark-to-connect-to-hive-metastore-thrift-service-through-thrift-protocol" class="md-nav__link">
+    Configure Spark to connect to Hive metastore thrift service through thrift:// protocol
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -762,6 +769,35 @@
   </li>
 
         
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  
+  <li class="md-nav__item md-nav__item--nested">
+    
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8" >
+    
+    <label class="md-nav__link" for="nav-8">
+      Performance
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Performance" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Performance
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
           
           
           
@@ -769,8 +805,21 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
-      Fargate Node placement
+    <a href="../../../performance/docs/" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="../../../performance/docs/dra/" class="md-nav__link">
+      Dynamic Resource Allocation
     </a>
   </li>
 
@@ -787,6 +836,44 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configure-spark-to-connect-to-hive-metastore-database-through-jdbc" class="md-nav__link">
+    Configure Spark to connect to Hive metastore Database through JDBC
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-spark-to-connect-to-hive-metastore-thrift-service-through-thrift-protocol" class="md-nav__link">
+    Configure Spark to connect to Hive metastore thrift service through thrift:// protocol
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -797,9 +884,63 @@
                   </a>
                 
                 
-                  <h1>Hive Metastore</h1>
-                
-                
+                <h1 id="emr-containers-integration-with-hive-metastore">EMR Containers integration with Hive Metastore<a class="headerlink" href="#emr-containers-integration-with-hive-metastore" title="Permanent link">&para;</a></h1>
+<p>Submit spark jobs and configure to use hive metastore thrift server running on EMR cluster</p>
+<h3 id="configure-spark-to-connect-to-hive-metastore-database-through-jdbc">Configure Spark to connect to Hive metastore Database through JDBC<a class="headerlink" href="#configure-spark-to-connect-to-hive-metastore-database-through-jdbc" title="Permanent link">&para;</a></h3>
+<p>Use RDS Aurora MySql as Hive Metastore and connect from Spark using JDBC string. The RDS and EKS cluster shouldbe in same VPC or else Spark job will not be able to connect to RDS. Script to submit job:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">  aws emr-containers start-job-run --virtual-cluster-id &lt;virtual-cluster-id&gt; --name sparkjob --execution-role-arn &lt;execution-role-arn&gt; --release-label emr-6.2.0-latest --job-driver &#39;{&quot;sparkSubmitJobDriver&quot;: {&quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/hivejdbc.py&quot;, &quot;sparkSubmitParameters&quot;:&quot; --jars s3://&lt;s3 prefix&gt;/mariadb-connector-java.jar --conf spark.executor.instances=3 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=1 --conf spark.driver.cores=1 --conf spark.hadoop.javax.jdo.option.ConnectionDriverName=org.mariadb.jdbc.Driver --conf spark.hadoop.javax.jdo.option.ConnectionUserName=&lt;connection-user-name&gt; --conf spark.hadoop.javax.jdo.option.ConnectionPassword=&lt;connection-password&gt; --conf spark.hadoop.javax.jdo.option.ConnectionURL=&lt;JDBC-Connection-string&gt;&quot;}}&#39; --configuration-overrides &#39;{&quot;applicationConfiguration&quot;: [{&quot;classification&quot;: &quot;spark-defaults&quot;,&quot;properties&quot;: {&quot;spark.executor.instances&quot;: &quot;2&quot;,&quot;spark.executor.memory&quot;: &quot;2G&quot;}}],&quot;monitoringConfiguration&quot;: { &quot;cloudWatchMonitoringConfiguration&quot;: { &quot;logGroupName&quot;: &quot;`/emr-containers/jobs`&quot;, &quot;logStreamNamePrefix&quot;: &quot;demo&quot;}, &quot;s3MonitoringConfiguration&quot;: { &quot;logUri&quot;: &quot;s3://joblogs/&quot; }}}&#39;</span>
+</code></pre></div>
+
+<p><em>In this example we are connecting to mysql db, so mariadb-connector-java.jar</em> needs to be passed with <em>--jars</em> option. If you are using postgres, oracle or any other database, appropriate connector jar needs to be included.Pass following for <em>sparkSubmitJobDriver</em> configuration:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">*--**jars s3**:**//&lt;s3 prefix&gt;/mariadb-connector-java.jar*</span>
+<span class="err">*--**conf spark**.**hadoop**.**javax**.**jdo**.**option**.**ConnectionDriverName**=**org**.**mariadb**.**jdbc**.**Driver* ** </span>
+<span class="err">*-**-**conf spark**.**hadoop**.**javax**.**jdo**.**option**.**ConnectionUserName**=&lt;**connection**-**user**-**name**&gt;* ** </span>
+<span class="err">*--**conf spark**.**hadoop**.**javax**.**jdo**.**option**.**ConnectionPassword**=&lt;**connection**-**password**&gt;*</span>
+<span class="err">*--**conf spark**.**hadoop**.**javax**.**jdo**.**option**.**ConnectionURL**=&lt;JDBC-Connection-string&gt;*</span>
+</code></pre></div>
+
+<p>hivejdbc.py</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
+<span class="c1"># warehouse_location points to the default location for managed databases and tables</span>
+<span class="n">warehouse_location</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;spark-warehouse&#39;</span><span class="p">)</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">warehouse_location</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE `ehmsdb`.`sparkemrnyc5`( `dispatching_base_num` string, `pickup_datetime` string, `dropoff_datetime` string, `pulocationid` bigint, `dolocationid` bigint, `sr_flag` bigint) STORED AS PARQUET LOCATION &#39;s3://&lt;s3 prefix&gt;/nyctaxi_parquet/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT count(*) FROM ehmsdb.sparkemrnyc5 &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The above job lists databases from remote RDS Hive Metastore, creates a new table and query it as well.</p>
+<h3 id="configure-spark-to-connect-to-hive-metastore-thrift-service-through-thrift-protocol">Configure Spark to connect to Hive metastore thrift service through thrift:// protocol<a class="headerlink" href="#configure-spark-to-connect-to-hive-metastore-thrift-service-through-thrift-protocol" title="Permanent link">&para;</a></h3>
+<p>Query from tables through an external Hive metastore thrift server. Thrift server is on EMR’s master node and RDS Aurora is used as database for Hive Metastore. Script to submit job:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">aws emr-containers start-job-run --virtual-cluster-id &lt;virtual-cluster-id&gt; --name sparkjob --execution-role-arn &lt;execution-role-arn&gt; --release-label emr-6.2.0-latest --job-driver &#39;{&quot;sparkSubmitJobDriver&quot;: {&quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/thriftscript.py&quot;, &quot;sparkSubmitParameters&quot;:&quot; --conf spark.executor.instances=3 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=1 --conf spark.driver.cores=1 &quot;}}&#39; --configuration-overrides &#39;{&quot;applicationConfiguration&quot;: [{&quot;classification&quot;: &quot;spark-defaults&quot;,&quot;properties&quot;: {&quot;spark.executor.instances&quot;: &quot;2&quot;,&quot;spark.executor.memory&quot;: &quot;2G&quot;}}],&quot;monitoringConfiguration&quot;: { &quot;cloudWatchMonitoringConfiguration&quot;: { &quot;logGroupName&quot;: &quot;`/emr-containers/jobs`&quot;, &quot;logStreamNamePrefix&quot;: &quot;demo&quot;}, &quot;s3MonitoringConfiguration&quot;: { &quot;logUri&quot;: &quot;s3://joblogs/&quot; }}}&#39;</span>
+</code></pre></div>
+
+<p>thriftscript.py: <em>hive.metastore.uris</em> config needs to be set to read from external Hive metastore.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
+<span class="c1"># warehouse_location points to the default location for managed databases and tables</span>
+<span class="n">warehouse_location</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;spark-warehouse&#39;</span><span class="p">)</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">warehouse_location</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;hive.metastore.uris&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;hive metastore thrift uri&gt;&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE ehmsdb.`sparkemrnyc2`( `dispatching_base_num` string, `pickup_datetime` string, `dropoff_datetime` string, `pulocationid` bigint, `dolocationid` bigint, `sr_flag` bigint) STORED AS PARQUET LOCATION &#39;s3://&lt;s3 prefix&gt;/nyctaxi_parquet/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM ehmsdb.sparkemrnyc2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The above job lists databases from remote Hive Metastore, creates a new table and query it as well.</p>
                 
               
               
