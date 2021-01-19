@@ -53,7 +53,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-image.
 
 ```
 
-In the below example - pi.py is placed in a mounted volume. FSx for Lustre is mounted as a Persistent Volume on the driver pod under `/var/data/` and will be referenced by local:// file prefix. For more information on how to mount FSx for lustre - refer - [EMR-Containers-integration-with-FSx-for-Lustre](../../storage/docs/spark/fsx-lustre.md)
+In the below example - pi.py is placed in a mounted volume. FSx for Lustre is mounted as a Persistent Volume on the driver pod under `/var/data/` and will be referenced by local:// file prefix. For more information on how to mount FSx for lustre - refer - [EMR-Containers-integration-with-FSx-for-Lustre](../../../storage/docs/spark/fsx-lustre.md)
 
 > This approach can be used to reference spark code and dependencies from remote locations if s3 access from driver and executor pods is not desired
 
@@ -231,7 +231,7 @@ zip -r pyspark-packaged-dependency-src.zip .
   adding: dependent/dependentFunc.py (deflated 7%)
 ```
 
-[pyspark-packaged-dependency-src.zip](../resources/pyspark-packaged-dependency-src.zip) - Place this file in a s3 location
+[pyspark-packaged-dependency-src.zip](../../resources/pyspark-packaged-dependency-src.zip) - Place this file in a s3 location
 
 ```
 cat > py-files-zip-pi.py <<EOF
@@ -321,7 +321,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dep
 ### Bundled as a .egg file
 
 Create a folder structure as in the below screenshot with the code from the previous example - py-files-zip-pi.py, dependentFunc.py
-![](../resources/images/pyspark-packaged-example-zip-folder-structure.png)Steps to create .egg file
+![](../../resources/images/pyspark-packaged-example-zip-folder-structure.png)Steps to create .egg file
 
 ```
 cd /pyspark-packaged-example
