@@ -22,7 +22,7 @@ https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html
 How to decide what type of FSx for Lustre file system you need ? - https://docs.aws.amazon.com/fsx/latest/LustreGuide/LustreGuide.pdf
 
 **Create a Security Group to attach to FSx for Lustre file system as below**
-[Image: Screen Shot 2020-10-26 at 3.28.19 PM.png]**Points to Note:**
+![](../../FSx_Lustre_SG.png)**Points to Note:**
 Security group attached to the EKS worker nodes is given access on port number 988, 1021-1023 in inbound rules.
 Security group specified when creating the FSx for Lustre filesystem is given access on port number 988, 1021-1023 in inbound rules.
 
@@ -150,7 +150,6 @@ kubectl apply -f fsxLustre-static-pv.yaml
 
 Now, a Persistent Volume Claim ( PVC) needs to be created that references PV created above.
 
-
 ```
 cat >fsxLustre-static-pvc.yaml <<EOF
 apiVersion: v1
@@ -167,6 +166,10 @@ spec:
       storage: 1200Gi
   volumeName: fsx-pv
 EOF
+```
+
+```
+kubectl apply -f fsxLustre-static-pvc.yaml -n <namespace registered with EMR on EKS Virtual Cluster>
 ```
 
 ### Spark Developer Tasks:
@@ -262,7 +265,7 @@ EOF
 ```
 
 ```
-kubectl apply -f fsx-dynamic-pvc.yaml -n <namespace>
+kubectl apply -f fsx-dynamic-pvc.yaml -n <namespace registered with EMR on EKS Virtual Cluster>
 ```
 
 ### Spark Developer Tasks:
