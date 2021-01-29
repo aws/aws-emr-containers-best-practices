@@ -1,7 +1,9 @@
-# EMR Containers integration with AWS Glue
+# **EMR Containers integration with AWS Glue**
 
-Submit spark jobs and configure to use AWS Glue catalog as the hive metastore
-gluequery.py
+#### **AWS Glue catalog in same account as EKS**
+In the below example spark application will be configured to use AWS Glue catalog as the hive metastore  
+
+**gluequery.py**
 
 ```
 cat > gluequery.py <<EOF
@@ -26,9 +28,9 @@ EOF
 LOCATION 's3://<s3 prefix>/trip-data.parquet/'
 ```
 
-Configure the above property to point to the location containing the data. 
+Configure the above property to point to the S3 location containing the data. 
 
-Request
+**Request**
 
 ```
 cat > Spark-Python-in-s3-awsglue-log.json << EOF
@@ -76,7 +78,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-aws
 
 ```
 
-Output from driver logs - will have the below log showing the number of rows.
+Output from driver logs - Displays the number of rows.
 
 ```
 +----------+
@@ -87,10 +89,9 @@ Output from driver logs - will have the below log showing the number of rows.
 ```
 
 
-In this example spark job connected to the AWS Glue in the same account.
 
-**Spark Job to connect to AWS Glue catalog in a different account**
-Spark job is running in EKS in Account A and accessing the AWS Glue catalog in Account B ( Refer https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html)
+####**AWS Glue catalog in different account**
+Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to [AWS Glue catalog in Account B](https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html)
 
 IAM policy attached to the job execution role `("executionRoleArn": "<execution-role-arn>") `in Account A
 
@@ -131,7 +132,7 @@ IAM policy attached to the AWS Glue catalog in Account B
 ```
 
 
-Request
+**Request**
 
 ```
 cat > Spark-Python-in-s3-awsglue-crossaccount.json << EOF
@@ -152,7 +153,7 @@ cat > Spark-Python-in-s3-awsglue-crossaccount.json << EOF
         "classification": "spark-defaults", 
         "properties": {
           "spark.hadoop.hive.metastore.client.factory.class":"com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory",
-          **"spark.hadoop.hive.metastore.glue.catalogid":"<account B>"**,
+          "spark.hadoop.hive.metastore.glue.catalogid":"<account B>",
           }
       }
     ], 
@@ -173,21 +174,16 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-aws
 
 
 
-
-
-
-
-
-
 ```
 
-Configuration of interest -  Specify the account id where the AWS Glue catalog is defined(https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html)
+**Configuration of interest**   
+Specify the account id where the AWS Glue catalog is defined. [Spark-Glue integration](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html)
 
 ```
 "spark.hadoop.hive.metastore.glue.catalogid":"<account B>",
 ```
 
-Output from driver logs - will have the below log showing the number of rows.
+Output from driver logs - displays the number of rows.
 
 ```
 +----------+
