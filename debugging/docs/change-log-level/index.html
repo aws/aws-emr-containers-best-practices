@@ -694,9 +694,29 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#change-log-level-to-debug-for-spark-application-submitted-to-emr-containers" class="md-nav__link">
-    Change log level to DEBUG for spark application submitted to EMR-Containers
+  <a href="#change-log-level-to-debug" class="md-nav__link">
+    Change log level to DEBUG
   </a>
+  
+    <nav class="md-nav" aria-label="Change log level to DEBUG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-emr-classification" class="md-nav__link">
+    Using EMR classification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-log4j-properties" class="md-nav__link">
+    Custom log4j properties
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -847,9 +867,29 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#change-log-level-to-debug-for-spark-application-submitted-to-emr-containers" class="md-nav__link">
-    Change log level to DEBUG for spark application submitted to EMR-Containers
+  <a href="#change-log-level-to-debug" class="md-nav__link">
+    Change log level to DEBUG
   </a>
+  
+    <nav class="md-nav" aria-label="Change log level to DEBUG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-emr-classification" class="md-nav__link">
+    Using EMR classification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-log4j-properties" class="md-nav__link">
+    Custom log4j properties
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -870,12 +910,62 @@
                   </a>
                 
                 
-                <h1 id="change-log-level-for-spark-application-on-emr-on-eks">Change Log level for Spark application on EMR on EKS<a class="headerlink" href="#change-log-level-for-spark-application-on-emr-on-eks" title="Permanent link">&para;</a></h1>
+                <h1 id="change-log-level-for-spark-application-on-emr-on-eks"><strong>Change Log level for Spark application on EMR on EKS</strong><a class="headerlink" href="#change-log-level-for-spark-application-on-emr-on-eks" title="Permanent link">&para;</a></h1>
 <p>Spark application developer would want to change log level to different levels depending on their requirement. spark uses apache log4j for logging.</p>
-<h3 id="change-log-level-to-debug-for-spark-application-submitted-to-emr-containers">Change log level to DEBUG for spark application submitted to EMR-Containers<a class="headerlink" href="#change-log-level-to-debug-for-spark-application-submitted-to-emr-containers" title="Permanent link">&para;</a></h3>
-<p>1.<strong>Using EMR classification:</strong>
-Log level of spark applications can be changed using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html">EMR spark-log4j configuration classification.</a>
-Request</p>
+<h3 id="change-log-level-to-debug">Change log level to DEBUG<a class="headerlink" href="#change-log-level-to-debug" title="Permanent link">&para;</a></h3>
+<h4 id="using-emr-classification"><strong>Using EMR classification</strong><a class="headerlink" href="#using-emr-classification" title="Permanent link">&para;</a></h4>
+<p>Log level of spark applications can be changed using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html">EMR spark-log4j configuration classification.</a></p>
+<p><strong>Request</strong><br />
+pi.py used in the below request payload is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a><br />
+<code>spark-log4j</code> classification can be used to configure values in <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">log4j.properties</a></p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="n">log</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-debug-log-classification&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
+          <span class="err">}</span>
+      <span class="err">}</span><span class="p">,</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-log4j&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;log4j.rootCategory&quot;</span><span class="p">:</span><span class="ss">&quot;DEBUG, console&quot;</span>
+          <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+<span class="n">EOF</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-debug-log.json</span>
+</code></pre></div>
+
+<p>The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and Cloudwatch logs as configured in the request.</p>
+<h4 id="custom-log4j-properties"><strong>Custom log4j properties</strong><a class="headerlink" href="#custom-log4j-properties" title="Permanent link">&para;</a></h4>
+<p>Download log4j properties from <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">here</a>. Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre filesystem</a>. </p>
+<p><strong>Request</strong><br />
+pi.py used in the below request payload is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="n">log</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
 <span class="err">{</span>
   <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-debug-log&quot;</span><span class="p">,</span> 
@@ -884,8 +974,8 @@ Request</p>
   <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
   <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
     <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
-      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/trip-count-repartition-fsx.py&quot;</span><span class="p">,</span> 
-       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/pi.py&quot;</span><span class="p">,</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.driver.cores=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span>
     <span class="err">}</span>
   <span class="err">}</span><span class="p">,</span> 
   <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
@@ -920,57 +1010,8 @@ Request</p>
 <span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-debug-log.json</span>
 </code></pre></div>
 
-<p>The above request will print DEBUG logs in the spark driver and executor logs stored in S3 and  Cloudwatch logs as configured.</p>
-<ol>
-<li><strong>Custom log4j properties:</strong>
-Download log4j properties from <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">here</a>. Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a FSx for Lustre filesystem. </li>
-</ol>
-<p>Request</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="n">log</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
-<span class="err">{</span>
-  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-debug-log&quot;</span><span class="p">,</span> 
-  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
-  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
-  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
-  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
-    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
-      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/trip-count-repartition-fsx.py&quot;</span><span class="p">,</span> 
-       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
-    <span class="err">}</span>
-  <span class="err">}</span><span class="p">,</span> 
-  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
-    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="err">{</span>
-        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
-        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
-          <span class="ss">&quot;spark.driver.extraJavaOptions&quot;</span><span class="p">:</span><span class="ss">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.executor.extraJavaOptions&quot;</span><span class="p">:</span><span class="ss">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="ss">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="ss">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="ss">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="ss">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="ss">&quot;false&quot;</span>
-         <span class="err">}</span>
-      <span class="err">}</span>
-    <span class="p">],</span> 
-    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
-      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
-        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
-        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
-      <span class="err">}</span><span class="p">,</span> 
-      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
-        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
-      <span class="err">}</span>
-    <span class="err">}</span>
-  <span class="err">}</span>
-<span class="err">}</span>
-<span class="n">EOF</span>
-
-<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-debug-log.json</span>
-</code></pre></div>
-
-<p>Configurations of interest: Below configuration makes spark driver and executor to pickup the log4j configuration file from /var/data/ folder mounted to the driver and executor containers. For guide to mount FSx for Lustre to driver and executor containers - refer to <a href="../../../storage/docs/spark/fsx-lustre/">EMR Containers integration with FSx for Lustre</a></p>
+<p><strong>Configurations of interest:</strong> <br />
+Below configuration enables spark driver and executor to pickup the log4j configuration file from <code>/var/data/</code> folder mounted to the driver and executor containers. For guide to mount FSx for Lustre to driver and executor containers - refer to <a href="../../../storage/docs/spark/fsx-lustre/">EMR Containers integration with FSx for Lustre</a></p>
 <div class="codehilite"><pre><span></span><code><span class="err">&quot;spark.driver.extraJavaOptions&quot;:&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;,</span>
 <span class="err">&quot;spark.executor.extraJavaOptions&quot;:&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;,</span>
 </code></pre></div>

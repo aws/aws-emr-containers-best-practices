@@ -616,9 +616,45 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        AWS Glue
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       AWS Glue
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-glue-catalog-in-same-account-as-eks" class="md-nav__link">
+    AWS Glue catalog in same account as EKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-glue-catalog-in-different-account" class="md-nav__link">
+    AWS Glue catalog in different account
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -811,6 +847,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-glue-catalog-in-same-account-as-eks" class="md-nav__link">
+    AWS Glue catalog in same account as EKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-glue-catalog-in-different-account" class="md-nav__link">
+    AWS Glue catalog in different account
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -826,9 +884,10 @@
                   </a>
                 
                 
-                <h1 id="emr-containers-integration-with-aws-glue">EMR Containers integration with AWS Glue<a class="headerlink" href="#emr-containers-integration-with-aws-glue" title="Permanent link">&para;</a></h1>
-<p>Submit spark jobs and configure to use AWS Glue catalog as the hive metastore
-gluequery.py</p>
+                <h1 id="emr-containers-integration-with-aws-glue"><strong>EMR Containers integration with AWS Glue</strong><a class="headerlink" href="#emr-containers-integration-with-aws-glue" title="Permanent link">&para;</a></h1>
+<h4 id="aws-glue-catalog-in-same-account-as-eks"><strong>AWS Glue catalog in same account as EKS</strong><a class="headerlink" href="#aws-glue-catalog-in-same-account-as-eks" title="Permanent link">&para;</a></h4>
+<p>In the below example spark application will be configured to use AWS Glue catalog as the hive metastore  </p>
+<p><strong>gluequery.py</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">gluequery</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
 <span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
@@ -850,8 +909,8 @@ gluequery.py</p>
 <div class="codehilite"><pre><span></span><code><span class="err">LOCATION &#39;s3://&lt;s3 prefix&gt;/trip-data.parquet/&#39;</span>
 </code></pre></div>
 
-<p>Configure the above property to point to the location containing the data. </p>
-<p>Request</p>
+<p>Configure the above property to point to the S3 location containing the data. </p>
+<p><strong>Request</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">awsglue</span><span class="o">-</span><span class="n">log</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
 <span class="err">{</span>
   <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-awsglue-log&quot;</span><span class="p">,</span> 
@@ -889,7 +948,7 @@ gluequery.py</p>
 <span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-awsglue-log.json</span>
 </code></pre></div>
 
-<p>Output from driver logs - will have the below log showing the number of rows.</p>
+<p>Output from driver logs - Displays the number of rows.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">+----------+</span>
 <span class="err">|  count(1)|</span>
 <span class="err">+----------+</span>
@@ -897,9 +956,8 @@ gluequery.py</p>
 <span class="err">+----------+</span>
 </code></pre></div>
 
-<p>In this example spark job connected to the AWS Glue in the same account.</p>
-<p><strong>Spark Job to connect to AWS Glue catalog in a different account</strong>
-Spark job is running in EKS in Account A and accessing the AWS Glue catalog in Account B ( Refer https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html)</p>
+<h4 id="aws-glue-catalog-in-different-account"><strong>AWS Glue catalog in different account</strong><a class="headerlink" href="#aws-glue-catalog-in-different-account" title="Permanent link">&para;</a></h4>
+<p>Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to <a href="https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html">AWS Glue catalog in Account B</a></p>
 <p>IAM policy attached to the job execution role <code>("executionRoleArn": "&lt;execution-role-arn&gt;")</code>in Account A</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
@@ -933,7 +991,7 @@ Spark job is running in EKS in Account A and accessing the AWS Glue catalog in A
 <span class="err">}</span>
 </code></pre></div>
 
-<p>Request</p>
+<p><strong>Request</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">awsglue</span><span class="o">-</span><span class="n">crossaccount</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
 <span class="err">{</span>
   <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-awsglue-crossaccount&quot;</span><span class="p">,</span> 
@@ -952,7 +1010,7 @@ Spark job is running in EKS in Account A and accessing the AWS Glue catalog in A
         <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
         <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
           <span class="ss">&quot;spark.hadoop.hive.metastore.client.factory.class&quot;</span><span class="p">:</span><span class="ss">&quot;com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory&quot;</span><span class="p">,</span>
-          <span class="o">**</span><span class="ss">&quot;spark.hadoop.hive.metastore.glue.catalogid&quot;</span><span class="p">:</span><span class="ss">&quot;&lt;account B&gt;&quot;</span><span class="o">**</span><span class="p">,</span>
+          <span class="ss">&quot;spark.hadoop.hive.metastore.glue.catalogid&quot;</span><span class="p">:</span><span class="ss">&quot;&lt;account B&gt;&quot;</span><span class="p">,</span>
           <span class="err">}</span>
       <span class="err">}</span>
     <span class="p">],</span> 
@@ -972,11 +1030,12 @@ Spark job is running in EKS in Account A and accessing the AWS Glue catalog in A
 <span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-awsglue-crossaccount.json</span>
 </code></pre></div>
 
-<p>Configuration of interest -  Specify the account id where the AWS Glue catalog is defined(https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html)</p>
+<p><strong>Configuration of interest</strong> <br />
+Specify the account id where the AWS Glue catalog is defined. <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html">Spark-Glue integration</a></p>
 <div class="codehilite"><pre><span></span><code><span class="err">&quot;spark.hadoop.hive.metastore.glue.catalogid&quot;:&quot;&lt;account B&gt;&quot;,</span>
 </code></pre></div>
 
-<p>Output from driver logs - will have the below log showing the number of rows.</p>
+<p>Output from driver logs - displays the number of rows.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">+----------+</span>
 <span class="err">|  count(1)|</span>
 <span class="err">+----------+</span>

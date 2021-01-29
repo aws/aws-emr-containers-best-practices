@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#run-spark-application-in-eks-worker-nodes-in-a-single-az" class="md-skip">
+        <a href="#eks-node-placement" class="md-skip">
           Skip to content
         </a>
       
@@ -726,9 +726,45 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        EKS Node placement
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       EKS Node placement
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-az-placement" class="md-nav__link">
+    Single AZ placement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#single-az-and-ec2-instance-type-placement" class="md-nav__link">
+    Single AZ and ec2 instance type placement
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -811,6 +847,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-az-placement" class="md-nav__link">
+    Single AZ placement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#single-az-and-ec2-instance-type-placement" class="md-nav__link">
+    Single AZ and ec2 instance type placement
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -826,18 +884,10 @@
                   </a>
                 
                 
-                <h1 id="run-spark-application-in-eks-worker-nodes-in-a-single-az"><strong>Run spark Application in EKS worker nodes in a single AZ</strong><a class="headerlink" href="#run-spark-application-in-eks-worker-nodes-in-a-single-az" title="Permanent link">&para;</a></h1>
-<p>EKS cluster can span across multiple AZ in a VPC. Spark application whose driver and executor pods are distributed across multiple AZ incur data transfer cost. 
-Refer Configuration - https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec
-Kubernetes Node selector reference - https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/</p>
-<p>Configuration of interest -</p>
-<div class="codehilite"><pre><span></span><code><span class="err">--conf spark.kubernetes.node.selector.zone=&#39;&lt;availability zone&gt;&#39;</span>
-</code></pre></div>
-
-<p><strong>zone</strong> is a built in label that EKS assigns to every EKS worker Node. The above config will make sure to schedule the driver and executor pod on those EKS worker nodes with label -  <a href="http://topology.kubernetes.io/zone">topology.kubernetes.io/zone</a>: <availability zone>.
-However user defined labels can also be created and used as node selector - Refer https://eksctl.io/usage/eks-managed-nodes/#managing-labels</p>
-<p>Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.
-<strong>Sample Request</strong></p>
+                <h1 id="eks-node-placement"><strong>EKS Node Placement</strong><a class="headerlink" href="#eks-node-placement" title="Permanent link">&para;</a></h1>
+<h2 id="single-az-placement"><strong>Single AZ placement</strong><a class="headerlink" href="#single-az-placement" title="Permanent link">&para;</a></h2>
+<p>EKS cluster can span across multiple AZ in a VPC. Spark application whose driver and executor pods are distributed across multiple AZ incur data transfer cost. </p>
+<p><strong>Request:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
 <span class="err">{</span>
 <span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, </span>
@@ -874,10 +924,21 @@ However user defined labels can also be created and used as node selector - Refe
 <span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong>
-When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <a href="http://topology.kubernetes.io/zone">topology.kubernetes.io/zone</a>: <availability zone>.
-This ensures the spark job is run within a single AZ. If there are not enough resource within the AZ the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.
- Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be passed to add more labels for selecting the EKS worker node. If you want to schedule on EKS worker nodes in <availability zone> and instance-type as m5.4xlarge - it is done as below</p>
+<p><strong>Observed Behavior:</strong><br />
+When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.
+This ensures the spark job is run within a single AZ. If there are not enough resource within the specified AZ, the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.</p>
+<p><a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">Spark on kubernetes Node selector configuration</a><br />
+<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">Kubernetes Node selector reference</a></p>
+<p><strong>Configuration of interest -</strong>  </p>
+<div class="codehilite"><pre><span></span><code><span class="err">--conf spark.kubernetes.node.selector.zone=&#39;&lt;availability zone&gt;&#39;</span>
+</code></pre></div>
+
+<p><code>zone</code> is a built in label that EKS assigns to every EKS worker Node. The above config will make sure to schedule the driver and executor pod on those EKS worker nodes with label - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
+However <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">user defined labels</a> can also be assigned to EKS worker nodes and used as node selector.</p>
+<p>Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  </p>
+<h2 id="single-az-and-ec2-instance-type-placement"><strong>Single AZ and ec2 instance type placement</strong><a class="headerlink" href="#single-az-and-ec2-instance-type-placement" title="Permanent link">&para;</a></h2>
+<p>Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be passed to add filter conditions for selecting the EKS worker node. If you want to schedule on EKS worker nodes in <code>&lt;availability zone&gt;</code> and instance-type as m5.4xlarge - it is done as below  </p>
+<p><strong>Request:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, </span>
 <span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
@@ -915,8 +976,8 @@ This ensures the spark job is run within a single AZ. If there are not enough re
 <span class="err">}</span>
 </code></pre></div>
 
-<p><strong>Configuration of interest - http://spark.apache.org/docs/latest/running-on-kubernetes.html</strong>
-<code>spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.</code></p>
+<p><strong><a href="http://spark.apache.org/docs/latest/running-on-kubernetes.html">Configuration of interest</a></strong>  </p>
+<p><code>spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.</code></p>
                 
               
               

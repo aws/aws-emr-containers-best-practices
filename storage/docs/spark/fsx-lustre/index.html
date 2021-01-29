@@ -992,7 +992,7 @@ In cases where multiple spark applications are executed as part of a data pipeli
 https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html</p>
 <p>How to decide what type of FSx for Lustre file system you need ? - https://docs.aws.amazon.com/fsx/latest/LustreGuide/LustreGuide.pdf</p>
 <p><strong>Create a Security Group to attach to FSx for Lustre file system as below</strong>
-[Image: Screen Shot 2020-10-26 at 3.28.19 PM.png]<strong>Points to Note:</strong>
+<img alt="" src="../../../resources/FSx_Lustre_SG.png" /><strong>Points to Note:</strong>
 Security group attached to the EKS worker nodes is given access on port number 988, 1021-1023 in inbound rules.
 Security group specified when creating the FSx for Lustre filesystem is given access on port number 988, 1021-1023 in inbound rules.</p>
 <p>Fsx for Lustre Provisioning through aws cli </p>
@@ -1113,6 +1113,9 @@ Once provisioned, a persistent volume - as specified below is created with direc
 <span class="err">EOF</span>
 </code></pre></div>
 
+<div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsxLustre-static-pvc.yaml -n &lt;namespace registered with EMR on EKS Virtual Cluster&gt;</span>
+</code></pre></div>
+
 <h3 id="spark-developer-tasks">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h3>
 <p>Now spark applications can use fsx-claim in their spark application config to mount the FSx for Lustre filesystem to driver and executor container volumes. </p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-fsx.json &lt;&lt;EOF</span>
@@ -1191,7 +1194,7 @@ can be provisioned. - https://docs.aws.amazon.com/fsx/latest/LustreGuide/using-f
 <span class="err">EOF </span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsx-dynamic-pvc.yaml -n &lt;namespace&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsx-dynamic-pvc.yaml -n &lt;namespace registered with EMR on EKS Virtual Cluster&gt;</span>
 </code></pre></div>
 
 <h3 id="spark-developer-tasks_1">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks_1" title="Permanent link">&para;</a></h3>
