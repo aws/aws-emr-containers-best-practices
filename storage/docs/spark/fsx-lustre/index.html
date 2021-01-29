@@ -571,30 +571,30 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#static-provisioning-" class="md-nav__link">
-    Static Provisioning -
+  <a href="#static-provisioning" class="md-nav__link">
+    Static Provisioning
   </a>
   
-    <nav class="md-nav" aria-label="Static Provisioning -">
+    <nav class="md-nav" aria-label="Static Provisioning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#provision-a-fsx-for-lustre-cluster" class="md-nav__link">
-    Provision a FSx for Lustre cluster:
+    Provision a FSx for Lustre cluster
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#eks-admin-tasks" class="md-nav__link">
-    EKS admin tasks:
+    EKS admin tasks
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -606,22 +606,22 @@
       
         <li class="md-nav__item">
   <a href="#dynamic-provisioning" class="md-nav__link">
-    Dynamic Provisioning:
+    Dynamic Provisioning
   </a>
   
-    <nav class="md-nav" aria-label="Dynamic Provisioning:">
+    <nav class="md-nav" aria-label="Dynamic Provisioning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#eks-admin-tasks_1" class="md-nav__link">
-    EKS Admin Tasks:
+    EKS Admin Tasks
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks_1" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -901,30 +901,30 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#static-provisioning-" class="md-nav__link">
-    Static Provisioning -
+  <a href="#static-provisioning" class="md-nav__link">
+    Static Provisioning
   </a>
   
-    <nav class="md-nav" aria-label="Static Provisioning -">
+    <nav class="md-nav" aria-label="Static Provisioning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#provision-a-fsx-for-lustre-cluster" class="md-nav__link">
-    Provision a FSx for Lustre cluster:
+    Provision a FSx for Lustre cluster
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#eks-admin-tasks" class="md-nav__link">
-    EKS admin tasks:
+    EKS admin tasks
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -936,22 +936,22 @@
       
         <li class="md-nav__item">
   <a href="#dynamic-provisioning" class="md-nav__link">
-    Dynamic Provisioning:
+    Dynamic Provisioning
   </a>
   
-    <nav class="md-nav" aria-label="Dynamic Provisioning:">
+    <nav class="md-nav" aria-label="Dynamic Provisioning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#eks-admin-tasks_1" class="md-nav__link">
-    EKS Admin Tasks:
+    EKS Admin Tasks
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks_1" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -978,21 +978,20 @@
                   </a>
                 
                 
-                <h1 id="emr-containers-integration-with-fsx-for-lustre">EMR Containers integration with FSx for Lustre<a class="headerlink" href="#emr-containers-integration-with-fsx-for-lustre" title="Permanent link">&para;</a></h1>
+                <h1 id="emr-containers-integration-with-fsx-for-lustre"><strong>EMR Containers integration with FSx for Lustre</strong><a class="headerlink" href="#emr-containers-integration-with-fsx-for-lustre" title="Permanent link">&para;</a></h1>
 <p>EMR Containers is a deployment option within EMR to run spark workloads on customer EKS clusters. EKS cluster provides the compute and ephemeral storage for the spark workloads. Ephemeral storage provided by EKS is carved from the EKS worker node disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.</p>
-<p><strong>Need for durable storage:</strong>
-In cases where multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a> - Lustre provides a fully managed, POSIX- compliant native filesystem interface for the data in s3, that can scale with compute provided by EKS. Storage is decoupled from compute and has its own lifecycle. </p>
-<p><strong>Difference between static and dynamic provisioning of Persistent Volumes:</strong>
-(Refer - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#provisioning)</p>
-<p>Data used in the below example is from https://registry.opendata.aws/nyc-tlc-trip-records-pds/</p>
-<h2 id="static-provisioning-"><strong>Static Provisioning</strong> -<a class="headerlink" href="#static-provisioning-" title="Permanent link">&para;</a></h2>
-<h3 id="provision-a-fsx-for-lustre-cluster">Provision a FSx for Lustre cluster:<a class="headerlink" href="#provision-a-fsx-for-lustre-cluster" title="Permanent link">&para;</a></h3>
-<p>FSx for Lustre cluster can be provisioned through the AWS console at https://us-west-2.console.aws.amazon.com/fsx/home?region=us-west-2#file-systems</p>
-<p>FSx for Luster can also be provisioned through aws cli as below -
-https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html</p>
-<p>How to decide what type of FSx for Lustre file system you need ? - https://docs.aws.amazon.com/fsx/latest/LustreGuide/LustreGuide.pdf</p>
-<p><strong>Create a Security Group to attach to FSx for Lustre file system as below</strong>
-<img alt="" src="../../../resources/FSx_Lustre_SG.png" /><strong>Points to Note:</strong>
+<p><strong>Need for durable storage:</strong><br />
+In cases where multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a> - Lustre provides a fully managed, POSIX- compliant native filesystem interface for the data in s3, that can scale independently. Storage is decoupled from compute and has its own lifecycle. </p>
+<p>FSx for Lustre Volumes can be mounted on spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
+<p>Data used in the below example is from <a href="https://registry.opendata.aws/nyc-tlc-trip-records-pds/">AWS Open data Registry</a></p>
+<h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
+<h4 id="provision-a-fsx-for-lustre-cluster">Provision a FSx for Lustre cluster<a class="headerlink" href="#provision-a-fsx-for-lustre-cluster" title="Permanent link">&para;</a></h4>
+<p>FSx for Luster can also be provisioned through <a href="https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html">aws cli</a></p>
+<p><a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/LustreGuide.pdf">How to decide what type of FSx for Lustre file system you need ?</a><br />
+<a name="security_group_fsx"></a>
+<strong>Create a Security Group to attach to FSx for Lustre file system as below</strong>
+<img alt="" src="../../../resources/FSx_Lustre_SG.png" /><br />
+<strong>Points to Note:</strong><br />
 Security group attached to the EKS worker nodes is given access on port number 988, 1021-1023 in inbound rules.
 Security group specified when creating the FSx for Lustre filesystem is given access on port number 988, 1021-1023 in inbound rules.</p>
 <p>Fsx for Lustre Provisioning through aws cli </p>
@@ -1059,15 +1058,14 @@ Security group specified when creating the FSx for Lustre filesystem is given ac
 <span class="err">}</span>
 </code></pre></div>
 
-<h3 id="eks-admin-tasks">EKS admin tasks:<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h3>
-<p>(Refer - https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/)</p>
+<h4 id="eks-admin-tasks">EKS admin tasks<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">ReferDoc</a> and <a href="https://quip-amazon.com/jxgRAKqNXPMi#CQe9CA6vghM">Create a Security Group to…</a></li>
-<li>Install the FSx CSI Driver in EKS - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a></li>
-<li>Configure Storage Class for FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a></li>
+<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Mount FSx for Lustre on EKS</a> and <a href="#security_group_fsx">Create a Security Group for FSx for Lustre</a></li>
+<li>Install the <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">FSx CSI Driver in EKS </a></li>
+<li>Configure <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Storage Class for FSx for Lustre</a></li>
 <li>Configure Persistent Volume and Persistent Volume Claim for FSx for Lustre</li>
 </ol>
-<p>FSx for Lustre file system is created as described above -<a href="https://quip-amazon.com/jxgRAKqNXPMi#CQe9CAPBB9A">Provision a FSx for Lustre cluster:</a>
+<p>FSx for Lustre file system is created as described above -<a href="#Provision a FSx for Lustre cluster">Provision a FSx for Lustre cluster</a><br />
 Once provisioned, a persistent volume - as specified below is created with direct ( hard-coded) reference to the created lustre file system. Persistent Volume claim for this persistent volume will always use the same file system.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;fsxLustre-static-pv.yaml &lt;&lt;EOF</span>
 <span class="c">apiVersion: v1</span>
@@ -1116,8 +1114,8 @@ Once provisioned, a persistent volume - as specified below is created with direc
 <div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsxLustre-static-pvc.yaml -n &lt;namespace registered with EMR on EKS Virtual Cluster&gt;</span>
 </code></pre></div>
 
-<h3 id="spark-developer-tasks">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h3>
-<p>Now spark applications can use fsx-claim in their spark application config to mount the FSx for Lustre filesystem to driver and executor container volumes. </p>
+<h4 id="spark-developer-tasks">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h4>
+<p>Now spark applications can use <code>fsx-claim</code> in their spark application config to mount the FSx for Lustre filesystem to driver and executor container volumes. </p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-fsx.json &lt;&lt;EOF</span>
 <span class="err">{</span>
 <span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-fsx&quot;, </span>
@@ -1161,24 +1159,23 @@ Once provisioned, a persistent volume - as specified below is created with direc
 <div class="codehilite"><pre><span></span><code><span class="err">aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-fsx.json</span>
 </code></pre></div>
 
-<p><strong>Expected Behavior:</strong>
-All spark jobs that are run with persistent volume claim as fsx-claim will mount to the statically created FSx for Lustre file system previously. </p>
+<p><strong>Expected Behavior:</strong><br />
+All spark jobs that are run with persistent volume claim as <code>fsx-claim</code> will mount to the statically created FSx for Lustre file system. </p>
 <p><strong>Use case:</strong></p>
 <ol>
-<li>A data pipeline consisting of 10 spark applications can all be mounted to the statically created FSx for Lustre file system and can write the intermediate output to a particular folder. The next spark job in the data pipeline that is dependent on this data can read from FSx for Lustre. Data that needs to be persisted beyond the scope of the data pipeline can be synced to S3 by creating data repository tasks - https://docs.aws.amazon.com/fsx/latest/LustreGuide/data-repository-tasks.html</li>
+<li>A data pipeline consisting of 10 spark applications can all be mounted to the statically created FSx for Lustre file system and can write the intermediate output to a particular folder. The next spark job in the data pipeline that is dependent on this data can read from FSx for Lustre. Data that needs to be persisted beyond the scope of the data pipeline can be exported to S3 by creating <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/data-repository-tasks.html">data repository tasks</a></li>
 <li>Data that is used often by multiple spark applications can also be stored in FSx for Lustre for improved performance.</li>
 </ol>
-<h2 id="dynamic-provisioning"><strong>Dynamic Provisioning:</strong><a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h2>
-<p>There is no need to provision a FSx for Lustre file system in advance. Need to create a Storage-class resource that instantiates the Storage class for FSx for Lustre. PVC is created and it refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model - FSx for Lustre of type <code>Scratch File Systems</code>
-can be provisioned. - https://docs.aws.amazon.com/fsx/latest/LustreGuide/using-fsx-lustre.html</p>
-<h3 id="eks-admin-tasks_1">EKS Admin Tasks:<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h3>
-<p>(Refer - https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/)</p>
+<h3 id="dynamic-provisioning"><strong>Dynamic Provisioning</strong><a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h3>
+<p>There is no need to provision a FSx for Lustre file system in advance. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. PVC is created and it refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model - FSx for Lustre of type <code>Scratch File Systems</code> is  provisioned.  </p>
+<h4 id="eks-admin-tasks_1">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a> and <a href="https://quip-amazon.com/jxgRAKqNXPMi#CQe9CA6vghM">Create a Security Group to…</a></li>
-<li>Install the FSx CSI Driver in EKS - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a></li>
-<li>Configure Storage Class for FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a></li>
-<li>Configure Persistent Volume Claim(<code>fsx-dynamic-claim</code>) for FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Refer Doc</a></li>
+<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Mount FSx for Lustre on EKS</a> and <a href="#security_group_fsx">Create a Security Group for FSx for Lustre</a></li>
+<li>Install the <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">FSx CSI Driver in EKS</a></li>
+<li>Configure <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Storage Class for FSx for Lustre</a></li>
+<li>Configure Persistent Volume Claim(<code>fsx-dynamic-claim</code>) for FSx for Lustre.</li>
 </ol>
+<p>Create PVC for dynamic provisioning with <code>fsx-sc</code> storage class.  </p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;fsx-dynamic-claim.yaml &lt;&lt;EOF</span>
 <span class="c">apiVersion: v1</span>
 <span class="c">kind: PersistentVolumeClaim</span>
@@ -1197,7 +1194,7 @@ can be provisioned. - https://docs.aws.amazon.com/fsx/latest/LustreGuide/using-f
 <div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsx-dynamic-pvc.yaml -n &lt;namespace registered with EMR on EKS Virtual Cluster&gt;</span>
 </code></pre></div>
 
-<h3 id="spark-developer-tasks_1">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks_1" title="Permanent link">&para;</a></h3>
+<h4 id="spark-developer-tasks_1">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks_1" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-fsx-dynamic.json &lt;&lt; EOF</span>
 <span class="err">{</span>
 <span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-fsx-dynamic&quot;, </span>
@@ -1245,12 +1242,12 @@ can be provisioned. - https://docs.aws.amazon.com/fsx/latest/LustreGuide/using-f
 <div class="codehilite"><pre><span></span><code><span class="err">aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-fsx-dynamic.json</span>
 </code></pre></div>
 
-<p><strong>Expected Result:</strong>
-Statically provisioned FSx for Lustre is mounted to <code>/var/data/</code> as before. For all the executors we provision a <code>SCRATCH 1</code> deployment type FSx for Lustre is provisioned on the fly dynamically by the Storage class that was created. There will be a latency before the first executor can start running - because the Lustre has to be created. Once it is created the same Lustre instance is mounted to all the executor.
-Also note - <code>"spark.local.dir":"/var/spark/spill/"</code> is used to force executor to use this folder mounted to Lustre for all spill and shuffle data. Once thePod is terminated the Lustre file system is deleted or retained based on the configuration.
-Also this dynamically created Lustre file system can also be linked to a S3 path like the statically created filesystem.
-References:
-https://docs.aws.amazon.com/eks/latest/userguide/fsx-csi.html</p>
+<p><strong>Expected Result:</strong><br />
+Statically provisioned FSx for Lustre is mounted to <code>/var/data/</code> as before for the driver pod.<br />
+For all the executors a <code>SCRATCH 1</code> deployment type FSx for Lustre is provisioned on the fly dynamically by the Storage class that was created. There will be a latency before the first executor can start running - because the Lustre has to be created. Once it is created the same Lustre file system is mounted to all the executors.<br />
+Also note - <code>"spark.local.dir":"/var/spark/spill/"</code> is used to force executor to use this folder mounted to Lustre for all spill and shuffle data. Once the spark job is completed, the Lustre file system is deleted or retained based on the PVC configuration.<br />
+This dynamically created Lustre file system is mapped to a S3 path like the statically created filesystem.<br />
+<a href="https://docs.aws.amazon.com/eks/latest/userguide/fsx-csi.html">FSx-csi user guide</a></p>
                 
               
               
