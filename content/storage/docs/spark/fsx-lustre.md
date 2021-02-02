@@ -9,6 +9,51 @@ FSx for Lustre Volumes can be mounted on spark driver and executor pods through 
 
 Data used in the below example is from [AWS Open data Registry](https://registry.opendata.aws/nyc-tlc-trip-records-pds/)
 
+### **FSx for Lustre POSIX permissions**
+When a Lustre file system is mounted to driver and executor pods, if the S3 objects does not have required metadata, the mounted volume defaults 
+ownership of the file system to root user. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
+In this scenario, the spark application has read only access to the mounted Lustre file system.Below are a few approaches that can be considered
+#### Tag Metadata to S3 object
+Applications writing to S3 can tag the S3 objects with the metadata that FSx for Lustre requires.  
+ 
+[Walkthrough: Attaching POSIX permissions when uploading objects into an S3 bucket](https://docs.aws.amazon.com/fsx/latest/LustreGuide/attach-s3-posix-permissions.html) provides a guided tutorial.
+FSx for Lustre will convert this tagged metadata to corresponding POSIX permissions when mounting Lustre file system to the driver and executor pods.       
+     
+     
+EMR on EKS spawns the driver and executor pods as non-root user(`UID -999, GID - 1000, groups - 1000, 65534`).
+To enable the spark application to write to the mounted file system, (UID - `999`) can be made as the `file-owner` and supplemental group `65534` be made as the `file-group`.
+
+For S3 objects that already exists with no metadata tagging, there can be a process that recursively tags all the S3 objects with the required metadata.
+Below is an example:    
+1. Create FSx for Lustre file system to the S3 prefix.    
+2. [Create Persistent Volume and Persistent Volume claim for the created FSx for Lustre file system](#Provision a FSx for Lustre cluster)    
+3. Run a pod as root user with FSx for Lustre mounted with the PVC created in Step 2.    
+    
+    ```
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: chmod-fsx-pod
+      namespace: test-demo
+    spec:
+      containers:
+      - name: ownership-change
+        image: amazonlinux:2
+        command: ["sh", "-c", "chown -hR +999:+65534 /data"]
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: fsx-static-root-claim
+    ```     
+
+Run a [data repository task](https://docs.aws.amazon.com/fsx/latest/LustreGuide/export-data-repo-task.html) with import path and export path pointing to the same S3 prefix. This will export the POSIX permission from FSx for Lustre file system as metadata, that is tagged on S3 objects.
+
+Now that the S3 objects are tagged with metadata, spark application with FSx for Lustre file system mounted will have write access.
+
+
 ### **Static Provisioning**
 
 #### Provision a FSx for Lustre cluster
