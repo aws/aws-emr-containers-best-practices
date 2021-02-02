@@ -532,6 +532,26 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#fsx-for-lustre-posix-permissions" class="md-nav__link">
+    FSx for Lustre POSIX permissions
+  </a>
+  
+    <nav class="md-nav" aria-label="FSx for Lustre POSIX permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-metadata-to-s3-object" class="md-nav__link">
+    Tag Metadata to S3 object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#static-provisioning" class="md-nav__link">
     Static Provisioning
   </a>
@@ -810,6 +830,26 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#fsx-for-lustre-posix-permissions" class="md-nav__link">
+    FSx for Lustre POSIX permissions
+  </a>
+  
+    <nav class="md-nav" aria-label="FSx for Lustre POSIX permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-metadata-to-s3-object" class="md-nav__link">
+    Tag Metadata to S3 object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#static-provisioning" class="md-nav__link">
     Static Provisioning
   </a>
@@ -893,6 +933,44 @@
 In cases where multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a> - Lustre provides a fully managed, POSIX- compliant native filesystem interface for the data in s3, that can scale independently. Storage is decoupled from compute and has its own lifecycle. </p>
 <p>FSx for Lustre Volumes can be mounted on spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
 <p>Data used in the below example is from <a href="https://registry.opendata.aws/nyc-tlc-trip-records-pds/">AWS Open data Registry</a></p>
+<h3 id="fsx-for-lustre-posix-permissions"><strong>FSx for Lustre POSIX permissions</strong><a class="headerlink" href="#fsx-for-lustre-posix-permissions" title="Permanent link">&para;</a></h3>
+<p>When a Lustre file system is mounted to driver and executor pods, if the S3 objects does not have required metadata, the mounted volume defaults 
+ownership of the file system to root user. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
+In this scenario, the spark application has read only access to the mounted Lustre file system.Below are a few approaches that can be considered</p>
+<h4 id="tag-metadata-to-s3-object">Tag Metadata to S3 object<a class="headerlink" href="#tag-metadata-to-s3-object" title="Permanent link">&para;</a></h4>
+<p>Applications writing to S3 can tag the S3 objects with the metadata that FSx for Lustre requires.  </p>
+<p><a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/attach-s3-posix-permissions.html">Walkthrough: Attaching POSIX permissions when uploading objects into an S3 bucket</a> provides a guided tutorial.
+FSx for Lustre will convert this tagged metadata to corresponding POSIX permissions when mounting Lustre file system to the driver and executor pods.       </p>
+<p>EMR on EKS spawns the driver and executor pods as non-root user(<code>UID -999, GID - 1000, groups - 1000, 65534</code>).
+To enable the spark application to write to the mounted file system, (UID - <code>999</code>) can be made as the <code>file-owner</code> and supplemental group <code>65534</code> be made as the <code>file-group</code>.</p>
+<p>For S3 objects that already exists with no metadata tagging, there can be a process that recursively tags all the S3 objects with the required metadata.
+Below is an example:  <br />
+1. Create FSx for Lustre file system to the S3 prefix.  <br />
+2. <a href="#Provision a FSx for Lustre cluster">Create Persistent Volume and Persistent Volume claim for the created FSx for Lustre file system</a>  <br />
+3. Run a pod as root user with FSx for Lustre mounted with the PVC created in Step 2.    </p>
+<div class="codehilite"><pre><span></span><code><span class="err">```</span>
+<span class="c">apiVersion: v1</span>
+<span class="c">kind: Pod</span>
+<span class="c">metadata:</span>
+<span class="c">  name: chmod-fsx-pod</span>
+<span class="c">  namespace: test-demo</span>
+<span class="c">spec:</span>
+<span class="c">  containers:</span>
+<span class="c">  - name: ownership-change</span>
+<span class="c">    image: amazonlinux:2</span>
+<span class="c">    command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -hR +999:+65534 /data&quot;]</span>
+<span class="c">    volumeMounts:</span>
+<span class="c">    - name: persistent-storage</span>
+<span class="c">      mountPath: /data</span>
+<span class="c">  volumes:</span>
+<span class="c">  - name: persistent-storage</span>
+<span class="c">    persistentVolumeClaim:</span>
+<span class="c">      claimName: fsx-static-root-claim</span>
+<span class="err">```</span>
+</code></pre></div>
+
+<p>Run a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/export-data-repo-task.html">data repository task</a> with import path and export path pointing to the same S3 prefix. This will export the POSIX permission from FSx for Lustre file system as metadata, that is tagged on S3 objects.</p>
+<p>Now that the S3 objects are tagged with metadata, spark application with FSx for Lustre file system mounted will have write access.</p>
 <h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
 <h4 id="provision-a-fsx-for-lustre-cluster">Provision a FSx for Lustre cluster<a class="headerlink" href="#provision-a-fsx-for-lustre-cluster" title="Permanent link">&para;</a></h4>
 <p>FSx for Luster can also be provisioned through <a href="https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html">aws cli</a></p>
