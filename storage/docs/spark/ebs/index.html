@@ -523,6 +523,13 @@
     Static Provisioning
   </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning_1" class="md-nav__link">
+    Static Provisioning
+  </a>
+  
     <nav class="md-nav" aria-label="Static Provisioning">
       <ul class="md-nav__list">
         
@@ -535,7 +542,7 @@
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -807,6 +814,13 @@
     Static Provisioning
   </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning_1" class="md-nav__link">
+    Static Provisioning
+  </a>
+  
     <nav class="md-nav" aria-label="Static Provisioning">
       <ul class="md-nav__list">
         
@@ -819,7 +833,7 @@
         
           <li class="md-nav__item">
   <a href="#spark-developer-tasks" class="md-nav__link">
-    Spark Developer Tasks:
+    Spark Developer Tasks
   </a>
   
 </li>
@@ -878,6 +892,7 @@
 <p><a href="https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html">EKS support for EBS CSI driver</a>  </p>
 <p><a href="https://github.com/kubernetes-sigs/aws-ebs-csi-driver">Documentation for EBS CSI driver</a></p>
 <h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
+<h3 id="static-provisioning_1"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning_1" title="Permanent link">&para;</a></h3>
 <h4 id="eks-admin-tasks">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h4>
 <p>Create EBS volumes</p>
 <div class="codehilite"><pre><span></span><code><span class="err">aws ec2 --region &lt;region&gt; create-volume --availability-zone &lt;availability zone&gt; --size 50</span>
@@ -936,7 +951,7 @@
 
 <p>PVC - <code>ebs-static-pvc</code> can be used by spark developer to mount to the spark pod  </p>
 <p><strong>NOTE</strong>: Pods running in EKS worker nodes can attach to only EBS volume provisioned in the same AZ as the EKS worker Node. Use node selector to schedule pods on a EKS worker node in a specified AZ</p>
-<h4 id="spark-developer-tasks">Spark Developer Tasks:<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h4>
+<h4 id="spark-developer-tasks">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h4>
 <p><strong>Request</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-ebs-static-localdir.json &lt;&lt; EOF</span>
 <span class="err">{</span>

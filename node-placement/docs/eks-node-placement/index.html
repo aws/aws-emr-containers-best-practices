@@ -795,7 +795,7 @@
                 
                 <h1 id="eks-node-placement"><strong>EKS Node Placement</strong><a class="headerlink" href="#eks-node-placement" title="Permanent link">&para;</a></h1>
 <h2 id="single-az-placement"><strong>Single AZ placement</strong><a class="headerlink" href="#single-az-placement" title="Permanent link">&para;</a></h2>
-<p>EKS cluster can span across multiple AZ in a VPC. Spark application whose driver and executor pods are distributed across multiple AZ incur data transfer cost. </p>
+<p>AWS EKS clusters can span multiple AZs in a VPC. A Spark application whose driver and executor pods are distributed across multiple AZs can incur inter-AZ data transfer costs. To minimize or eliminate inter-AZ data transfer costs, you can configure the application to only run on the nodes within a single AZ.  In this example, we use the kubernetes <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">node selector</a> to specify which AZ should the job run on.</p>
 <p><strong>Request:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
 <span class="err">{</span>
@@ -834,16 +834,15 @@
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong><br />
-When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.
-This ensures the spark job is run within a single AZ. If there are not enough resource within the specified AZ, the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.</p>
+When the job starts the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>. This ensures the spark job is run within a single AZ. If there are not enough resources within the specified AZ, the pods will be in the <code>pending</code> state until the Autoscaler(if configured) kicks in or more resources become available.</p>
 <p><a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">Spark on kubernetes Node selector configuration</a><br />
 <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">Kubernetes Node selector reference</a></p>
 <p><strong>Configuration of interest -</strong>  </p>
 <div class="codehilite"><pre><span></span><code><span class="err">--conf spark.kubernetes.node.selector.zone=&#39;&lt;availability zone&gt;&#39;</span>
 </code></pre></div>
 
-<p><code>zone</code> is a built in label that EKS assigns to every EKS worker Node. The above config will make sure to schedule the driver and executor pod on those EKS worker nodes with label - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
-However <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">user defined labels</a> can also be assigned to EKS worker nodes and used as node selector.</p>
+<p><code>zone</code> is a built in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
+However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">user defined labels</a> can also be assigned to EKS worker nodes and used as node selector.</p>
 <p>Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  </p>
 <h2 id="single-az-and-ec2-instance-type-placement"><strong>Single AZ and ec2 instance type placement</strong><a class="headerlink" href="#single-az-and-ec2-instance-type-placement" title="Permanent link">&para;</a></h2>
 <p>Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be passed to add filter conditions for selecting the EKS worker node. If you want to schedule on EKS worker nodes in <code>&lt;availability zone&gt;</code> and instance-type as m5.4xlarge - it is done as below  </p>

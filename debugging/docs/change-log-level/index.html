@@ -820,7 +820,7 @@
                 
                 
                 <h1 id="change-log-level-for-spark-application-on-emr-on-eks"><strong>Change Log level for Spark application on EMR on EKS</strong><a class="headerlink" href="#change-log-level-for-spark-application-on-emr-on-eks" title="Permanent link">&para;</a></h1>
-<p>Spark application developer would want to change log level to different levels depending on their requirement. spark uses apache log4j for logging.</p>
+<p>To obtain more detail about their application or job submission, Spark application developers can change the log level of their job to different levels depending on their requirements. Spark uses apache log4j for logging.</p>
 <h3 id="change-log-level-to-debug">Change log level to DEBUG<a class="headerlink" href="#change-log-level-to-debug" title="Permanent link">&para;</a></h3>
 <h4 id="using-emr-classification"><strong>Using EMR classification</strong><a class="headerlink" href="#using-emr-classification" title="Permanent link">&para;</a></h4>
 <p>Log level of spark applications can be changed using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html">EMR spark-log4j configuration classification.</a></p>
@@ -870,7 +870,7 @@ pi.py used in the below request payload is from <a href="https://github.com/apac
 <span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:///Spark-Python-in-s3-debug-log.json</span>
 </code></pre></div>
 
-<p>The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and Cloudwatch logs as configured in the request.</p>
+<p>The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and AWS Cloudwatch logs as configured in the request.</p>
 <h4 id="custom-log4j-properties"><strong>Custom log4j properties</strong><a class="headerlink" href="#custom-log4j-properties" title="Permanent link">&para;</a></h4>
 <p>Download log4j properties from <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">here</a>. Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre filesystem</a>. </p>
 <p><strong>Request</strong><br />
