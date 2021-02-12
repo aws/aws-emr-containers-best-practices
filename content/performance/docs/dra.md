@@ -1,15 +1,15 @@
 # **Dynamic Resource Allocation**
 
-DRA is available in spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling [shuffle tracking](https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation).
+DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling [shuffle tracking](https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation).
 
 **Spark DRA without external shuffle service:**  
-With DRA - spark driver spawns the initial number of executors and then scales the number until the specified maximum number as needed, to process the pending tasks. Once there are no pending tasks and executor idle time exceeds the idle timeout(`spark.dynamicAllocation.executorIdleTimeout)`and doesn't have any cached or shuffle data, then the idle executor is terminated.
+With DRA, the spark driver spawns the initial number of executors and then scales up the number until the specified maximum number of executors is met to process the pending tasks. Idle executors are terminated when there are no pending tasks, the executor idle time exceeds the idle timeout(`spark.dynamicAllocation.executorIdleTimeout)`and it doesn't have any cached or shuffle data.
 
  If the executor idle threshold is reached and it has cached data, then it has to exceed the cache data idle timeout(`spark.dynamicAllocation.cachedExecutorIdleTimeout) ` and if the executor doesn't have shuffle data, then the idle executor is terminated.
 
 If the executor idle threshold is reached and it has shuffle data, then without external shuffle service the executor will never be terminated. These executors will be terminated when the job is completed. This behavior is enforced by `"spark.dynamicAllocation.shuffleTracking.enabled":"true" and "spark.dynamicAllocation.enabled":"true"`
 
-If `"spark.dynamicAllocation.shuffleTracking.enabled":"false"and "spark.dynamicAllocation.enabled":"true"` then spark application will error out since external shuffle service is not available.
+If `"spark.dynamicAllocation.shuffleTracking.enabled":"false"and "spark.dynamicAllocation.enabled":"true"` then the spark application will error out since external shuffle service is not available.
 
 **Request:**
 
@@ -58,11 +58,11 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dra
 ```
 
 **Observed Behavior:**
-When the job gets started the driver pod gets created and then 10 executors are created to start with (`"spark.dynamicAllocation.initialExecutors":"10"`) and then the number of executors can scale up to a maximum of 100 (`"spark.dynamicAllocation.maxExecutors":"100"`).   
+When the job gets started, the driver pod gets created and 10 executors are initially created. (`"spark.dynamicAllocation.initialExecutors":"10"`) Then the number of executors can scale up to a maximum of 100 (`"spark.dynamicAllocation.maxExecutors":"100"`).   
 **Configurations to note:**   
  **Please note that this feature is marked as Experimental as of Spark 3.0.0**
 
-`spark.dynamicAllocation.shuffleTracking.enabled - `**`Experimental`**`. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.`
+`spark.dynamicAllocation.shuffleTracking.enabled` - `**`Experimental`**`. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.
 
-`spark.dynamicAllocation.shuffleTracking.timeout - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.`
+`spark.dynamicAllocation.shuffleTracking.timeout` - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.
 
