@@ -1,18 +1,18 @@
 # **EMR Containers integration with FSx for Lustre**
 
-EMR Containers is a deployment option within EMR to run spark workloads on customer EKS clusters. EKS cluster provides the compute and ephemeral storage for the spark workloads. Ephemeral storage provided by EKS is carved from the EKS worker node disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.
+[Amazon EKS](https://aws.amazon.com/eks/) clusters provide the compute and ephemeral storage for Spark workloads. Ephemeral storage provided by EKS is allocated from the EKS worker node's disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.
 
 **Need for durable storage:**  
-In cases where multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively this data can also be persisted in [FSx for Lustre](https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html) - Lustre provides a fully managed, POSIX- compliant native filesystem interface for the data in s3, that can scale independently. Storage is decoupled from compute and has its own lifecycle. 
+When multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively, this data can also be persisted in [FSx for Lustre](https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html). FSx for Lustre provides a fully managed, scalable, POSIX compliant native filesystem interface for the data in s3. With FSx, your torage is decoupled from your compute and has its own lifecycle. 
 
 FSx for Lustre Volumes can be mounted on spark driver and executor pods through [static](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static) and [dynamic](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic) provisioning.
 
 Data used in the below example is from [AWS Open data Registry](https://registry.opendata.aws/nyc-tlc-trip-records-pds/)
 
 ### **FSx for Lustre POSIX permissions**
-When a Lustre file system is mounted to driver and executor pods, if the S3 objects does not have required metadata, the mounted volume defaults 
-ownership of the file system to root user. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
-In this scenario, the spark application has read only access to the mounted Lustre file system.Below are a few approaches that can be considered
+When a Lustre filesystem is mounted to driver and executor pods, and if the S3 objects does not have required metadata, the mounted volume defaults 
+ownership of the file system to `root`. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
+In this scenario, the spark application has read only access to the mounted Lustre file system. Below are a few approaches that can be considered:
 #### Tag Metadata to S3 object
 Applications writing to S3 can tag the S3 objects with the metadata that FSx for Lustre requires.  
  
@@ -51,7 +51,7 @@ Below is an example:
 
 Run a [data repository task](https://docs.aws.amazon.com/fsx/latest/LustreGuide/export-data-repo-task.html) with import path and export path pointing to the same S3 prefix. This will export the POSIX permission from FSx for Lustre file system as metadata, that is tagged on S3 objects.
 
-Now that the S3 objects are tagged with metadata, spark application with FSx for Lustre file system mounted will have write access.
+Now that the S3 objects are tagged with metadata, the spark application with FSx for Lustre filesystem mounted will have write access.
 
 
 ### **Static Provisioning**
@@ -95,7 +95,7 @@ cat fsxLustreConfig.json << EOF
 EOF
 ```
 
-Run the aws-cli to create the FSx for Lustre filesystem as below
+Run the aws-cli command to create the FSx for Lustre filesystem as below.
 
 ```
 aws fsx create-file-system --cli-input-json file:///fsxLustreConfig.json
@@ -161,7 +161,7 @@ Response is as below
 
 
 FSx for Lustre file system is created as described above -[Provision a FSx for Lustre cluster](#Provision a FSx for Lustre cluster)  
-Once provisioned, a persistent volume - as specified below is created with direct ( hard-coded) reference to the created lustre file system. Persistent Volume claim for this persistent volume will always use the same file system.
+Once provisioned, a persistent volume - as specified below is created with a direct (hard-coded) reference to the created lustre file system. A Persistent Volume claim for this persistent volume will always use the same file system.
 
 ```
 cat >fsxLustre-static-pv.yaml <<EOF
@@ -191,7 +191,7 @@ EOF
 kubectl apply -f fsxLustre-static-pv.yaml
 ```
 
-Now, a Persistent Volume Claim ( PVC) needs to be created that references PV created above.
+Now, a Persistent Volume Claim (PVC) needs to be created that references PV created above.
 
 ```
 cat >fsxLustre-static-pvc.yaml <<EOF
@@ -266,7 +266,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-fsx
 ```
 
 **Expected Behavior:**  
-All spark jobs that are run with persistent volume claim as `fsx-claim` will mount to the statically created FSx for Lustre file system. 
+All spark jobs that are run with persistent volume claims as `fsx-claim` will mount to the statically created FSx for Lustre file system. 
 
 **Use case:**
 
@@ -279,7 +279,7 @@ All spark jobs that are run with persistent volume claim as `fsx-claim` will mou
 
 ### **Dynamic Provisioning**
 
-There is no need to provision a FSx for Lustre file system in advance. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. PVC is created and it refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model - FSx for Lustre of type `Scratch File Systems` is  provisioned.  
+A FSx for Lustre file system can be provisioned on-demand. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. A PVC is created and refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model,  FSx for Lustre of type `Scratch File Systems` is  provisioned.  
 
 
 #### EKS Admin Tasks

@@ -3,7 +3,7 @@
 ### **Encryption at Rest**   
 ####Amazon S3 Client-Side Encryption
 
-To utilize S3 Client side encryption, you will need to create a KMS Key to be used to encrypt and decrypt data. If you do not have an KMS key, please follow this guide - [AWS KMS create keys](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html). Also please note the job execution role needs access to this key, please see [Add to Key policy](https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-users) for instructions on how to add these permissions.
+To utilize [S3 Client side encryption](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingClientSideEncryption.html), you will need to create a KMS Key to be used to encrypt and decrypt data. If you do not have an KMS key, please follow this guide - [AWS KMS create keys](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html). Also please note the job execution role needs access to this key, please see [Add to Key policy](https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-users) for instructions on how to add these permissions.
 
 **trip-count-encrypt-write.py:**
 
@@ -82,7 +82,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-enc
 
 ```
 
-In the above request,  emrfs encrypts the parquet file with the specified KMS key and the encrypted object is persisted to the specified s3 location.
+In the above request, EMRFS encrypts the parquet file with the specified KMS key and the encrypted object is persisted to the specified s3 location.
 
 To verify the encryption - use the same KMS key to decrypt - the KMS key used is a symmetric key ( the same key can be used to both encrypt and decrypt)
 
