@@ -1,7 +1,7 @@
 # **EKS Node Placement**
 ## **Single AZ placement**
 
-EKS cluster can span across multiple AZ in a VPC. Spark application whose driver and executor pods are distributed across multiple AZ incur data transfer cost. 
+AWS EKS clusters can span multiple AZs in a VPC. A Spark application whose driver and executor pods are distributed across multiple AZs can incur inter-AZ data transfer costs. To minimize or eliminate inter-AZ data transfer costs, you can configure the application to only run on the nodes within a single AZ.  In this example, we use the kubernetes [node selector](https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec) to specify which AZ should the job run on.
 
 **Request:**
 
@@ -43,8 +43,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nod
 ```
 
 **Observed Behavior:**  
-When the job gets started the driver pod and executor pods are scheduled only on those EKS worker nodes with the label `topology.kubernetes.io/zone: <availability zone>`.
-This ensures the spark job is run within a single AZ. If there are not enough resource within the specified AZ, the pods will be in pending state until the Autoscaler(if configured) to kick in or more resources to be available.
+When the job starts the driver pod and executor pods are scheduled only on those EKS worker nodes with the label `topology.kubernetes.io/zone: <availability zone>`. This ensures the spark job is run within a single AZ. If there are not enough resources within the specified AZ, the pods will be in the `pending` state until the Autoscaler(if configured) kicks in or more resources become available.
  
 [Spark on kubernetes Node selector configuration](https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec)  
 [Kubernetes Node selector reference](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
@@ -56,8 +55,8 @@ This ensures the spark job is run within a single AZ. If there are not enough re
 --conf spark.kubernetes.node.selector.zone='<availability zone>'
 ```
 
-`zone` is a built in label that EKS assigns to every EKS worker Node. The above config will make sure to schedule the driver and executor pod on those EKS worker nodes with label - `topology.kubernetes.io/zone: <availability zone>`.  
-However [user defined labels](https://eksctl.io/usage/eks-managed-nodes/#managing-labels) can also be assigned to EKS worker nodes and used as node selector.
+`zone` is a built in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - `topology.kubernetes.io/zone: <availability zone>`.  
+However, [user defined labels](https://eksctl.io/usage/eks-managed-nodes/#managing-labels) can also be assigned to EKS worker nodes and used as node selector.
 
 Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  
 

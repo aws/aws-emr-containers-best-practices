@@ -1,6 +1,6 @@
 # **Change Log level for Spark application on EMR on EKS**
 
-Spark application developer would want to change log level to different levels depending on their requirement. spark uses apache log4j for logging.
+To obtain more detail about their application or job submission, Spark application developers can change the log level of their job to different levels depending on their requirements. Spark uses apache log4j for logging.
 
 ### Change log level to DEBUG 
 
@@ -56,7 +56,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-deb
 
 ```
 
-The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and Cloudwatch logs as configured in the request.
+The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and AWS Cloudwatch logs as configured in the request.
 
 ####**Custom log4j properties**  
 Download log4j properties from [here](https://github.com/apache/spark/blob/master/conf/log4j.properties.template). Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a [FSx for Lustre filesystem](https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html). 
