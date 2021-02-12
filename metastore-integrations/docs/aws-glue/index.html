@@ -795,7 +795,7 @@
                 
                 <h1 id="emr-containers-integration-with-aws-glue"><strong>EMR Containers integration with AWS Glue</strong><a class="headerlink" href="#emr-containers-integration-with-aws-glue" title="Permanent link">&para;</a></h1>
 <h4 id="aws-glue-catalog-in-same-account-as-eks"><strong>AWS Glue catalog in same account as EKS</strong><a class="headerlink" href="#aws-glue-catalog-in-same-account-as-eks" title="Permanent link">&para;</a></h4>
-<p>In the below example spark application will be configured to use AWS Glue catalog as the hive metastore  </p>
+<p>In the below example a Spark application will be configured to use <a href="https://docs.aws.amazon.com/glue/latest/dg/components-overview.html">AWS Glue data catalog</a> as the hive metastore.  </p>
 <p><strong>gluequery.py</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">gluequery</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
@@ -866,8 +866,7 @@
 </code></pre></div>
 
 <h4 id="aws-glue-catalog-in-different-account"><strong>AWS Glue catalog in different account</strong><a class="headerlink" href="#aws-glue-catalog-in-different-account" title="Permanent link">&para;</a></h4>
-<p>Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to <a href="https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html">AWS Glue catalog in Account B</a></p>
-<p>IAM policy attached to the job execution role <code>("executionRoleArn": "&lt;execution-role-arn&gt;")</code>in Account A</p>
+<p>The Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to <a href="https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html">AWS Glue catalog in Account B.</a> The IAM policy attached to the job execution role <code>("executionRoleArn": "&lt;execution-role-arn&gt;")</code>is in Account A</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
 <span class="err">    &quot;Statement&quot;: [</span>
@@ -940,7 +939,8 @@
 </code></pre></div>
 
 <p><strong>Configuration of interest</strong> <br />
-Specify the account id where the AWS Glue catalog is defined. <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html">Spark-Glue integration</a></p>
+To specify the accountID where the AWS Glue catalog is defined reference the following: </p>
+<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html">Spark-Glue integration</a></p>
 <div class="codehilite"><pre><span></span><code><span class="err">&quot;spark.hadoop.hive.metastore.glue.catalogid&quot;:&quot;&lt;account B&gt;&quot;,</span>
 </code></pre></div>
 

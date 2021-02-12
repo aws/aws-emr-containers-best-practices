@@ -888,13 +888,13 @@
                 
                 
                 <h1 id="mount-ebs-volume-to-spark-driver-and-executor-pods"><strong>Mount EBS Volume to spark driver and executor pods</strong><a class="headerlink" href="#mount-ebs-volume-to-spark-driver-and-executor-pods" title="Permanent link">&para;</a></h1>
-<p>EBS Volumes can be mounted on spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
+<p><a href="https://aws.amazon.com/ebs/">Amazon EBS volumes</a> can be mounted on Spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
 <p><a href="https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html">EKS support for EBS CSI driver</a>  </p>
 <p><a href="https://github.com/kubernetes-sigs/aws-ebs-csi-driver">Documentation for EBS CSI driver</a></p>
 <h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
 <h3 id="static-provisioning_1"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning_1" title="Permanent link">&para;</a></h3>
 <h4 id="eks-admin-tasks">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h4>
-<p>Create EBS volumes</p>
+<p>First, create your EBS volumes:</p>
 <div class="codehilite"><pre><span></span><code><span class="err">aws ec2 --region &lt;region&gt; create-volume --availability-zone &lt;availability zone&gt; --size 50</span>
 <span class="err">{</span>
 <span class="err">    &quot;AvailabilityZone&quot;: &quot;&lt;availability zone&gt;&quot;, </span>
@@ -911,7 +911,7 @@
 <span class="err">}</span>
 </code></pre></div>
 
-<p>Create Persistent Volume(PV) that has the EBS volume created above hardcoded</p>
+<p>Create Persistent Volume(PV) that has the EBS volume created above hardcoded:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
 <span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
 <span class="n">kind</span><span class="p">:</span> <span class="n">PersistentVolume</span>
@@ -931,7 +931,7 @@
 <span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pv</span><span class="p">.</span><span class="n">yaml</span> <span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
 </code></pre></div>
 
-<p>Create Persistent Volume Claim(PVC) for the Persistent Volume created above</p>
+<p>Create Persistent Volume Claim(PVC) for the Persistent Volume created above:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">ebs</span><span class="o">-</span><span class="k">static</span><span class="o">-</span><span class="n">pvc</span><span class="p">.</span><span class="n">yaml</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
 <span class="n">kind</span><span class="p">:</span> <span class="n">PersistentVolumeClaim</span>
 <span class="n">apiVersion</span><span class="p">:</span> <span class="n">v1</span>
@@ -950,7 +950,7 @@
 </code></pre></div>
 
 <p>PVC - <code>ebs-static-pvc</code> can be used by spark developer to mount to the spark pod  </p>
-<p><strong>NOTE</strong>: Pods running in EKS worker nodes can attach to only EBS volume provisioned in the same AZ as the EKS worker Node. Use node selector to schedule pods on a EKS worker node in a specified AZ</p>
+<p><strong>NOTE</strong>: Pods running in EKS worker nodes can only attach to the EBS volume provisioned in the same AZ as the EKS worker node. Use <a href="../../../../node-placement/docs/eks-node-placement/">node selectors</a> to schedule pods on EKS worker nodes the specified AZ.</p>
 <h4 id="spark-developer-tasks">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h4>
 <p><strong>Request</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-ebs-static-localdir.json &lt;&lt; EOF</span>
@@ -992,7 +992,7 @@
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong><br />
-When the job gets started, pre provisioned EBS volume is mounted to driver pod. You can exec into the driver container to verify that the EBS volume is mounted. Also can verify from driver pod spec.</p>
+When the job gets started, the pre-provisioned EBS volume is mounted to driver pod. You can exec into the driver container to verify that the EBS volume is mounted. Also you can verify the mount from the driver pod's spec.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">kubectl get pod &lt;driver pod name&gt; -n &lt;namespace&gt; -o yaml --export</span>
 </code></pre></div>
 
@@ -1078,12 +1078,12 @@ When the job gets started, pre provisioned EBS volume is mounted to driver pod. 
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong>
-When the job gets started an EBS volume is provisioned dynamically by the EBS CSI driver and mounted to the driver pod. You can exec into the driver container to verify that the EBS volume is mounted. Also can verify from driver pod spec.  </p>
+When the job gets started an EBS volume is provisioned dynamically by the EBS CSI driver and mounted to the driver pod. You can exec into the driver container to verify that the EBS volume is mounted. Also, you can verify the mount from driver pod spec.  </p>
 <div class="codehilite"><pre><span></span><code><span class="err">kubectl get pod &lt;driver pod name&gt; -n &lt;namespace&gt; -o yaml --export</span>
 </code></pre></div>
 
 <p><strong>POINT TO NOTE</strong>: <br />
-It is not possible to use this dynamic provisioning strategy for EBS to spark executors. Not possible to mount a new EBS volume to every Spark executor. Instead use a distributed file system like Lustre, EFS, NFS to mount to executors. </p>
+It is not possible to use this dynamic provisioning strategy for EBS to spark executors. It is not possible to mount a new EBS volume to every Spark executor. Instead use a distributed file system like Lustre, EFS, NFS to mount to executors. </p>
                 
               
               

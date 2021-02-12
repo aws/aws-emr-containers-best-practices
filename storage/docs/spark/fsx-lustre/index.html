@@ -928,15 +928,15 @@
                 
                 
                 <h1 id="emr-containers-integration-with-fsx-for-lustre"><strong>EMR Containers integration with FSx for Lustre</strong><a class="headerlink" href="#emr-containers-integration-with-fsx-for-lustre" title="Permanent link">&para;</a></h1>
-<p>EMR Containers is a deployment option within EMR to run spark workloads on customer EKS clusters. EKS cluster provides the compute and ephemeral storage for the spark workloads. Ephemeral storage provided by EKS is carved from the EKS worker node disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.</p>
+<p><a href="https://aws.amazon.com/eks/">Amazon EKS</a> clusters provide the compute and ephemeral storage for Spark workloads. Ephemeral storage provided by EKS is allocated from the EKS worker node's disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.</p>
 <p><strong>Need for durable storage:</strong><br />
-In cases where multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a> - Lustre provides a fully managed, POSIX- compliant native filesystem interface for the data in s3, that can scale independently. Storage is decoupled from compute and has its own lifecycle. </p>
+When multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively, this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a>. FSx for Lustre provides a fully managed, scalable, POSIX compliant native filesystem interface for the data in s3. With FSx, your torage is decoupled from your compute and has its own lifecycle. </p>
 <p>FSx for Lustre Volumes can be mounted on spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
 <p>Data used in the below example is from <a href="https://registry.opendata.aws/nyc-tlc-trip-records-pds/">AWS Open data Registry</a></p>
 <h3 id="fsx-for-lustre-posix-permissions"><strong>FSx for Lustre POSIX permissions</strong><a class="headerlink" href="#fsx-for-lustre-posix-permissions" title="Permanent link">&para;</a></h3>
-<p>When a Lustre file system is mounted to driver and executor pods, if the S3 objects does not have required metadata, the mounted volume defaults 
-ownership of the file system to root user. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
-In this scenario, the spark application has read only access to the mounted Lustre file system.Below are a few approaches that can be considered</p>
+<p>When a Lustre filesystem is mounted to driver and executor pods, and if the S3 objects does not have required metadata, the mounted volume defaults 
+ownership of the file system to <code>root</code>. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
+In this scenario, the spark application has read only access to the mounted Lustre file system. Below are a few approaches that can be considered:</p>
 <h4 id="tag-metadata-to-s3-object">Tag Metadata to S3 object<a class="headerlink" href="#tag-metadata-to-s3-object" title="Permanent link">&para;</a></h4>
 <p>Applications writing to S3 can tag the S3 objects with the metadata that FSx for Lustre requires.  </p>
 <p><a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/attach-s3-posix-permissions.html">Walkthrough: Attaching POSIX permissions when uploading objects into an S3 bucket</a> provides a guided tutorial.
@@ -970,7 +970,7 @@ Below is an example:  <br />
 </code></pre></div>
 
 <p>Run a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/export-data-repo-task.html">data repository task</a> with import path and export path pointing to the same S3 prefix. This will export the POSIX permission from FSx for Lustre file system as metadata, that is tagged on S3 objects.</p>
-<p>Now that the S3 objects are tagged with metadata, spark application with FSx for Lustre file system mounted will have write access.</p>
+<p>Now that the S3 objects are tagged with metadata, the spark application with FSx for Lustre filesystem mounted will have write access.</p>
 <h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
 <h4 id="provision-a-fsx-for-lustre-cluster">Provision a FSx for Lustre cluster<a class="headerlink" href="#provision-a-fsx-for-lustre-cluster" title="Permanent link">&para;</a></h4>
 <p>FSx for Luster can also be provisioned through <a href="https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html">aws cli</a></p>
@@ -1005,7 +1005,7 @@ Security group specified when creating the FSx for Lustre filesystem is given ac
 <span class="err">EOF</span>
 </code></pre></div>
 
-<p>Run the aws-cli to create the FSx for Lustre filesystem as below</p>
+<p>Run the aws-cli command to create the FSx for Lustre filesystem as below.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">aws fsx create-file-system --cli-input-json file:///fsxLustreConfig.json</span>
 </code></pre></div>
 
@@ -1053,7 +1053,7 @@ Security group specified when creating the FSx for Lustre filesystem is given ac
 <li>Configure Persistent Volume and Persistent Volume Claim for FSx for Lustre</li>
 </ol>
 <p>FSx for Lustre file system is created as described above -<a href="#Provision a FSx for Lustre cluster">Provision a FSx for Lustre cluster</a><br />
-Once provisioned, a persistent volume - as specified below is created with direct ( hard-coded) reference to the created lustre file system. Persistent Volume claim for this persistent volume will always use the same file system.</p>
+Once provisioned, a persistent volume - as specified below is created with a direct (hard-coded) reference to the created lustre file system. A Persistent Volume claim for this persistent volume will always use the same file system.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;fsxLustre-static-pv.yaml &lt;&lt;EOF</span>
 <span class="c">apiVersion: v1</span>
 <span class="c">kind: PersistentVolume</span>
@@ -1080,7 +1080,7 @@ Once provisioned, a persistent volume - as specified below is created with direc
 <div class="codehilite"><pre><span></span><code><span class="err">kubectl apply -f fsxLustre-static-pv.yaml</span>
 </code></pre></div>
 
-<p>Now, a Persistent Volume Claim ( PVC) needs to be created that references PV created above.</p>
+<p>Now, a Persistent Volume Claim (PVC) needs to be created that references PV created above.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">cat &gt;fsxLustre-static-pvc.yaml &lt;&lt;EOF</span>
 <span class="c">apiVersion: v1</span>
 <span class="c">kind: PersistentVolumeClaim</span>
@@ -1147,14 +1147,14 @@ Once provisioned, a persistent volume - as specified below is created with direc
 </code></pre></div>
 
 <p><strong>Expected Behavior:</strong><br />
-All spark jobs that are run with persistent volume claim as <code>fsx-claim</code> will mount to the statically created FSx for Lustre file system. </p>
+All spark jobs that are run with persistent volume claims as <code>fsx-claim</code> will mount to the statically created FSx for Lustre file system. </p>
 <p><strong>Use case:</strong></p>
 <ol>
 <li>A data pipeline consisting of 10 spark applications can all be mounted to the statically created FSx for Lustre file system and can write the intermediate output to a particular folder. The next spark job in the data pipeline that is dependent on this data can read from FSx for Lustre. Data that needs to be persisted beyond the scope of the data pipeline can be exported to S3 by creating <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/data-repository-tasks.html">data repository tasks</a></li>
 <li>Data that is used often by multiple spark applications can also be stored in FSx for Lustre for improved performance.</li>
 </ol>
 <h3 id="dynamic-provisioning"><strong>Dynamic Provisioning</strong><a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h3>
-<p>There is no need to provision a FSx for Lustre file system in advance. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. PVC is created and it refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model - FSx for Lustre of type <code>Scratch File Systems</code> is  provisioned.  </p>
+<p>A FSx for Lustre file system can be provisioned on-demand. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. A PVC is created and refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model,  FSx for Lustre of type <code>Scratch File Systems</code> is  provisioned.  </p>
 <h4 id="eks-admin-tasks_1">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h4>
 <ol>
 <li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Mount FSx for Lustre on EKS</a> and <a href="#security_group_fsx">Create a Security Group for FSx for Lustre</a></li>
