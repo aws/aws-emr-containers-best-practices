@@ -1,4 +1,4 @@
-Welcome to the EMR Containers Best Practices Guides. The primary goal of this project is to offer a set of best practices and templates to get started with EMR on EKS. We elected to publish this guidance to GitHub so we could iterate quickly, provide timely and effective recommendations for variety of concerns, and easily incorporate suggestions from the broader community.
+Welcome to the EMR Containers Best Practices Guide. The primary goal of this project is to offer a set of best practices and templates to get started with [Amazon EMR on EKS](https://aws.amazon.com/emr/features/eks/). We elected to publish this guidance to GitHub so we could iterate quickly, provide timely and effective recommendations for variety of concerns, and easily incorporate suggestions from the broader community.
 
 
 ## Contributing

@@ -3,7 +3,8 @@
 
 ### **Hive metastore Database through JDBC**
 
-In this example, Spark application is configured to connect to a Hive Metastore database (provisioned with RDS Aurora MySql). The RDS and EKS cluster should be in same VPC or else Spark job will not be able to connect to RDS.   
+In this example, a Spark application is configured to connect to a Hive Metastore database provisioned with [Amazon RDS Aurora](https://aws.amazon.com/rds/aurora/) MySql. The Amazon RDS and [EKS](https://aws.amazon.com/eks/) cluster should be in same VPC or else the Spark job will not be able to connect to RDS.
+
 **Request:**  
 ```
 cat > Spark-Python-in-s3-hms-jdbc.json << EOF
@@ -45,7 +46,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-hms
 
 ```
 
-*In this example we are connecting to mysql db, so mariadb-connector-java.jar* needs to be passed with *--jars* option. If you are using postgres, oracle or any other database, appropriate connector jar needs to be included.  
+In this example we are connecting to mysql db, so `mariadb-connector-java.jar` needs to be passed with `--jars` option. If you are using postgres, Oracle or any other database, the appropriate connector jar needs to be included.  
 
 **Configuration of interest:**
 
@@ -78,11 +79,11 @@ spark.sql("SELECT count(*) FROM ehmsdb.sparkemrnyc5 ").show()
 spark.stop()
 ```
 
-The above job lists databases from remote RDS Hive Metastore, creates a new table and query it as well.
+The above job lists databases from a remote RDS Hive Metastore, creates a new table and then queries it.
 
 ### **Hive metastore thrift service through thrift:// protocol**
 
-In this example, spark application is configured to connect to an external Hive metastore thrift server. Thrift server is on EMR’s master node and RDS Aurora is used as database for Hive Metastore.   
+In this example, the spark application is configured to connect to an external Hive metastore thrift server. The thrift server is running on EMR on EC2's master node and AWS RDS Aurora is used as database for the Hive metastore.   
 
 
 
@@ -108,6 +109,8 @@ spark.stop()
 ```
 
 **Request:**
+
+The below job lists databases from remote Hive Metastore, creates a new table and then queries it.
 ```
 cat > Spark-Python-in-s3-hms-thrift.json << EOF
 {
@@ -148,4 +151,4 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-hms
 
 ```
 
-The above job lists databases from remote Hive Metastore, creates a new table and query it as well.
+
