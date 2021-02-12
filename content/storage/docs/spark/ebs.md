@@ -8,6 +8,7 @@ EBS Volumes can be mounted on spark driver and executor pods through [static](ht
 
 
 ### **Static Provisioning**
+### **Static Provisioning**
 
 #### EKS Admin Tasks
 
@@ -76,7 +77,7 @@ PVC - `ebs-static-pvc` can be used by spark developer to mount to the spark pod
 
 **NOTE**: Pods running in EKS worker nodes can attach to only EBS volume provisioned in the same AZ as the EKS worker Node. Use node selector to schedule pods on a EKS worker node in a specified AZ
 
-#### Spark Developer Tasks:
+#### Spark Developer Tasks
 
 **Request**
 
