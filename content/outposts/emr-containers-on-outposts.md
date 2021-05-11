@@ -11,6 +11,8 @@ This document provides the steps necessary to setup EMR Containers on AWS Outpos
   * Use the AWS Management Console+CloudFormation to create a self-managed node group in Outposts
 * For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the Outposts self-managed node group.
 * AWS Fargate is not available on Outposts.
+* Regions supported, prerequisites and considerations for EKS on Outposts - https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html
+
 
 ## Infrastructure Setup
 ### Setup EKS on Outposts
@@ -138,7 +140,7 @@ At this point, eksctl cannot be used to launch self-managed node groups in Outpo
 Apply the aws-auth-cm config map listed on the documentation page to allow the nodes to join the cluster.
 
 ### Register cluster with EMR Containers
-Once the EKS cluster has been created and the nodes are visible proceed with onboarding to AWS EMR Containers by following the standard onboarding [documenetation](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up.html). Since the cluster is already setup, only the following steps need to be performed:
+Once the EKS cluster has been created and the nodes //docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up.html). Since the cluster is already setup, only the following steps need to be performed:
 
 * Enable cluster access for Amazon EMR on EKS
 * Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster
