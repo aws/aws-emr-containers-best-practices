@@ -9,19 +9,19 @@
       
       
       
-      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
     
     
       
-        <title>EKS Node placement - EMR Containers Best Practices Guides</title>
+        <title>EMR on EKS(AWS Outposts) - EMR Containers Best Practices Guides</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.3b61ea93.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3b61ea93.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
         
       
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#eks-node-placement" class="md-skip">
+        <a href="#running-emr-containers-on-aws-outposts" class="md-skip">
           Skip to content
         </a>
       
@@ -71,7 +71,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
+    <a href="../.." title="EMR Containers Best Practices Guides" class="md-header-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -90,7 +90,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              EKS Node placement
+              EMR on EKS(AWS Outposts)
             
           </span>
         </div>
@@ -156,13 +156,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link md-tabs__link--active">
         Guides
       </a>
     </li>
@@ -178,7 +180,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../security/docs/spark/data-encryption/" class="md-tabs__link">
+      <a href="../../security/docs/spark/data-encryption/" class="md-tabs__link">
         Security
       </a>
     </li>
@@ -194,7 +196,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+      <a href="../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
         Submit applications
       </a>
     </li>
@@ -210,7 +212,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+      <a href="../../storage/docs/spark/ebs/" class="md-tabs__link">
         Storage
       </a>
     </li>
@@ -226,7 +228,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+      <a href="../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
         Metastore Integration
       </a>
     </li>
@@ -242,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../debugging/docs/change-log-level/" class="md-tabs__link">
+      <a href="../../debugging/docs/change-log-level/" class="md-tabs__link">
         Debugging
       </a>
     </li>
@@ -252,15 +254,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
         Node Placement
       </a>
     </li>
@@ -276,7 +276,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../performance/docs/dra/" class="md-tabs__link">
+      <a href="../../performance/docs/dra/" class="md-tabs__link">
         Performance
       </a>
     </li>
@@ -305,7 +305,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
+    <a href="../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -334,12 +334,14 @@
       
 
 
+  
+
 
   
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" >
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" checked>
     
     <label class="md-nav__link" for="nav-1">
       Guides
@@ -360,7 +362,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../.." class="md-nav__link">
+    <a href="../.." class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -371,11 +373,90 @@
           
 
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        EMR on EKS(AWS Outposts)
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       EMR on EKS(AWS Outposts)
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    Background
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations-and-recommendations" class="md-nav__link">
+    Key Considerations and Recommendations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup" class="md-nav__link">
+    Infrastructure Setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-eks-on-outposts" class="md-nav__link">
+    Setup EKS on Outposts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-cluster-with-emr-containers" class="md-nav__link">
+    Register cluster with EMR Containers
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -415,7 +496,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+    <a href="../../security/docs/spark/data-encryption/" class="md-nav__link">
       Data Encryption
     </a>
   </li>
@@ -457,7 +538,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+    <a href="../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
       Pyspark
     </a>
   </li>
@@ -499,7 +580,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+    <a href="../../storage/docs/spark/ebs/" class="md-nav__link">
       EBS
     </a>
   </li>
@@ -512,7 +593,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+    <a href="../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
       FSx for Lustre
     </a>
   </li>
@@ -554,7 +635,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+    <a href="../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
       Hive Metastore
     </a>
   </li>
@@ -567,7 +648,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+    <a href="../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
       AWS Glue
     </a>
   </li>
@@ -609,7 +690,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../debugging/docs/change-log-level/" class="md-nav__link">
+    <a href="../../debugging/docs/change-log-level/" class="md-nav__link">
       Change Log Level
     </a>
   </li>
@@ -625,14 +706,12 @@
       
 
 
-  
-
 
   
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
     
     <label class="md-nav__link" for="nav-7">
       Node Placement
@@ -651,56 +730,11 @@
           
 
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        EKS Node placement
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../node-placement/docs/eks-node-placement/" class="md-nav__link">
       EKS Node placement
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#single-az-placement" class="md-nav__link">
-    Single AZ placement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#single-az-and-ec2-instance-type-placement" class="md-nav__link">
-    Single AZ and ec2 instance type placement
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -740,7 +774,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../performance/docs/dra/" class="md-nav__link">
+    <a href="../../performance/docs/dra/" class="md-nav__link">
       Dynamic Resource Allocation
     </a>
   </li>
@@ -776,15 +810,49 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#single-az-placement" class="md-nav__link">
-    Single AZ placement
+  <a href="#background" class="md-nav__link">
+    Background
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#single-az-and-ec2-instance-type-placement" class="md-nav__link">
-    Single AZ and ec2 instance type placement
+  <a href="#key-considerations-and-recommendations" class="md-nav__link">
+    Key Considerations and Recommendations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup" class="md-nav__link">
+    Infrastructure Setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-eks-on-outposts" class="md-nav__link">
+    Setup EKS on Outposts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-cluster-with-emr-containers" class="md-nav__link">
+    Register cluster with EMR Containers
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
   </a>
   
 </li>
@@ -801,104 +869,149 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/node-placement/docs/eks-node-placement.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/outposts/emr-containers-on-outposts.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="eks-node-placement"><strong>EKS Node Placement</strong><a class="headerlink" href="#eks-node-placement" title="Permanent link">&para;</a></h1>
-<h2 id="single-az-placement"><strong>Single AZ placement</strong><a class="headerlink" href="#single-az-placement" title="Permanent link">&para;</a></h2>
-<p>AWS EKS clusters can span multiple AZs in a VPC. A Spark application whose driver and executor pods are distributed across multiple AZs can incur inter-AZ data transfer costs. To minimize or eliminate inter-AZ data transfer costs, you can configure the application to only run on the nodes within a single AZ.  In this example, we use the kubernetes <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">node selector</a> to specify which AZ should the job run on.</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
-<span class="err">{</span>
-<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, </span>
-<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
-<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
-<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
-<span class="err">  &quot;jobDriver&quot;: {</span>
-<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
-<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
-<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.kubernetes.node.selector.topology.kubernetes.io/zone=&#39;&lt;availability zone&gt;&#39; --conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
-<span class="err">    }</span>
-<span class="err">  }, </span>
-<span class="err">  &quot;configurationOverrides&quot;: {</span>
-<span class="err">    &quot;applicationConfiguration&quot;: [</span>
-<span class="err">      {</span>
-<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
-<span class="err">        &quot;properties&quot;: {</span>
-<span class="err">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;</span>
-<span class="err">         }</span>
-<span class="err">      }</span>
-<span class="err">    ], </span>
-<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
-<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
-<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
-<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
-<span class="err">      }, </span>
-<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
-<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
-<span class="err">      }</span>
-<span class="err">    }</span>
-<span class="err">  }</span>
-<span class="err">}</span>
-<span class="err">EOF</span>
-<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json</span>
+                <h1 id="running-emr-containers-on-aws-outposts">Running EMR Containers on AWS Outposts<a class="headerlink" href="#running-emr-containers-on-aws-outposts" title="Permanent link">&para;</a></h1>
+<h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
+<p>You can now create and run Amazon EMR Container jobs on AWS EKS clusters running on AWS Outposts. AWS Outposts enables native AWS services, infrastructure, and operating models in on-premises facilities. In AWS Outposts environments, you can use the same AWS APIs, tools, and infrastructure that you use in the AWS Cloud. Amazon EKS nodes on AWS Outposts is ideal for low-latency workloads that need to be run in close proximity to on-premises data and applications. Visit the AWS EKS on Outposts <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html">documentation page</a> for more information, pre-requisites and considerations.</p>
+<p>This document provides the steps necessary to setup EMR Containers on AWS Outposts.</p>
+<p><img alt="" src="../resources/outposts_eks_network.png" /></p>
+<h2 id="key-considerations-and-recommendations">Key Considerations and Recommendations<a class="headerlink" href="#key-considerations-and-recommendations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The EKS Cluster being created on the Outpost must be created with self-managed node groups.</li>
+<li>Use the AWS Management Console+CloudFormation to create a self-managed node group in Outposts</li>
+<li>For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the Outposts self-managed node group.</li>
+<li>AWS Fargate is not available on Outposts.</li>
+<li>Regions supported, prerequisites and considerations for EKS on Outposts - https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html</li>
+</ul>
+<h2 id="infrastructure-setup">Infrastructure Setup<a class="headerlink" href="#infrastructure-setup" title="Permanent link">&para;</a></h2>
+<h3 id="setup-eks-on-outposts">Setup EKS on Outposts<a class="headerlink" href="#setup-eks-on-outposts" title="Permanent link">&para;</a></h3>
+<p><strong>Network Setup</strong>  </p>
+<ul>
+<li>Setup a VPC  </li>
+</ul>
+<p><code>aws ec2 create-vpc \
+--region &lt;us-west-2&gt; \
+--cidr-block '&lt;10.0.0.0/16&gt;'</code>  </p>
+<p>In the output that's returned, take note of the VPC ID. </p>
+<p><code>{
+    "Vpc": {
+        "VpcId": "vpc-123vpc", 
+        ...
+    }
+}</code></p>
+<ul>
+<li>Create two subnets in the parent region</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">aws</span> <span class="n">ec2</span> <span class="k">create</span><span class="o">-</span><span class="n">subnet</span> <span class="err">\</span>
+    <span class="c1">--region &#39;&lt;us-west-2&gt;&#39; \</span>
+    <span class="c1">--availability-zone-id &#39;&lt;usw2-az1&gt;&#39; \</span>
+    <span class="c1">--vpc-id &#39;&lt;vpc-123vpc&gt;&#39; \</span>
+    <span class="c1">--cidr-block &#39;&lt;10.0.1.0/24&gt;&#39;</span>
+
+<span class="n">aws</span> <span class="n">ec2</span> <span class="k">create</span><span class="o">-</span><span class="n">subnet</span> <span class="err">\</span>
+    <span class="c1">--region &#39;&lt;us-west-2&gt;&#39; \</span>
+    <span class="c1">--availability-zone-id &#39;&lt;usw2-az2&gt;&#39; \</span>
+    <span class="c1">--vpc-id &#39;&lt;vpc-123vpc&gt;&#39; \</span>
+    <span class="c1">--cidr-block &#39;&lt;10.0.2.0/24&gt;&#39;</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-When the job starts the driver pod and executor pods are scheduled only on those EKS worker nodes with the label <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>. This ensures the spark job is run within a single AZ. If there are not enough resources within the specified AZ, the pods will be in the <code>pending</code> state until the Autoscaler(if configured) kicks in or more resources become available.</p>
-<p><a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">Spark on kubernetes Node selector configuration</a><br />
-<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">Kubernetes Node selector reference</a></p>
-<p><strong>Configuration of interest -</strong>  </p>
-<div class="codehilite"><pre><span></span><code><span class="err">--conf spark.kubernetes.node.selector.zone=&#39;&lt;availability zone&gt;&#39;</span>
-</code></pre></div>
-
-<p><code>zone</code> is a built in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
-However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">user defined labels</a> can also be assigned to EKS worker nodes and used as node selector.</p>
-<p>Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  </p>
-<h2 id="single-az-and-ec2-instance-type-placement"><strong>Single AZ and ec2 instance type placement</strong><a class="headerlink" href="#single-az-and-ec2-instance-type-placement" title="Permanent link">&para;</a></h2>
-<p>Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be passed to add filter conditions for selecting the EKS worker node. If you want to schedule on EKS worker nodes in <code>&lt;availability zone&gt;</code> and instance-type as m5.4xlarge - it is done as below  </p>
-<p><strong>Request:</strong></p>
+<p>In the output that's returned, take note of the Subnet ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
-<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, </span>
-<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
-<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
-<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
-<span class="err">  &quot;jobDriver&quot;: {</span>
-<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
-<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
-<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.kubernetes.pyspark.pythonVersion=3 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 --conf spark.sql.shuffle.partitions=1000&quot;</span>
+<span class="err">    &quot;Subnet&quot;: {</span>
+<span class="err">        &quot;SubnetId&quot;: &quot;subnet-111&quot;,</span>
+<span class="err">        ...</span>
 <span class="err">    }</span>
-<span class="err">  }, </span>
-<span class="err">  &quot;configurationOverrides&quot;: {</span>
-<span class="err">    &quot;applicationConfiguration&quot;: [</span>
-<span class="err">      {</span>
-<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
-<span class="err">        &quot;properties&quot;: {</span>
-<span class="err">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;,</span>
-<span class="err">          &quot;spark.kubernetes.node.selector.topology.kubernetes.io/zone&quot;:&quot;&lt;availability zone&gt;&quot;,</span>
-<span class="err">          &quot;spark.kubernetes.node.selector.node.kubernetes.io/instance-type&quot;:&quot;m5.4xlarge&quot;</span>
-<span class="err">         }</span>
-<span class="err">      }</span>
-<span class="err">    ], </span>
-<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
-<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
-<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
-<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
-<span class="err">      }, </span>
-<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
-<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
-<span class="err">      }</span>
-<span class="err">      }</span>
-<span class="err">      }</span>
+<span class="err">}</span>
+<span class="err">{</span>
+<span class="err">    &quot;Subnet&quot;: {</span>
+<span class="err">        &quot;SubnetId&quot;: &quot;subnet-222&quot;,</span>
+<span class="err">        ...</span>
 <span class="err">    }</span>
-<span class="err">  }</span>
 <span class="err">}</span>
 </code></pre></div>
 
-<p><strong><a href="http://spark.apache.org/docs/latest/running-on-kubernetes.html">Configuration of interest</a></strong>  </p>
-<p><code>spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.</code></p>
+<ul>
+<li>Create a subnet in the Outpost AZ (This step is different for Outposts)</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">aws ec2 create-subnet \</span>
+<span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
+<span class="err">    --availability-zone-id &#39;&lt;usw2-az1&gt;&#39; \</span>
+<span class="err">    --outpost-arn &#39;arn:aws:outposts:&lt;us-west-2&gt;:&lt;123456789&gt;:outpost/&lt;op-123op&gt;&#39; \</span>
+<span class="err">    --vpc-id &#39;&lt;vpc-123vpc&gt;&#39; \</span>
+<span class="err">    --cidr-block &#39;&lt;10.0.3.0/24&gt;&#39;</span>
+</code></pre></div>
+
+<p>In the output that's returned, take note of the Subnet ID.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{</span>
+<span class="err">    &quot;Subnet&quot;: {</span>
+<span class="err">        &quot;SubnetId&quot;: &quot;subnet-333outpost&quot;,</span>
+<span class="err">        &quot;OutpostArn&quot;: &quot;...&quot;</span>
+<span class="err">        ...</span>
+<span class="err">    }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p><strong>EKS Cluster Creation</strong> </p>
+<ul>
+<li>Create an EKS cluster using the three subnet Ids created earlier</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">aws eks create-cluster \</span>
+<span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
+<span class="err">    --name &#39;&lt;outposts-eks-cluster&gt;&#39; \</span>
+<span class="err">    --role-arn &#39;arn:aws:iam::&lt;123456789&gt;:role/&lt;cluster-service-role&gt;&#39; \</span>
+<span class="err">    --resources-vpc-config  subnetIds=&#39;&lt;subnet-111&gt;,&lt;subnet-222&gt;,&lt;subnet-333outpost&gt;&#39;</span>
+</code></pre></div>
+
+<ul>
+<li>Check until the cluster status becomes active</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="err">aws eks describe-cluster \</span>
+<span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
+<span class="err">    --name &#39;&lt;outposts-eks-cluster&gt;&#39;</span>
+</code></pre></div>
+
+<p>Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.issuer</p>
+<div class="codehilite"><pre><span></span><code><span class="err">{</span>
+<span class="err">    &quot;cluster&quot;: {</span>
+<span class="err">        &quot;name&quot;: &quot;outposts-eks-cluster&quot;,</span>
+<span class="err">        ...</span>
+<span class="err">        &quot;resourcesVpcConfig&quot;: {</span>
+<span class="err">            &quot;clusterSecurityGroupId&quot;: &quot;sg-123clustersg&quot;,</span>
+<span class="err">        },</span>
+<span class="err">        &quot;identity&quot;: {</span>
+<span class="err">            &quot;oidc&quot;: {</span>
+<span class="err">                &quot;issuer&quot;: &quot;https://oidc.eks.us-west-2.amazonaws.com/id/oidcid&quot;</span>
+<span class="err">            }</span>
+<span class="err">        },</span>
+<span class="err">        &quot;status&quot;: &quot;ACTIVE&quot;,</span>
+<span class="err">    }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<ul>
+<li>Add the Outposts nodes to the EKS Cluster.
+At this point, eksctl cannot be used to launch self-managed node groups in Outposts. Please follow the steps listed in the self-managed nodes <a href="https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html#aws-management-console">documentation page</a>. In order to use the cloudformation script lised in the AWS Management Console tab, make note of the following values created in the earlier steps:</li>
+<li>ClusterName: <code>&lt;outposts-eks-cluster&gt;</code></li>
+<li>ClusterControlPlaneSecurityGroup: <code>&lt;sg-123clustersg&gt;</code></li>
+<li>Subnets: <code>&lt;subnet-333outpost&gt;</code></li>
+</ul>
+<p>Apply the aws-auth-cm config map listed on the documentation page to allow the nodes to join the cluster.</p>
+<h3 id="register-cluster-with-emr-containers">Register cluster with EMR Containers<a class="headerlink" href="#register-cluster-with-emr-containers" title="Permanent link">&para;</a></h3>
+<p>Once the EKS cluster has been created and the nodes registered with EKS control plane, the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html">following steps</a> need to be performed:</p>
+<ul>
+<li>Enable cluster access for Amazon EMR on EKS</li>
+<li>Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster</li>
+<li>Create a job execution role</li>
+<li>Update the trust policy of the job execution role</li>
+<li>Grant users access to Amazon EMR on EKS</li>
+<li>Register the Amazon EKS cluster with Amazon EMR</li>
+</ul>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>EMR-EKS on Outposts allows users to run their big data jobs in close proximity to on-premises data and applications.</p>
                 
               
               
@@ -917,7 +1030,7 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../../debugging/docs/change-log-level/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../.." class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -926,19 +1039,19 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Change Log Level
+                Introduction
               </div>
             </div>
           </a>
         
         
-          <a href="../../../performance/docs/dra/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../security/docs/spark/data-encryption/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Dynamic Resource Allocation
+                Data Encryption
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
@@ -965,15 +1078,15 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
       
     </div>
     
-      <script src="../../../assets/javascripts/vendor.08c56446.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
-          base: "../../..",
+          base: "../..",
           features: ['navigation.tabs'],
           search: Object.assign({
-            worker: "../../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
