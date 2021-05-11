@@ -131,7 +131,7 @@ Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.i
     }
 }
 ```
-* Add the Outposts nodes to the EKS Cluster
+* Add the Outposts nodes to the EKS Cluster.
 At this point, eksctl cannot be used to launch self-managed node groups in Outposts. Please follow the steps listed in the self-managed nodes [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html#aws-management-console). In order to use the cloudformation script lised in the AWS Management Console tab, make note of the following values created in the earlier steps:
 * ClusterName: ```<outposts-eks-cluster>```
 * ClusterControlPlaneSecurityGroup: ```<sg-123clustersg>```
@@ -140,7 +140,7 @@ At this point, eksctl cannot be used to launch self-managed node groups in Outpo
 Apply the aws-auth-cm config map listed on the documentation page to allow the nodes to join the cluster.
 
 ### Register cluster with EMR Containers
-Once the EKS cluster has been created and the nodes //docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up.html). Since the cluster is already setup, only the following steps need to be performed:
+Once the EKS cluster has been created and the nodes registered with EKS control plane, the [following steps](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html) need to be performed:
 
 * Enable cluster access for Amazon EMR on EKS
 * Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster
