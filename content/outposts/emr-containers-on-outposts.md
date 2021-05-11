@@ -16,13 +16,18 @@ This document provides the steps necessary to setup EMR Containers on AWS Outpos
 ### Setup EKS on Outposts
 **Network Setup**  
 
-1. Setup a VPC  
+* Setup a VPC  
+
   ```
 aws ec2 create-vpc \
 --region <us-west-2> \
 --cidr-block '<10.0.0.0/16>'
-  ```
-In the output that's returned, take note of the VPC ID.
+  ```  
+
+
+In the output that's returned, take note of the VPC ID. 
+
+ 
   ```
 {
     "Vpc": {
@@ -33,7 +38,7 @@ In the output that's returned, take note of the VPC ID.
   ```
 
 
-2. Create two subnets in the parent region
+* Create two subnets in the parent region
 ```
 aws ec2 create-subnet \
     --region '<us-west-2>' \
@@ -64,7 +69,7 @@ In the output that's returned, take note of the Subnet ID.
 ```
 
 
-3. Create a subnet in the Outpost AZ (This step is different for Outposts)
+* Create a subnet in the Outpost AZ (This step is different for Outposts)
 
 ```
 aws ec2 create-subnet \
@@ -91,7 +96,7 @@ In the output that's returned, take note of the Subnet ID.
 **EKS Cluster Creation** 
 
   
-4. Create an EKS cluster using the three subnet Ids created earlier
+* Create an EKS cluster using the three subnet Ids created earlier
 ```
 aws eks create-cluster \
     --region '<us-west-2>' \
@@ -100,7 +105,7 @@ aws eks create-cluster \
     --resources-vpc-config  subnetIds='<subnet-111>,<subnet-222>,<subnet-333outpost>'
 ```
 
-5. Check until the cluster status becomes active
+* Check until the cluster status becomes active
 ```
 aws eks describe-cluster \
     --region '<us-west-2>' \
@@ -124,7 +129,7 @@ Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.i
     }
 }
 ```
-6. Add the Outposts nodes to the EKS Cluster
+* Add the Outposts nodes to the EKS Cluster
 At this point, eksctl cannot be used to launch self-managed node groups in Outposts. Please follow the steps listed in the self-managed nodes [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html#aws-management-console). In order to use the cloudformation script lised in the AWS Management Console tab, make note of the following values created in the earlier steps:
 * ClusterName: ```<outposts-eks-cluster>```
 * ClusterControlPlaneSecurityGroup: ```<sg-123clustersg>```

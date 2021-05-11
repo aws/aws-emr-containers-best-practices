@@ -9,6 +9,7 @@ theme:
 nav:
   - Guides:
       - Introduction: 'index.md'
+      - EMR on EKS(AWS Outposts): 'outposts/emr-containers-on-outposts.md'
   - Security:
       - Data Encryption: 'security/docs/spark/data-encryption.md'
   - Submit applications:
