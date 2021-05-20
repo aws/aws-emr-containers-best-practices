@@ -1,18 +1,18 @@
 # Running EMR Containers on AWS Outposts
 ## Background
-You can now run AWS EMR Container jobs on EKS clusters that are running on AWS Outposts. AWS Outposts enables native AWS services, infrastructure, and operating models in on-premises facilities. In AWS Outposts environments, you can use the same AWS APIs, tools, and infrastructure that you use in the AWS Cloud. Amazon EKS nodes on AWS Outposts is ideal for low-latency workloads that need to be run in close proximity to on-premises data and applications. Visit the AWS EKS on Outposts [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html) for more information, pre-requisites and considerations.
+You can now run Amazon EMR container jobs on EKS clusters that are running on AWS Outposts. AWS Outposts enables native AWS services, infrastructure, and operating models in on-premises facilities. In AWS Outposts environments, you can use the same AWS APIs, tools, and infrastructure that you use in the AWS Cloud. Amazon EKS nodes on AWS Outposts is ideal for low-latency workloads that need to be run in close proximity to on-premises data and applications. For more information, see the Amazon EKS on Outposts [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html).
 
-This document provides the steps necessary to setup EMR Containers on AWS Outposts.
+This document provides the steps to set up EMR containers on AWS Outposts.
 
 ![](resources/outposts_eks_network.png)
 
 ## Key Considerations and Recommendations
-* The EKS Cluster being created on the Outpost must be created with self-managed node groups.
-  * Use the AWS Management Console+CloudFormation to create a self-managed node group in Outposts
-* For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the Outposts self-managed node group.
-  * The Kubernetes client in the Spark driver pod creates and monitor executor pods by communicating with the EKS managed Kubernetes API server residing in the parent AWS region. To allow for reliable monitoring of executor pods during job run, we also recommend having a reliable low latency link between the Outpost and the parent region.
+* The EKS cluster on an Outpost must be created with self-managed node groups.
+  * Use the AWS Management Console and AWS CloudFormation to create a self-managed node group in Outposts.
+* For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the self-managed node group of Outposts.
+  * The Kubernetes client in the Spark driver pod creates and monitor executor pods by communicating with the EKS managed Kubernetes API server residing in the parent AWS Region. For reliable monitoring of executor pods during a job run, we also recommend having a reliable low latency link between the Outpost and the parent Region.
 * AWS Fargate is not available on Outposts.
-* Regions supported, prerequisites and considerations for EKS on Outposts are described in the EKS on Outposts [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html)
+* For more information about the supported Regions, prerequisites and considerations for Amazon EKS on AWS Outposts, see the EKS on Outposts [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html).
 
 
 ## Infrastructure Setup
@@ -26,7 +26,7 @@ aws ec2 create-vpc \
 --region <us-west-2> \
 --cidr-block '<10.0.0.0/16>'
 ```  
-In the output that's returned, take note of the VPC ID. 
+In the output, take note of the VPC ID. 
 ```
 {
     "Vpc": {
@@ -37,7 +37,7 @@ In the output that's returned, take note of the VPC ID.
 ```
 
 
-* Create two subnets in the parent region
+* Create two subnets in the parent Region.
 ```
 aws ec2 create-subnet \
     --region '<us-west-2>' \
@@ -51,7 +51,7 @@ aws ec2 create-subnet \
     --vpc-id '<vpc-123vpc>' \
     --cidr-block '<10.0.2.0/24>'
 ```
-In the output that's returned, take note of the Subnet ID.
+In the output, take note of the Subnet ID.
 ```
 {
     "Subnet": {
@@ -68,7 +68,7 @@ In the output that's returned, take note of the Subnet ID.
 ```
 
 
-* Create a subnet in the Outpost AZ (This step is different for Outposts)
+* Create a subnet in the Outpost Availability Zone. (This step is different for Outposts)
 ```
 aws ec2 create-subnet \
     --region '<us-west-2>' \
@@ -77,7 +77,7 @@ aws ec2 create-subnet \
     --vpc-id '<vpc-123vpc>' \
     --cidr-block '<10.0.3.0/24>'
 ```
-In the output that's returned, take note of the Subnet ID.
+In the output, take note of the Subnet ID.
 ```
 {
     "Subnet": {
@@ -93,7 +93,7 @@ In the output that's returned, take note of the Subnet ID.
 **EKS Cluster Creation** 
 
 
-* Create an EKS cluster using the three subnet Ids created earlier
+* Create an EKS cluster using the three subnet Ids created earlier.
 ```
 aws eks create-cluster \
     --region '<us-west-2>' \
@@ -103,13 +103,13 @@ aws eks create-cluster \
 ```
 
 
-* Check until the cluster status becomes active
+* Check until the cluster status becomes active.
 ```
 aws eks describe-cluster \
     --region '<us-west-2>' \
     --name '<outposts-eks-cluster>'
 ```
-Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.issuer
+Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.issuer.
 ```
 {
     "cluster": {
@@ -128,7 +128,7 @@ Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.i
 }
 ```
 
-* Add the Outposts nodes to the EKS Cluster
+* Add the Outposts nodes to the EKS Cluster.
 
 At this point, eksctl cannot be used to launch self-managed node groups in Outposts. Please follow the steps listed in the self-managed nodes [documentation page](https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html#aws-management-console). In order to use the cloudformation script lised in the AWS Management Console tab, make note of the following values created in the earlier steps:
 * ClusterName: ```<outposts-eks-cluster>```
@@ -138,14 +138,14 @@ At this point, eksctl cannot be used to launch self-managed node groups in Outpo
 Apply the aws-auth-cm config map listed on the documentation page to allow the nodes to join the cluster.
 
 ### Register cluster with EMR Containers
-Once the EKS cluster has been created and the nodes registered with EKS control plane, the [following steps](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html) need to be performed:
+Once the EKS cluster has been created and the nodes have been registered with the EKS control plane, take the [following steps](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html):
 
-* Enable cluster access for Amazon EMR on EKS
-* Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster
-* Create a job execution role
-* Update the trust policy of the job execution role
-* Grant users access to Amazon EMR on EKS
-* Register the Amazon EKS cluster with Amazon EMR
+* Enable cluster access for Amazon EMR on EKS.
+* Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster.
+* Create a job execution role.
+* Update the trust policy of the job execution role.
+* Grant users access to Amazon EMR on EKS.
+* Register the Amazon EKS cluster with Amazon EMR.
 
 
 ## Conclusion
