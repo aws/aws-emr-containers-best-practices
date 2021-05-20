@@ -876,17 +876,17 @@
                 
                 <h1 id="running-emr-containers-on-aws-outposts">Running EMR Containers on AWS Outposts<a class="headerlink" href="#running-emr-containers-on-aws-outposts" title="Permanent link">&para;</a></h1>
 <h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
-<p>You can now run AWS EMR Container jobs on EKS clusters that are running on AWS Outposts. AWS Outposts enables native AWS services, infrastructure, and operating models in on-premises facilities. In AWS Outposts environments, you can use the same AWS APIs, tools, and infrastructure that you use in the AWS Cloud. Amazon EKS nodes on AWS Outposts is ideal for low-latency workloads that need to be run in close proximity to on-premises data and applications. Visit the AWS EKS on Outposts <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html">documentation page</a> for more information, pre-requisites and considerations.</p>
-<p>This document provides the steps necessary to setup EMR Containers on AWS Outposts.</p>
+<p>You can now run Amazon EMR container jobs on EKS clusters that are running on AWS Outposts. AWS Outposts enables native AWS services, infrastructure, and operating models in on-premises facilities. In AWS Outposts environments, you can use the same AWS APIs, tools, and infrastructure that you use in the AWS Cloud. Amazon EKS nodes on AWS Outposts is ideal for low-latency workloads that need to be run in close proximity to on-premises data and applications. For more information, see the Amazon EKS on Outposts <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html">documentation page</a>.</p>
+<p>This document provides the steps to set up EMR containers on AWS Outposts.</p>
 <p><img alt="" src="../resources/outposts_eks_network.png" /></p>
 <h2 id="key-considerations-and-recommendations">Key Considerations and Recommendations<a class="headerlink" href="#key-considerations-and-recommendations" title="Permanent link">&para;</a></h2>
 <ul>
-<li>The EKS Cluster being created on the Outpost must be created with self-managed node groups.</li>
-<li>Use the AWS Management Console+CloudFormation to create a self-managed node group in Outposts</li>
-<li>For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the Outposts self-managed node group.</li>
-<li>The Kubernetes client in the Spark driver pod creates and monitor executor pods by communicating with the EKS managed Kubernetes API server residing in the parent AWS region. To allow for reliable monitoring of executor pods during job run, we also recommend having a reliable low latency link between the Outpost and the parent region.</li>
+<li>The EKS cluster on an Outpost must be created with self-managed node groups.</li>
+<li>Use the AWS Management Console and AWS CloudFormation to create a self-managed node group in Outposts.</li>
+<li>For EMR workloads, we recommend creating EKS clusters where all the worker nodes reside in the self-managed node group of Outposts.</li>
+<li>The Kubernetes client in the Spark driver pod creates and monitor executor pods by communicating with the EKS managed Kubernetes API server residing in the parent AWS Region. For reliable monitoring of executor pods during a job run, we also recommend having a reliable low latency link between the Outpost and the parent Region.</li>
 <li>AWS Fargate is not available on Outposts.</li>
-<li>Regions supported, prerequisites and considerations for EKS on Outposts are described in the EKS on Outposts <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html">documentation page</a></li>
+<li>For more information about the supported Regions, prerequisites and considerations for Amazon EKS on AWS Outposts, see the EKS on Outposts <a href="https://docs.aws.amazon.com/eks/latest/userguide/eks-on-outposts.html">documentation page</a>.</li>
 </ul>
 <h2 id="infrastructure-setup">Infrastructure Setup<a class="headerlink" href="#infrastructure-setup" title="Permanent link">&para;</a></h2>
 <h3 id="setup-eks-on-outposts">Setup EKS on Outposts<a class="headerlink" href="#setup-eks-on-outposts" title="Permanent link">&para;</a></h3>
@@ -899,7 +899,7 @@
 <span class="err">--cidr-block &#39;&lt;10.0.0.0/16&gt;&#39;</span>
 </code></pre></div>
 
-<p>In the output that's returned, take note of the VPC ID. </p>
+<p>In the output, take note of the VPC ID. </p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;Vpc&quot;: {</span>
 <span class="err">        &quot;VpcId&quot;: &quot;vpc-123vpc&quot;, </span>
@@ -909,7 +909,7 @@
 </code></pre></div>
 
 <ul>
-<li>Create two subnets in the parent region</li>
+<li>Create two subnets in the parent Region.</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="n">aws</span> <span class="n">ec2</span> <span class="k">create</span><span class="o">-</span><span class="n">subnet</span> <span class="err">\</span>
     <span class="c1">--region &#39;&lt;us-west-2&gt;&#39; \</span>
@@ -924,7 +924,7 @@
     <span class="c1">--cidr-block &#39;&lt;10.0.2.0/24&gt;&#39;</span>
 </code></pre></div>
 
-<p>In the output that's returned, take note of the Subnet ID.</p>
+<p>In the output, take note of the Subnet ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;Subnet&quot;: {</span>
 <span class="err">        &quot;SubnetId&quot;: &quot;subnet-111&quot;,</span>
@@ -940,7 +940,7 @@
 </code></pre></div>
 
 <ul>
-<li>Create a subnet in the Outpost AZ (This step is different for Outposts)</li>
+<li>Create a subnet in the Outpost Availability Zone. (This step is different for Outposts)</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="err">aws ec2 create-subnet \</span>
 <span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
@@ -950,7 +950,7 @@
 <span class="err">    --cidr-block &#39;&lt;10.0.3.0/24&gt;&#39;</span>
 </code></pre></div>
 
-<p>In the output that's returned, take note of the Subnet ID.</p>
+<p>In the output, take note of the Subnet ID.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;Subnet&quot;: {</span>
 <span class="err">        &quot;SubnetId&quot;: &quot;subnet-333outpost&quot;,</span>
@@ -962,7 +962,7 @@
 
 <p><strong>EKS Cluster Creation</strong> </p>
 <ul>
-<li>Create an EKS cluster using the three subnet Ids created earlier</li>
+<li>Create an EKS cluster using the three subnet Ids created earlier.</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="err">aws eks create-cluster \</span>
 <span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
@@ -972,14 +972,14 @@
 </code></pre></div>
 
 <ul>
-<li>Check until the cluster status becomes active</li>
+<li>Check until the cluster status becomes active.</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="err">aws eks describe-cluster \</span>
 <span class="err">    --region &#39;&lt;us-west-2&gt;&#39; \</span>
 <span class="err">    --name &#39;&lt;outposts-eks-cluster&gt;&#39;</span>
 </code></pre></div>
 
-<p>Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.issuer</p>
+<p>Note the values of resourcesVpcConfig.clusterSecurityGroupId and identity.oidc.issuer.</p>
 <div class="codehilite"><pre><span></span><code><span class="err">{</span>
 <span class="err">    &quot;cluster&quot;: {</span>
 <span class="err">        &quot;name&quot;: &quot;outposts-eks-cluster&quot;,</span>
@@ -998,7 +998,7 @@
 </code></pre></div>
 
 <ul>
-<li>Add the Outposts nodes to the EKS Cluster</li>
+<li>Add the Outposts nodes to the EKS Cluster.</li>
 </ul>
 <p>At this point, eksctl cannot be used to launch self-managed node groups in Outposts. Please follow the steps listed in the self-managed nodes <a href="https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html#aws-management-console">documentation page</a>. In order to use the cloudformation script lised in the AWS Management Console tab, make note of the following values created in the earlier steps:
 * ClusterName: <code>&lt;outposts-eks-cluster&gt;</code>
@@ -1006,14 +1006,14 @@
 * Subnets: <code>&lt;subnet-333outpost&gt;</code></p>
 <p>Apply the aws-auth-cm config map listed on the documentation page to allow the nodes to join the cluster.</p>
 <h3 id="register-cluster-with-emr-containers">Register cluster with EMR Containers<a class="headerlink" href="#register-cluster-with-emr-containers" title="Permanent link">&para;</a></h3>
-<p>Once the EKS cluster has been created and the nodes registered with EKS control plane, the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html">following steps</a> need to be performed:</p>
+<p>Once the EKS cluster has been created and the nodes have been registered with the EKS control plane, take the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/getting-started.html">following steps</a>:</p>
 <ul>
-<li>Enable cluster access for Amazon EMR on EKS</li>
-<li>Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster</li>
-<li>Create a job execution role</li>
-<li>Update the trust policy of the job execution role</li>
-<li>Grant users access to Amazon EMR on EKS</li>
-<li>Register the Amazon EKS cluster with Amazon EMR</li>
+<li>Enable cluster access for Amazon EMR on EKS.</li>
+<li>Enable IAM Roles for Service Accounts (IRSA) on the EKS cluster.</li>
+<li>Create a job execution role.</li>
+<li>Update the trust policy of the job execution role.</li>
+<li>Grant users access to Amazon EMR on EKS.</li>
+<li>Register the Amazon EKS cluster with Amazon EMR.</li>
 </ul>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>EMR-EKS on Outposts allows users to run their big data jobs in close proximity to on-premises data and applications.</p>
