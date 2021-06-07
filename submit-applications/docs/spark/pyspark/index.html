@@ -1335,8 +1335,8 @@ Zip should be done at the top folder level and using the -r option.</p>
 <a href="https://readthedocs.org/projects/manypex/downloads/pdf/latest/">PEX documentation</a>
 <a href="http://www.legendu.net/misc/blog/tips-on-pex/">Tips on PEX</a>
 <a href="http://www.legendu.net/misc/blog/packaging-python-dependencies-for-pyspark-using-pex/">pex packaging for pyspark</a>  </p>
+<p><strong>Approach 1: Using Persistent Volume - FSx for Lustre cluster</strong></p>
 <p>Upload <code>numpy_dep.pex</code> to a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_dep.pex</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.<br />
-Alternatively, S3 path for <code>numpy_dep.pex</code> can also be passed using <a href="# List of .py files">--py-files</a><br />
 <strong>Request:</strong>
 <code>kmeans.py</code> used in the below request is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py">spark examples</a></p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
@@ -1393,6 +1393,106 @@ Alternatively, S3 path for <code>numpy_dep.pex</code> can also be passed using <
 <span class="err">}</span>
 
 <span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:////Spark-Python-in-s3-pex-fsx.json</span>
+</code></pre></div>
+
+<p><strong>Approach 2: Using Custom Pod Templates</strong></p>
+<p>Upload <code>numpy_dep.pex</code> to a s3 location. Create <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/pod-templates.html">custom pod templates</a> for driver and executor pods. Custom pod templates allows running a command through <a href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">initContainers</a> before the main application container is created.
+In this case, the command will download the <code>numpy_dep.pex</code> file to the <code>/tmp/numpy_dep.pex</code> path of the driver and executor pods.</p>
+<p>Note: This approach is only supported for release image 5.33.0 and later or 6.3.0 and later.</p>
+<p>Sample driver pod template YAML file:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt; driver_pod_tenplate.yaml &lt;&lt;EOF</span>
+<span class="c">apiVersion: v1</span>
+<span class="c">kind: Pod</span>
+<span class="c">spec:</span>
+<span class="c"> containers:</span>
+<span class="c">   - name: spark-kubernetes-driver</span>
+<span class="c"> initContainers: </span>
+<span class="c">   - name: my-init-container</span>
+<span class="c">     image: 895885662937.dkr.ecr.us-west-2.amazonaws.com/spark/emr-5.33.0-20210323:2.4.7-amzn-1-vanilla</span>
+<span class="c">     volumeMounts:</span>
+<span class="c">       - name: temp-data-dir</span>
+<span class="c">         mountPath: /tmp</span>
+<span class="c">     command:</span>
+<span class="c">       - sh</span>
+<span class="c">       - -c</span>
+<span class="c">       - aws s3api get-object --bucket &lt;s3-bucket&gt; --key &lt;s3-key-prefix&gt;/numpy_dep.pex /tmp/numpy_dep.pex &amp;&amp; chmod u+x /tmp/numpy_dep.pex</span>
+<span class="err">EOF</span>
+</code></pre></div>
+
+<p>Sample executor pod template YAML file:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt; executor_pod_tenplate.yaml &lt;&lt;EOF</span>
+<span class="c">apiVersion: v1</span>
+<span class="c">kind: Pod</span>
+<span class="c">spec:</span>
+<span class="c">  containers:</span>
+<span class="c">    - name: spark-kubernetes-executor</span>
+<span class="c">  initContainers: </span>
+<span class="c">    - name: my-init-container</span>
+<span class="c">      image: 895885662937.dkr.ecr.us-west-2.amazonaws.com/spark/emr-5.33.0-20210323:2.4.7-amzn-1-vanilla</span>
+<span class="c">      volumeMounts:</span>
+<span class="c">        - name: temp-data-dir</span>
+<span class="c">          mountPath: /tmp</span>
+<span class="c">      command:</span>
+<span class="c">        - sh</span>
+<span class="c">        - -c</span>
+<span class="c">        - aws s3api get-object --bucket &lt;s3-bucket&gt; --key &lt;s3-key-prefix&gt;/numpy_dep.pex /tmp/numpy_dep.pex &amp;&amp; chmod u+x /tmp/numpy_dep.pex</span>
+<span class="err">EOF</span>
+</code></pre></div>
+
+<p>Replace initContainer's <code>image</code> with the respective release label's container image. In this case we are using the image of release <code>emr-5.33.0-latest</code>.
+Upload the driver and executor custom pod templates to S3</p>
+<p><strong>Request:</strong>
+<code>kmeans.py</code> used in the below request is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py">spark examples</a></p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">pod</span><span class="o">-</span><span class="n">templates</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="err">{</span>
+  <span class="ss">&quot;name&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-python-in-s3-pex-pod-templates&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="ss">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="ss">&quot;emr-5.33.0-latest&quot;</span><span class="p">,</span> 
+  <span class="ss">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="err">{</span>
+      <span class="ss">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span>
+      <span class="ss">&quot;entryPointArguments&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="ss">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span>
+        <span class="ss">&quot;2&quot;</span><span class="p">,</span>
+        <span class="ss">&quot;3&quot;</span>
+       <span class="p">],</span> 
+       <span class="ss">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="ss">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">,</span> 
+  <span class="ss">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="err">{</span>
+    <span class="ss">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="err">{</span>
+        <span class="ss">&quot;classification&quot;</span><span class="p">:</span> <span class="ss">&quot;spark-defaults&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;properties&quot;</span><span class="p">:</span> <span class="err">{</span>
+          <span class="ss">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="ss">&quot;3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="ss">&quot;./tmp&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="ss">&quot;./tmp&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="ss">&quot;prefer&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="ss">&quot;prefer&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_VERBOSE&quot;</span><span class="p">:</span><span class="ss">&quot;10&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driverEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="ss">&quot;python3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.executorEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="ss">&quot;python3&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="ss">&quot;/tmp/numpy_dep.pex&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="ss">&quot;/tmp/numpy_dep.pex&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.driver.podTemplateFile&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3-prefix&gt;/driver_pod_template.yaml&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;spark.kubernetes.executor.podTemplateFile&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://&lt;s3-prefix&gt;/executor_pod_template.yaml&quot;</span>
+         <span class="err">}</span>
+      <span class="err">}</span>
+    <span class="p">],</span> 
+    <span class="ss">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span> 
+      <span class="ss">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="ss">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
+        <span class="ss">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="ss">&quot;demo&quot;</span>
+      <span class="err">}</span><span class="p">,</span> 
+      <span class="ss">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="err">{</span>
+        <span class="ss">&quot;logUri&quot;</span><span class="p">:</span> <span class="ss">&quot;s3://joblogs&quot;</span>
+      <span class="err">}</span>
+    <span class="err">}</span>
+  <span class="err">}</span>
+<span class="err">}</span>
+
+<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="k">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="c1">--cli-input-json file:////Spark-Python-in-s3-pex-pod-templates.json</span>
 </code></pre></div>
 
 <p><strong>Point to Note:</strong><br />
