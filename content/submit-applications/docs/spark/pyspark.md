@@ -428,9 +428,9 @@ To read more about PEX:
 [pex packaging for pyspark](http://www.legendu.net/misc/blog/packaging-python-dependencies-for-pyspark-using-pex/)  
 
 
+**Approach 1: Using FSX on Lustre cluster**
 
-Upload `numpy_dep.pex` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_dep.pex` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.  
-Alternatively, S3 path for ``numpy_dep.pex`` can also be passed using [--py-files](# List of .py files)  
+Upload `numpy_dep.pex` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_dep.pex` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.
 **Request:**
 ``kmeans.py`` used in the below request is from [spark examples](https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py)
 ```
@@ -488,6 +488,111 @@ cat > spark-python-in-s3-pex-fsx.json << EOF
 }
 
 aws emr-containers start-job-run --cli-input-json file:////Spark-Python-in-s3-pex-fsx.json
+```
+**Approach 2: Using Custom Pod Templates**
+
+Upload `numpy_dep.pex` to a s3 location. Create [custom pod templates](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/pod-templates.html) for driver and executor pods. Custom pod templates allows running a command through [initContainers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) before the main application container is created.
+In this case, the command will download the `numpy_dep.pex` file to the `/tmp/numpy_dep.pex` path of the driver and executor pods.
+
+Note: This approach is only supported for release image 5.33.0 and later or 6.3.0 and later.
+
+Sample driver pod template YAML file:
+```
+cat > driver_pod_tenplate.yaml <<EOF
+apiVersion: v1
+kind: Pod
+spec:
+ containers:
+   - name: spark-kubernetes-driver
+ initContainers: 
+   - name: my-init-container
+     image: 895885662937.dkr.ecr.us-west-2.amazonaws.com/spark/emr-5.33.0-20210323:2.4.7-amzn-1-vanilla
+     volumeMounts:
+       - name: temp-data-dir
+         mountPath: /tmp
+     command:
+       - sh
+       - -c
+       - aws s3api get-object --bucket <s3-bucket> --key <s3-key-prefix>/numpy_dep.pex /tmp/numpy_dep.pex && chmod u+x /tmp/numpy_dep.pex
+EOF
+```
+
+Sample executor pod template YAML file:
+```
+cat > executor_pod_tenplate.yaml <<EOF
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: spark-kubernetes-executor
+  initContainers: 
+    - name: my-init-container
+      image: 895885662937.dkr.ecr.us-west-2.amazonaws.com/spark/emr-5.33.0-20210323:2.4.7-amzn-1-vanilla
+      volumeMounts:
+        - name: temp-data-dir
+          mountPath: /tmp
+      command:
+        - sh
+        - -c
+        - aws s3api get-object --bucket <s3-bucket> --key <s3-key-prefix>/numpy_dep.pex /tmp/numpy_dep.pex && chmod u+x /tmp/numpy_dep.pex
+EOF
+```
+Replace initContainer's `image` with the respective release label's container image. In this case we are using the image of release `emr-5.33.0-latest`.
+Upload the driver and executor custom pod templates to S3
+
+**Request:**
+``kmeans.py`` used in the below request is from [spark examples](https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py)
+```
+cat > spark-python-in-s3-pex-pod-templates.json << EOF
+{
+  "name": "spark-python-in-s3-pex-pod-templates", 
+  "virtualClusterId": "<virtual-cluster-id>", 
+  "executionRoleArn": "<execution-role-arn>", 
+  "releaseLabel": "emr-5.33.0-latest", 
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/kmeans.py",
+      "entryPointArguments": [
+        "s3://<s3 prefix>/kmeans_data.txt",
+        "2",
+        "3"
+       ], 
+       "sparkSubmitParameters": "--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2"
+    }
+  }, 
+  "configurationOverrides": {
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.kubernetes.pyspark.pythonVersion":"3",
+          "spark.kubernetes.driverEnv.PEX_ROOT":"./tmp",
+          "spark.executorEnv.PEX_ROOT":"./tmp",
+          "spark.kubernetes.driverEnv.PEX_INHERIT_PATH":"prefer",
+          "spark.executorEnv.PEX_INHERIT_PATH":"prefer",
+          "spark.kubernetes.driverEnv.PEX_VERBOSE":"10",
+          "spark.kubernetes.driverEnv.PEX_PYTHON":"python3",
+          "spark.executorEnv.PEX_PYTHON":"python3",
+          "spark.pyspark.driver.python":"/tmp/numpy_dep.pex",
+          "spark.pyspark.python":"/tmp/numpy_dep.pex",
+          "spark.kubernetes.driver.podTemplateFile": "s3://<s3-prefix>/driver_pod_template.yaml",
+          "spark.kubernetes.executor.podTemplateFile": "s3://<s3-prefix>/executor_pod_template.yaml"
+         }
+      }
+    ], 
+    "monitoringConfiguration": { 
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs", 
+        "logStreamNamePrefix": "demo"
+      }, 
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+    }
+  }
+}
+
+aws emr-containers start-job-run --cli-input-json file:////Spark-Python-in-s3-pex-pod-templates.json
 ```
 
 **Point to Note:**  
