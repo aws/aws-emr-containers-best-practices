@@ -428,9 +428,9 @@ To read more about PEX:
 [pex packaging for pyspark](http://www.legendu.net/misc/blog/packaging-python-dependencies-for-pyspark-using-pex/)  
 
 
-**Approach 1: Using FSX on Lustre cluster**
+**Approach 1: Using Persistent Volume - FSx for Lustre cluster**
 
-Upload `numpy_dep.pex` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_dep.pex` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.
+Upload `numpy_dep.pex` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_dep.pex` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.  
 **Request:**
 ``kmeans.py`` used in the below request is from [spark examples](https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py)
 ```
