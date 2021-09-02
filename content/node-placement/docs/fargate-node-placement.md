@@ -16,13 +16,14 @@ Create your Fargate profile with the following eksctl command, replacing the `<v
 eksctl create fargateprofile \
     --cluster <cluster_name> \
     --name <fargate_profile_name> \
-    --namespace <virtual_cluster's_mapped_namespace> \
+    --namespace <virtual_cluster_mapped_namespace> \
     --labels spark-node-placement=fargate
 ```
 
 ### 1- Place entire job including driver pod on Fargate 
 
-When both Driver and Executor are labled that matches the Fargate Selector, the entire job including the driver pod could run on Fargate. 
+When both Driver and Executor are labeled that matches the Fargate Selector, the entire job including the driver pod could run on Fargate.
+
 **Request:**
 ```
 cat >spark-python-in-s3-nodeselector.json << EOF
@@ -66,7 +67,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nod
 When the job starts the driver pod and executor pods are scheduled only on fargate since both are labeled with the `spark-node-placement: fargate`. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. 
 
 ### 2- Place driver pod on EC2 and executor pod on Fargate 
-When the driver pod needs more resources(> 4 vCPU), Removing the driver's pod label configuration, will have driver pod not scheduled by the Fargate selector.
+Remove the label from the driver pod to schedule the driver pod on EC2 instances. This is especially helpful when driver pod needs more resources (i.e. > 4 vCPU).
 
 **Request:**
 ```
@@ -79,7 +80,7 @@ cat >spark-python-in-s3-nodeselector.json << EOF
   "jobDriver": {
     "sparkSubmitJobDriver": {
       "entryPoint": "s3://<s3 prefix>/trip-count.py", 
-       "sparkSubmitParameters": "--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4"
+       "sparkSubmitParameters": "--conf spark.driver.cores=6 --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4"
     }
   }, 
   "configurationOverrides": {
@@ -107,11 +108,10 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nod
 ```
 
 **Observed Behavior:**  
-When the job starts, the driver pod is scheduled on an EC2 instance. EKS picks an instance from the first Node Group that has matching resources available to the driver pod.
-
+When the job starts, the driver pod schedules on an EC2 instance. EKS picks an instance from the first Node Group that has the matching resources available to the driver pod.
 
 ### 3- Define a NodeSelector in Pod Templates 
-Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example spark configurations do not support defining indivisual node selectors for the driver pod and the executor pods. Since we desire to have the driver pod  schedule on specific node group, we would need to define a node selector **only** for the driver pod and let the Fargate Profile schedule the executor pods.
+Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example spark configurations do not support defining indivisual node selectors for the driver pod and the executor pods. Define a node selector **only** for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.
 
 **Driver Pod Template**
 
@@ -129,8 +129,8 @@ spec:
   - name: spark-kubernetes-driver # This will be interpreted as Spark driver container
   ```
 
-  The pod template need to be stored onto a S3 location:
-
+  Store the pod template file onto a S3 location:
+  
   ``` aws s3 cp /driver-pod-template.yaml s3://<your-bucket-name>/driver-pod-template.yaml```
 
 
@@ -173,3 +173,6 @@ cat >spark-python-in-s3-nodeselector.json << EOF
 EOF
 aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
 ```
+
+**Observed Behavior:**  
+The driver pod schedules on an EC2 instance with enough capacity and matching label key / value with the node selector.
