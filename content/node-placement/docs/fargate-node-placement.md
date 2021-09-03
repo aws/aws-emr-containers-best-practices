@@ -10,7 +10,7 @@ A Spark application whose driver and executor pods are distributed across multip
 
 
 **Create Fargate Profile**
-Create your Fargate profile with the following eksctl command, replacing the `<variable text>` (including <>) with your own values. You're required to specify a namespace. However, the `--labels` option is not required.
+Create your Fargate profile with the following eksctl command, replacing the `<variable text>` (including <>) with your own values. You're required to specify a namespace. The `--labels` option is not required to create your Fargate profile, but will be required if you want to only run Spark executors on Fargate.
 
 ```
 eksctl create fargateprofile \
@@ -22,7 +22,7 @@ eksctl create fargateprofile \
 
 ### 1- Place entire job including driver pod on Fargate 
 
-When both Driver and Executor are labeled that matches the Fargate Selector, the entire job including the driver pod could run on Fargate.
+When both Driver and Executors use the same labels as the Fargate Selector, the entire job including the driver pod will run on Fargate.
 
 **Request:**
 ```
@@ -64,7 +64,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nod
 ```
 
 **Observed Behavior:**  
-When the job starts the driver pod and executor pods are scheduled only on fargate since both are labeled with the `spark-node-placement: fargate`. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. 
+When the job starts, the driver pod and executor pods are scheduled only on Fargate since both are labeled with the `spark-node-placement: fargate`. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. 
 
 ### 2- Place driver pod on EC2 and executor pod on Fargate 
 Remove the label from the driver pod to schedule the driver pod on EC2 instances. This is especially helpful when driver pod needs more resources (i.e. > 4 vCPU).
@@ -111,7 +111,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nod
 When the job starts, the driver pod schedules on an EC2 instance. EKS picks an instance from the first Node Group that has the matching resources available to the driver pod.
 
 ### 3- Define a NodeSelector in Pod Templates 
-Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example spark configurations do not support defining indivisual node selectors for the driver pod and the executor pods. Define a node selector **only** for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.
+Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example Spark configurations do not support defining individual node selectors for the driver pod and the executor pods. Define a node selector **only** for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.
 
 **Driver Pod Template**
 
