@@ -24,6 +24,7 @@ nav:
       - Change Log Level: 'debugging/docs/change-log-level.md'
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
+      - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
   - Performance:
       - Dynamic Resource Allocation: 'performance/docs/dra.md'
       - EKS Best Practices: 'best-practices-and-recommendations/eks-best-practices.md'
