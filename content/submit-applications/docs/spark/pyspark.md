@@ -99,7 +99,11 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-Fsx.js
 
 ```
 
-### Python code with dependencies  
+### Python code with python dependencies  
+
+!!! info
+    [boto3](https://boto3.readthedocs.io/) will only work with '[Bundled as a .pex file](#bundled-as-a-pex-file)' 
+    or with '[Custom docker image](#custom-docker-image)'
 
 ####**List of .py files**
 
@@ -683,8 +687,150 @@ Upload `numpy_environment.tar.gz` to a s3 location that is mapped to a FSx for L
 
 #### Bundled as virtual env  
 
-**This will not work with spark on kubernetes**.This feature only works with YARN - cluster mode
+!!! warning
+    **This will not work with spark on kubernetes**
+
+This feature only works with YARN - cluster mode
 In this implementation for YARN - the dependencies will be installed from the repository for every driver and executor. This might not be a more scalable model as per [SPARK-25433](https://issues.apache.org/jira/browse/SPARK-25433). Recommended solution is to pass in the dependencies as PEX file.
+
+#### Custom docker image
+See the details in the [official documentation](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html).  
+
+**Dockerfile**
+```dockerfile
+FROM 107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0
+USER root
+RUN pip3 install boto3
+USER hadoop:hadoop
+```
+
+### Python code with java dependencies  
+
+####**List of packages**
+
+!!! warning
+    **This will not work with spark on kubernetes**
+
+This feature only works with YARN - cluster mode
+
+kafka integration example
+```shell
+./bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2
+```
+
+####**List of .jar files**
+
+This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.
+
+How to find all of the .jar files which belongs to given package?
+
+ 1. Go to [Maven Repository](https://mvnrepository.com/)
+ 2. Search for the package name
+ 3. Select the matching Spark and Scala version
+ 4. Copy the URL of the jar file
+ 5. Copy the URL of the jar file of all compile dependencies
+
+***Request:***
+```shell
+cat > Spark-Python-with-jars.json << EOF
+{
+  "name": "spark-python-with-jars",
+  "virtualClusterId": "<virtual-cluster-id>",
+  "executionRoleArn": "<execution-role-arn>",
+  "releaseLabel": "emr-6.2.0-latest",
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/pi.py",
+      "sparkSubmitParameters": "--jars https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.1.1/spark-sql-kafka-0-10_2.12-3.1.1.jar,https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar,https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.6.0/kafka-clients-2.6.0.jar,https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar,https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.12/3.1.1/spark-tags_2.12-3.1.1.jar --conf spark.driver.cores=3 --conf spark.executor.memory=8G --conf spark.driver.memory=6G --conf spark.executor.cores=3"
+    }
+  },
+  "configurationOverrides": {
+    "monitoringConfiguration": {
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs",
+        "logStreamNamePrefix": "demo"
+      },
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+    }
+  }
+}
+EOF
+
+aws emr-containers start-job-run --cli-input-json file:///Spark-Python-with-jars.json
+```
+
+#### Custom docker image
+See the basics in the [official documentation](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html).  
+
+**Approach 1: List of .jar files**  
+
+This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.
+
+How to find all of the .jar files which belongs to given package?
+
+ 1. Go to [Maven Repository](https://mvnrepository.com/)
+ 2. Search for the package name
+ 3. Select the matching Spark and Scala version
+ 4. Copy the URL of the jar file
+ 5. Copy the URL of the jar file of all compile dependencies
+ 
+**Dockerfile**
+```dockerfile
+FROM 107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0
+
+USER root
+
+ARG JAR_HOME=/usr/lib/spark/jars/
+
+# Kafka
+ADD https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.1.1/spark-sql-kafka-0-10_2.12-3.1.1.jar $JAR_HOME
+ADD https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar $JAR_HOME
+ADD https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.6.0/kafka-clients-2.6.0.jar $JAR_HOME
+ADD https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar $JAR_HOME
+ADD https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.12/3.1.1/spark-tags_2.12-3.1.1.jar $JAR_HOME
+
+RUN chmod -R +r  /usr/lib/spark/jars
+
+USER hadoop:hadoop
+```
+**Observed Behavior:**  
+Spark automatically installs all the .jar files from `/usr/lib/spark/jars/` directory. In Dockerfile we are adding these 
+file as root user and these file will get `-rw-------` permission while the original files have `-rw-r--r--` permission. 
+EMR on EKS uses hadoop:hadoop to run spark jobs and files with `-rw-------` permission are hidden from this user and can 
+not be imported. To make these file readable for all the users run the following command `chmod -R +r /usr/lib/spark/jars`
+and the files will have `-rw-r--r--` permission.
+
+
+<br></br>
+**Approach 2: List of packages**  
+
+This approach is a resource intensive (min 1vCPU, 2GB RAM) solution, because it will run a dummy spark job. Scale your local or CI/CD resources
+according to it. 
+
+**Dockerfile**
+```dockerfile
+FROM 107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0
+
+USER root
+
+ARG KAFKA_PKG="org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2"
+
+RUN spark-submit run-example --packages $KAFKA_PKG --deploy-mode=client --master=local[1] SparkPi
+RUN mv /root/.ivy2/jars/* /usr/lib/spark/jars/
+
+USER hadoop:hadoop
+```
+
+**Observed Behavior:**   
+Spark runs [ivy](https://ant.apache.org/ivy/) to get all of its dependencies (packages) when `--packages` are defined in the submit command.
+We can run a "dummy" spark job to make spark downloads its packages. These .jars are saved in `/root/.ivy2/jars/` which 
+we can move to `/usr/lib/spark/jars/` for further use. These jars having `-rw-r--r--` permission and does not require further modifications.
+The advantage of this method is ivy download the dependencies of the package as well, and we needed to specify only 
+`org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2` instead of 5 jars files above.
+
+
 
 ### **Import of Dynamic Modules (.pyd, .so)**  
 
