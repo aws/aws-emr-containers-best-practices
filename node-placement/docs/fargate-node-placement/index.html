@@ -14,7 +14,7 @@
     
     
       
-        <title>Fargate node placement - EMR Containers Best Practices Guides</title>
+        <title>EKS Fargate Node placement - EMR Containers Best Practices Guides</title>
       
     
     
@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#eks-fargate-node-placement" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Fargate node placement
+              EKS Fargate Node placement
             
           </span>
         </div>
@@ -247,13 +252,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../eks-node-placement/" class="md-tabs__link">
+      <a href="../eks-node-placement/" class="md-tabs__link md-tabs__link--active">
         Node Placement
       </a>
     </li>
@@ -618,12 +625,14 @@
       
 
 
+  
+
 
   
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" >
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
       Node Placement
@@ -647,6 +656,91 @@
     <a href="../eks-node-placement/" class="md-nav__link">
       EKS Node placement
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        EKS Fargate Node placement
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      EKS Fargate Node placement
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fargate-node-placement" class="md-nav__link">
+    Fargate Node Placement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-fargate-profile" class="md-nav__link">
+    AWS Fargate profile
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Fargate profile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
+    1- Place entire job including driver pod on Fargate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
+    2- Place driver pod on EC2 and executor pod on Fargate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
+    3- Define a NodeSelector in Pod Templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -717,6 +811,71 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fargate-node-placement" class="md-nav__link">
+    Fargate Node Placement
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-fargate-profile" class="md-nav__link">
+    AWS Fargate profile
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Fargate profile">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
+    1- Place entire job including driver pod on Fargate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
+    2- Place driver pod on EC2 and executor pod on Fargate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
+    3- Define a NodeSelector in Pod Templates
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -727,9 +886,161 @@
                   </a>
                 
                 
-                  <h1>Fargate node placement</h1>
-                
-                
+                <h1 id="eks-fargate-node-placement"><strong>EKS Fargate Node Placement</strong><a class="headerlink" href="#eks-fargate-node-placement" title="Permanent link">&para;</a></h1>
+<h2 id="fargate-node-placement"><strong>Fargate Node Placement</strong><a class="headerlink" href="#fargate-node-placement" title="Permanent link">&para;</a></h2>
+<p>AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you don't have to provision, configure, or scale groups of EC2 instances on your own to run containers. You also don't need to choose server types, decide when to scale your node groups, or optimize cluster packing. Instead you can control which pods start on Fargate and how they run with Fargate profiles.</p>
+<h2 id="aws-fargate-profile">AWS Fargate profile<a class="headerlink" href="#aws-fargate-profile" title="Permanent link">&para;</a></h2>
+<p>Before you can schedule pods on Fargate in your cluster, you must define at least one Fargate profile that specifies which pods use Fargate when launched.  You must define a namespace for every selector. The Fargate profile allows an administrator to declare which pods run on Fargate. This declaration is done through the profile’s selectors. If a namespace selector is defined without any labels, Amazon EKS attempts to schedule all pods that run in that namespace onto Fargate using the profile.</p>
+<p>A Spark application whose driver and executor pods are distributed across multiple AZs can incur inter-AZ data transfer costs. To minimize or eliminate inter-AZ data transfer costs, you can configure the application to only run on the nodes within a single AZ.  In this example, we use the kubernetes <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec">node selector</a> to specify which AZ should the job run on.</p>
+<p><strong>Create Fargate Profile</strong>
+Create your Fargate profile with the following eksctl command, replacing the <code>&lt;variable text&gt;</code> (including &lt;&gt;) with your own values. You're required to specify a namespace. The <code>--labels</code> option is not required to create your Fargate profile, but will be required if you want to only run Spark executors on Fargate.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">eksctl create fargateprofile \</span>
+<span class="err">    --cluster &lt;cluster_name&gt; \</span>
+<span class="err">    --name &lt;fargate_profile_name&gt; \</span>
+<span class="err">    --namespace &lt;virtual_cluster_mapped_namespace&gt; \</span>
+<span class="err">    --labels spark-node-placement=fargate</span>
+</code></pre></div>
+
+<h3 id="1-place-entire-job-including-driver-pod-on-fargate">1- Place entire job including driver pod on Fargate<a class="headerlink" href="#1-place-entire-job-including-driver-pod-on-fargate" title="Permanent link">&para;</a></h3>
+<p>When both Driver and Executors use the same labels as the Fargate Selector, the entire job including the driver pod will run on Fargate.</p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=4  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=4&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">            &quot;spark.kubernetes.driver.label.spark-node-placement&quot;: &quot;fargate&quot;,</span>
+<span class="err">            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong><br />
+When the job starts, the driver pod and executor pods are scheduled only on Fargate since both are labeled with the <code>spark-node-placement: fargate</code>. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. </p>
+<h3 id="2-place-driver-pod-on-ec2-and-executor-pod-on-fargate">2- Place driver pod on EC2 and executor pod on Fargate<a class="headerlink" href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" title="Permanent link">&para;</a></h3>
+<p>Remove the label from the driver pod to schedule the driver pod on EC2 instances. This is especially helpful when driver pod needs more resources (i.e. &gt; 4 vCPU).</p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=6 --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong><br />
+When the job starts, the driver pod schedules on an EC2 instance. EKS picks an instance from the first Node Group that has the matching resources available to the driver pod.</p>
+<h3 id="3-define-a-nodeselector-in-pod-templates">3- Define a NodeSelector in Pod Templates<a class="headerlink" href="#3-define-a-nodeselector-in-pod-templates" title="Permanent link">&para;</a></h3>
+<p>Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example Spark configurations do not support defining individual node selectors for the driver pod and the executor pods. Define a node selector <strong>only</strong> for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.</p>
+<p><strong>Driver Pod Template</strong></p>
+<p><code>apiVersion: v1
+kind: Pod
+spec:
+  volumes:
+    - name: source-data-volume
+      emptyDir: {}
+    - name: metrics-files-volume
+      emptyDir: {}
+  nodeSelector:
+    &lt;ec2-instance-node-label-key&gt;: &lt;ec2-instance-node-label-value&gt;
+  containers:
+  - name: spark-kubernetes-driver # This will be interpreted as Spark driver container</code></p>
+<p>Store the pod template file onto a S3 location:</p>
+<p><code>aws s3 cp /driver-pod-template.yaml s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml</code></p>
+<p><strong>Request</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="err">cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF</span>
+<span class="err">{</span>
+<span class="err">  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, </span>
+<span class="err">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="err">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="err">  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, </span>
+<span class="err">  &quot;jobDriver&quot;: {</span>
+<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="err">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
+<span class="err">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;</span>
+<span class="err">    }</span>
+<span class="err">  }, </span>
+<span class="err">  &quot;configurationOverrides&quot;: {</span>
+<span class="err">    &quot;applicationConfiguration&quot;: [</span>
+<span class="err">      {</span>
+<span class="err">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="err">        &quot;properties&quot;: {</span>
+<span class="err">            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;,</span>
+<span class="err">            &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml&quot;</span>
+<span class="err">         }</span>
+<span class="err">      }</span>
+<span class="err">    ], </span>
+<span class="err">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="err">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="err">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="err">      }, </span>
+<span class="err">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="err">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="err">      }</span>
+<span class="err">    }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+<span class="err">EOF</span>
+<span class="err">aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json</span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong><br />
+The driver pod schedules on an EC2 instance with enough capacity and matching label key / value with the node selector.</p>
                 
               
               
@@ -744,6 +1055,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../eks-node-placement/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                EKS Node placement
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../../performance/docs/dra/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Dynamic Resource Allocation
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
