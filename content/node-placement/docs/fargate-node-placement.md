@@ -6,8 +6,6 @@ AWS Fargate is a technology that provides on-demand, right-sized compute capacit
 ## AWS Fargate profile 
 Before you can schedule pods on Fargate in your cluster, you must define at least one Fargate profile that specifies which pods use Fargate when launched.  You must define a namespace for every selector. The Fargate profile allows an administrator to declare which pods run on Fargate. This declaration is done through the profile’s selectors. If a namespace selector is defined without any labels, Amazon EKS attempts to schedule all pods that run in that namespace onto Fargate using the profile.
 
-A Spark application whose driver and executor pods are distributed across multiple AZs can incur inter-AZ data transfer costs. To minimize or eliminate inter-AZ data transfer costs, you can configure the application to only run on the nodes within a single AZ.  In this example, we use the kubernetes [node selector](https://spark.apache.org/docs/latest/running-on-kubernetes.html#pod-spec) to specify which AZ should the job run on.
-
 
 **Create Fargate Profile**
 Create your Fargate profile with the following eksctl command, replacing the `<variable text>` (including <>) with your own values. You're required to specify a namespace. The `--labels` option is not required to create your Fargate profile, but will be required if you want to only run Spark executors on Fargate.
