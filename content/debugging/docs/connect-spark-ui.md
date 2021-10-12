@@ -10,7 +10,7 @@ This page shows how to use `kubectl port-forward` to connect to the Job's Driver
 
 * AWS cli should be installed
 * "kubectl" should be installed
-* If this is the first time you are connecting to your EKS cluster from your machine, you should run `aws eks update-kubeconfig --name --region` to download kubeconfig file and use currect context to talk to API server.
+* If this is the first time you are connecting to your EKS cluster from your machine, you should run `aws eks update-kubeconfig --name --region` to download kubeconfig file and use correct context to talk to API server.
 
 ### Submitting the job to a virtual cluster
 
@@ -63,7 +63,7 @@ Spark Driver Pod hosts Spark-UI on port `4040`. However the pod runs within the 
 
 1- Run ```kubectl port-forward <driver-pod-name> 4040:4040```
 
-The result should as the following:
+The result should be the following:
 
 
 ```
