@@ -13,7 +13,7 @@
     
     
       
-        <title>AWS Glue - EMR Containers Best Practices Guides</title>
+        <title>Copying Shuffle data - EMR Containers Best Practices Guides</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#emr-containers-integration-with-aws-glue" class="md-skip">
+        <a href="#spot-instances-interruption-resiliency-by-copying-shuffle-data" class="md-skip">
           Skip to content
         </a>
       
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AWS Glue
+              Copying Shuffle data
             
           </span>
         </div>
@@ -227,15 +227,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../hive-metastore/" class="md-tabs__link md-tabs__link--active">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
         Metastore Integration
       </a>
     </li>
@@ -293,13 +291,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../spot-instances-resiliency/docs/copying-shuffle-data/" class="md-tabs__link">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Spot instances resiliency
       </a>
     </li>
@@ -576,14 +576,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       
       
@@ -606,7 +604,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hive-metastore/" class="md-nav__link">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
         Hive Metastore
       </a>
     </li>
@@ -618,59 +616,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          AWS Glue
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
         AWS Glue
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#aws-glue-catalog-in-same-account-as-eks" class="md-nav__link">
-    AWS Glue catalog in same account as EKS
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-glue-catalog-in-different-account" class="md-nav__link">
-    AWS Glue catalog in different account
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -860,12 +810,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
       
       
       
@@ -886,11 +838,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../spot-instances-resiliency/docs/copying-shuffle-data/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Copying Shuffle data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Copying Shuffle data
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -929,15 +922,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#aws-glue-catalog-in-same-account-as-eks" class="md-nav__link">
-    AWS Glue catalog in same account as EKS
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-glue-catalog-in-different-account" class="md-nav__link">
-    AWS Glue catalog in different account
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
   </a>
   
 </li>
@@ -954,169 +940,121 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/metastore-integrations/docs/aws-glue.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/spot-instances-resiliency/docs/copying-shuffle-data.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-<h1 id="emr-containers-integration-with-aws-glue"><strong>EMR Containers integration with AWS Glue</strong><a class="headerlink" href="#emr-containers-integration-with-aws-glue" title="Permanent link">&para;</a></h1>
-<h4 id="aws-glue-catalog-in-same-account-as-eks"><strong>AWS Glue catalog in same account as EKS</strong><a class="headerlink" href="#aws-glue-catalog-in-same-account-as-eks" title="Permanent link">&para;</a></h4>
-<p>In the below example a Spark application will be configured to use <a href="https://docs.aws.amazon.com/glue/latest/dg/components-overview.html">AWS Glue data catalog</a> as the hive metastore.  </p>
-<p><strong>gluequery.py</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">gluequery</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
-<span class="c1"># warehouse_location points to the default location for managed databases and tables</span>
-<span class="n">warehouse_location</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;spark-warehouse&#39;</span><span class="p">)</span>
-<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
-    <span class="o">.</span><span class="n">builder</span> \
-    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Python Spark SQL Hive integration example&quot;</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">warehouse_location</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
-    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE `sparkemrnyc`( `dispatching_base_num` string, `pickup_datetime` string, `dropoff_datetime` string, `pulocationid` bigint, `dolocationid` bigint, `sr_flag` bigint) STORED AS PARQUET LOCATION &#39;s3://&lt;s3 prefix&gt;/trip-data.parquet/&#39;&quot;</span><span class="p">)</span>
-<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT count(*) FROM sparkemrnyc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<h1 id="spot-instances-interruption-resiliency-by-copying-shuffle-data"><strong>Spot instances interruption resiliency by copying shuffle data</strong><a class="headerlink" href="#spot-instances-interruption-resiliency-by-copying-shuffle-data" title="Permanent link">&para;</a></h1>
+<p><a href="https://aws.amazon.com/ec2/spot/">Amazon EC2 Spot Instances</a> allow AWS customers to run EC2 instances at steep discounts by tapping into EC2 spare capacity pools. Using Amazon EKS’s managed node groups, EKS can provision and manage the underlying Spot Instances (worker nodes) that provide compute capacity to EKS clusters. Using an EKS cluster with Spot instances to run EMR on EKS jobs allows customers to provision and maintain the desired capacity while benefiting from steep cost savings. </p>
+<p>However, Spot Instances can be interrupted with a two-minute notification when EC2 needs the capacity back. Termination of the Spot instance will result in termination of the executors on the node. The shuffle data and cached RDD data on these nodes will be lost and may need to be recalculated. This operation is very costly and will result in a high increase in the execution time of EMR on EKS jobs.</p>
+<p>This section shows how to use a new <a href="https://issues.apache.org/jira/browse/SPARK-20629">Apache Spark feature</a> that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. </p>
+<p>This feature is supported for releases EMR 6.3.0+.</p>
+<h3 id="how-does-it-work">How does it work?<a class="headerlink" href="#how-does-it-work" title="Permanent link">&para;</a></h3>
+<p>When <code>spark.decommission.enabled</code> is true, Spark will try its best to shutdown the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.decommission.enabled</td>
+<td>Whether to enable decommissioning</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.enabled</td>
+<td>Whether to decommission the block manager when decommissioning executor</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.rddBlocks.enabled</td>
+<td>Whether to transfer RDD blocks during block manager decommissioning.</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.shuffleBlocks.enabled</td>
+<td>Whether to transfer shuffle blocks during block manager decommissioning. Requires a migratable shuffle resolver (like sort based shuffle)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.maxReplicationFailuresPerBlock</td>
+<td>Maximum number of failures which can be handled for migrating shuffle blocks when block manager is decommissioning and trying to move its existing blocks.</td>
+<td>3</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.shuffleBlocks.maxThreads</td>
+<td>Maximum number of threads to use in migrating shuffle files.</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>This feature can currently be enabled through a temporary workaround on EMR 6.3.0+ releases. To enable it, Spark’s decom.sh file permission must be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html">custom image</a>. Once the code is fixed, the page will be updated.</p>
+<p><strong>Dockerfile for custom image:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">FROM</span> <span class="o">&lt;</span><span class="k">release</span> <span class="n">account</span> <span class="n">id</span><span class="o">&gt;</span><span class="p">.</span><span class="n">dkr</span><span class="p">.</span><span class="n">ecr</span><span class="p">.</span><span class="o">&lt;</span><span class="n">aws</span> <span class="n">region</span><span class="o">&gt;</span><span class="p">.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">spark</span><span class="o">/&lt;</span><span class="k">release</span><span class="o">&gt;</span>
+<span class="n">USER</span> <span class="n">root</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span>
+<span class="n">RUN</span> <span class="n">chown</span> <span class="nl">hadoop:</span><span class="n">hadoop</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">decom</span><span class="p">.</span><span class="n">sh</span>
+</code></pre></div>
+
+<p><strong>Setting decommission timeout:</strong></p>
+<p>Each executor has to be decommissioned within a certain time limit controlled by the pod’s terminationGracePeriodSeconds configuration.  The default value is 30 secs but can be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/pod-templates.html">custom pod template</a>. The pod template for this modification would look like </p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">Pod</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">terminationGracePeriodSeconds</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">seconds</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p><strong>Note: terminationGracePeriodSeconds timeout should be lesser than spot instance timeout with around 5 seconds buffer kept aside for triggering the node termination</strong></p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">decommissioning</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
+<span class="p">{</span>
+   <span class="s">&quot;name&quot;</span><span class="o">:</span> <span class="s">&quot;my-job-run-with-node-decommissioning&quot;</span><span class="p">,</span>
+   <span class="s">&quot;virtualClusterId&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span>
+   <span class="s">&quot;executionRoleArn&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span>
+   <span class="s">&quot;releaseLabel&quot;</span><span class="o">:</span> <span class="s">&quot;emr-6.3.0-latest&quot;</span><span class="p">,</span> 
+   <span class="s">&quot;jobDriver&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s">&quot;sparkSubmitJobDriver&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s">&quot;entryPoint&quot;</span><span class="o">:</span> <span class="s">&quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;</span><span class="p">,</span> 
+       <span class="s">&quot;sparkSubmitParameters&quot;</span><span class="o">:</span> <span class="s">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+    <span class="p">}</span>
+   <span class="p">},</span> 
+   <span class="s">&quot;configurationOverrides&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s">&quot;applicationConfiguration&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+       <span class="s">&quot;classification&quot;</span><span class="o">:</span> <span class="s">&quot;spark-defaults&quot;</span><span class="p">,</span>
+       <span class="s">&quot;properties&quot;</span><span class="o">:</span> <span class="p">{</span>
+       <span class="s">&quot;spark.kubernetes.container.image&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com/&lt;custom_image_repo&gt;&quot;</span><span class="p">,</span>
+       <span class="s">&quot;spark.executor.instances&quot;</span><span class="o">:</span> <span class="s">&quot;5&quot;</span><span class="p">,</span>
+        <span class="s">&quot;spark.decommission.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s">&quot;spark.storage.decommission.rddBlocks.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s">&quot;spark.storage.decommission.shuffleBlocks.enabled&quot;</span> <span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s">&quot;spark.storage.decommission.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span>
+       <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">],</span> 
+    <span class="s">&quot;monitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s">&quot;logGroupName&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;log group&gt;&quot;</span><span class="p">,</span> 
+        <span class="s">&quot;logStreamNamePrefix&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;log-group-prefix&gt;&quot;</span>
+      <span class="p">},</span> 
+      <span class="s">&quot;s3MonitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s">&quot;logUri&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;S3 URI&gt;&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+   <span class="p">}</span> 
+<span class="p">}</span>
 <span class="n">EOF</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code>LOCATION &#39;s3://&lt;s3 prefix&gt;/trip-data.parquet/&#39;
-</code></pre></div>
-
-<p>Configure the above property to point to the S3 location containing the data. </p>
-<p><strong>Request</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-awsglue-log.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-awsglue-log&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/gluequery.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=3 --conf spark.executor.memory=8G --conf spark.driver.memory=6G --conf spark.executor.cores=3&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-          &quot;spark.hadoop.hive.metastore.client.factory.class&quot;:&quot;com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory&quot;,
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-
-aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-awsglue-log.json
-</code></pre></div>
-
-<p>Output from driver logs - Displays the number of rows.</p>
-<div class="codehilite"><pre><span></span><code>+----------+
-|  count(1)|
-+----------+
-|2716504499|
-+----------+
-</code></pre></div>
-
-<h4 id="aws-glue-catalog-in-different-account"><strong>AWS Glue catalog in different account</strong><a class="headerlink" href="#aws-glue-catalog-in-different-account" title="Permanent link">&para;</a></h4>
-<p>The Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to <a href="https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html">AWS Glue catalog in Account B.</a> The IAM policy attached to the job execution role <code>("executionRoleArn": "&lt;execution-role-arn&gt;")</code>is in Account A</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-    <span class="s">&quot;Version&quot;</span><span class="o">:</span> <span class="s">&quot;2012-10-17&quot;</span><span class="p">,</span>
-    <span class="s">&quot;Statement&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s">&quot;Effect&quot;</span><span class="o">:</span> <span class="s">&quot;Allow&quot;</span><span class="p">,</span>
-            <span class="s">&quot;Action&quot;</span><span class="o">:</span> <span class="p">[</span>
-                <span class="s">&quot;glue:*&quot;</span>
-            <span class="p">],</span>
-            <span class="s">&quot;Resource&quot;</span><span class="o">:</span> <span class="p">[</span>
-                <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:catalog&quot;</span><span class="p">,</span>
-                <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:database/default&quot;</span><span class="p">,</span>
-                <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:table/default/sparkemrnyc&quot;</span>
-            <span class="p">]</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>IAM policy attached to the AWS Glue catalog in Account B</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-  <span class="s">&quot;Version&quot;</span> <span class="o">:</span> <span class="s">&quot;2012-10-17&quot;</span><span class="p">,</span>
-  <span class="s">&quot;Statement&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="p">{</span>
-    <span class="s">&quot;Effect&quot;</span> <span class="o">:</span> <span class="s">&quot;Allow&quot;</span><span class="p">,</span>
-    <span class="s">&quot;Principal&quot;</span> <span class="o">:</span> <span class="p">{</span>
-      <span class="s">&quot;AWS&quot;</span> <span class="o">:</span> <span class="s">&quot;&lt;execution-role-arn&gt;&quot;</span>
-    <span class="p">},</span>
-    <span class="s">&quot;Action&quot;</span> <span class="o">:</span> <span class="s">&quot;glue:*&quot;</span><span class="p">,</span>
-    <span class="s">&quot;Resource&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:catalog&quot;</span><span class="p">,</span> <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:database/default&quot;</span><span class="p">,</span> <span class="s">&quot;arn:aws:glue:&lt;region&gt;:&lt;account&gt;:table/default/sparkemrnyc&quot;</span> <span class="p">]</span>
-  <span class="p">}</span> <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p><strong>Request</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-awsglue-crossaccount.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-awsglue-crossaccount&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/gluequery.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 &quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-          &quot;spark.hadoop.hive.metastore.client.factory.class&quot;:&quot;com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory&quot;,
-          &quot;spark.hadoop.hive.metastore.glue.catalogid&quot;:&quot;&lt;account B&gt;&quot;,
-          }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-
-aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-awsglue-crossaccount.json
-</code></pre></div>
-
-<p><strong>Configuration of interest</strong> <br />
-To specify the accountID where the AWS Glue catalog is defined reference the following: </p>
-<p><a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-glue.html">Spark-Glue integration</a></p>
-<div class="codehilite"><pre><span></span><code>&quot;spark.hadoop.hive.metastore.glue.catalogid&quot;:&quot;&lt;account B&gt;&quot;,
-</code></pre></div>
-
-<p>Output from driver logs - displays the number of rows.</p>
-<div class="codehilite"><pre><span></span><code>+----------+
-|  count(1)|
-+----------+
-|2716504499|
-+----------+
-</code></pre></div>
+<p><strong>Observed Behavior:</strong></p>
+<p>When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines <code>Updating map output for &lt;shuffle_id&gt; to BlockManagerId(&lt;executor_id&gt;, &lt;ip_address&gt;, &lt;port&gt;, &lt;topology_info&gt;)</code> denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation as of yet.</p>
+<p><strong>Node decommissioning with fallback storage</strong></p>
+<p>Spark supports a fallback storage configuration (spark.storage.decommission.fallbackStorage.path) and it can be used if migrating shuffle blocks to peer executors fails. However, there is an <a href="https://issues.apache.org/jira/browse/SPARK-18105">existing issue</a> in Spark where these blocks cannot be read from the fallback path properly and a job fails with exception <code>java.io.IOException: Stream is corrupted, net.jpountz.lz4.LZ4Exception: Error decoding offset &lt;offset_id&gt; of input buffer</code>.</p>
 
               
             </article>
@@ -1130,7 +1068,7 @@ To specify the accountID where the AWS Glue catalog is defined reference the fol
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../hive-metastore/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hive Metastore" rel="prev">
+        <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-footer__link md-footer__link--prev" aria-label="Previous: EKS Best Practices" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1139,26 +1077,11 @@ To specify the accountID where the AWS Glue catalog is defined reference the fol
               <span class="md-footer__direction">
                 Previous
               </span>
-              Hive Metastore
+              EKS Best Practices
             </div>
           </div>
         </a>
       
-      
-        
-        <a href="../../../debugging/docs/change-log-level/" class="md-footer__link md-footer__link--next" aria-label="Next: Change Log Level" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Change Log Level
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
       
     </nav>
   
