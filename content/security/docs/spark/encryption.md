@@ -13,9 +13,7 @@ AWS assumes different levels of responsibility depending on the features being c
 
 ![EMR on EKS Self Managed and Managed Node Groups](../resources/images/emr-on-eks-self-and-managed.png)
 
-![EMR on EKS with Fargate](../resources/images/emr-on-eks-fargate.png)
-
-<img src="../resources/images/emr-on-eks-fargate.png" alt="emr-on-eks-fargate" width="200" />
+<img src="../resources/images/emr-on-eks-fargate.png" alt="emr-on-eks-fargate" width="500" />
 
 ### Encryption for data in-transit
 
