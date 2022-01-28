@@ -21,7 +21,7 @@ In this section, we will cover encryption for data in-transit. We will highlight
 
 #### AWS Infrastructure - Physical layer
 
-AWS provides secure and private connectivity between EC2 instances of all types. All data flowing across AWS Regions over the AWS global network is automatically encrypted at the physical layer before it leaves AWS secured facilities. All traffic between AZs is encrypted. All cross-Region traffic that uses Amazon VPC and Transit Gateway peering is automatically bulk-encrypted when it exits a Region. In addition, if you use Nitro family of instances, all traffic between instances is encrypted in-transit using AEAD algorithms with 256-bit encryption. We highly recommend reviewing EC2 documentation (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html#encryption-transit) for more information.
+AWS provides secure and private connectivity between EC2 instances of all types. All data flowing across AWS Regions over the AWS global network is automatically encrypted at the physical layer before it leaves AWS secured facilities. All traffic between AZs is encrypted. All cross-Region traffic that uses Amazon VPC and Transit Gateway peering is automatically bulk-encrypted when it exits a Region. In addition, if you use Nitro family of instances, all traffic between instances is encrypted in-transit using AEAD algorithms with 256-bit encryption. We highly recommend reviewing [EC2 documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html#encryption-transit) for more information.
 
 #### Amazon EMR on EKS
 
