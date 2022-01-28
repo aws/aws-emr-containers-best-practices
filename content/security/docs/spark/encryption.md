@@ -27,7 +27,7 @@ AWS provides secure and private connectivity between EC2 instances of all types.
 
 Below diagram depicts high-level architecture implementation of EMR on EKS. In this section, we will cover encryption in-transit for communication between managed services such as EMR & EKS. All traffic with AWS API’s that support EMR and EKS are encrypted by default. EKS enables Kubernetes API server using https endpoint. Both the kubelet that runs on EKS worker nodes and Kubernetes client such as kubectl interacts with EKS cluster API using TLS. Amazon EMR on EKS uses the same secure channel to interact with EKS cluster API to run spark jobs on worker nodes. In addition, EMR on EKS provides an encrypted endpoint for accessing spark history server.  
 
-[Image: image.png]
+![](../resources/images/emr-on-eks-network-communication.png)
 
 Spark offers AES-based encryption for RPC connections. EMR on EKS customers may choose to encrypt the traffic between spark drivers and executors using this encryption mechanism. In order to enable encryption, RPC authentication must also be enabled in your spark configuration.
 
