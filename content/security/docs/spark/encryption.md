@@ -45,7 +45,6 @@ In this section, we will cover encryption for data at-rest. We will review how t
 Amazon S3 offers server-side encryption for encrypting all data that is stored in an S3 bucket. You can enable default encryption using either S3 managed keys (SSE-S3) or KMS managed keys (SSE-KMS). Amazon S3 will encrypt all data before storing it on disks based on the keys specified. We recommend using server-side encryption at a minimum so that your data at-rest is encrypted. Please review [Amazon S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html) and use the mechanisms that apply to your encryption standards and acceptable performance.
 
 Amazon S3 supports client-side encryption as well. Using this approach, you can let spark application to encrypt all data with desired KMS keys and upload this data to S3 buckets. Below examples shows spark application reading and writing parquet data in S3. During job submission, we use EMRFS encryption mechanism to encrypt all data with KMS key into the desired S3 location.
-
 ```
 import sys
 
@@ -66,9 +65,7 @@ if __name__ == "__main__":
     print("Encrypt - KMS- CSE writew to s3 compeleted")
     spark.stop()
 ```
-
 Below is the job submission request that depicts KMS specification needed for EMRFS to perform this encryption. For complete end-to-end example, please see [EMR on EKS best practices documentation](https://aws.github.io/aws-emr-containers-best-practices/security/docs/spark/data-encryption/)
-
 ```
 cat > spark-python-in-s3-encrypt-cse-kms-write.json <<EOF
 {
@@ -115,7 +112,6 @@ EOF
 
 aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-encrypt-cse-kms-write.json
 ```
-
 Amazon EKS offers three different storage offerings (EBS, EFS, FSx) that can be directly consumed by pods. Each storage offering provides encryption mechanism that can be enabled at the storage level.
 
 #### Amazon EBS
@@ -123,7 +119,6 @@ Amazon EKS offers three different storage offerings (EBS, EFS, FSx) that can be 
 Amazon EBS supports default encryption that can be turned on a per region basis. Once its turned on, you can have newly created EBS volumes and snapshots encrypted using AWS managed KMS keys. Please review [EBS documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default) to learn more on how to enable this feature
 
 You can use Kubernetes (k8s) in-tree storage driver or choose to use [EBS CSI driver](https://github.com/kubernetes-sigs/aws-ebs-csi-driver) to consume EBS volumes within your pods. Both choices offer options to enable encryption. In the below example, we use k8s in-tree storage driver to create [storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/) and [persistent volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/). You can create similar resources using EBS CSI driver as well.  
-
 ```
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -148,7 +143,6 @@ spec:
     requests:
       storage: 10Gi
 ```
-
 Once these resources are created, you can specify them in your drivers and executors. You can see an example of this specification below.
 ```
 --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.options.claimName=spark-driver-pvc
@@ -159,7 +153,6 @@ Once these resources are created, you can specify them in your drivers and execu
 --conf spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.readOnly=false
 --conf spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path=/data
 ```
-
 Another approach is to let k8s create EBS volumes dynamically based on your spark workload. You can do so by specifying just the storageClass  and sizeLimit  options and specify OnDemand for the persistent volume claim (PVC). This is useful in case of [Dynamic Resource Allocation](https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation). Please be sure to use EMR 6.3.0 release and above to use this feature because dynamic PVC support was added in Spark 3.1. Below is an example for dynamically creating volumes for executors within your job
 ```
 --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.options.claimName=spark-driver-pvc
@@ -242,7 +235,6 @@ If you use non-NVMe SSD volumes, you can follow the best practice to encrypt shu
 ```
 --conf spark.io.encryption.enabled=true
 ```
-
 ### Conclusion
 
 In this document, we covered shared responsibility model for running EMR on EKS workload. We then reviewed platform capabilities available through AWS infrastructure and how to enable encryption for both storage-level and via spark application. To quote Werner Vogels, AWS CTO “Security is everyone’s job now, not just the security team’s”. We hope this document provides prescriptive guidance into how to enable encryption for running secure EMR on EKS workload.   
