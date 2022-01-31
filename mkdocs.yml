@@ -11,6 +11,7 @@ nav:
       - Introduction: 'index.md'
       - EMR on EKS(AWS Outposts): 'outposts/emr-containers-on-outposts.md'
   - Security:
+      - Encryption: 'security/docs/spark/encryption.md'
       - Data Encryption: 'security/docs/spark/data-encryption.md'
   - Submit applications:
       - Pyspark: 'submit-applications/docs/spark/pyspark.md'
