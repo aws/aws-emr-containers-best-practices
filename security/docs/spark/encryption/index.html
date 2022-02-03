@@ -1,0 +1,1412 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+    
+    
+      
+        <title>Encryption - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.edf004c2.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#emr-on-eks-encryption-best-practices" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Encryption
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../storage/docs/spark/ebs/" class="md-tabs__link">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../spot-instances-resiliency/docs/copying-shuffle-data/" class="md-tabs__link">
+        Spot instances resiliency
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Encryption
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Encryption
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#shared-responsibility-model" class="md-nav__link">
+    Shared responsibility model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-for-data-in-transit" class="md-nav__link">
+    Encryption for data in-transit
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption for data in-transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-infrastructure-physical-layer" class="md-nav__link">
+    AWS Infrastructure - Physical layer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-emr-on-eks" class="md-nav__link">
+    Amazon EMR on EKS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-for-data-at-rest" class="md-nav__link">
+    Encryption for data at-rest
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption for data at-rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3" class="md-nav__link">
+    Amazon S3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ebs" class="md-nav__link">
+    Amazon EBS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-efs" class="md-nav__link">
+    Amazon EFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-fsx-for-lustre" class="md-nav__link">
+    Amazon FSx for Lustre
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-spark-to-encrypt-data" class="md-nav__link">
+    Using Spark to encrypt data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../storage/docs/spark/ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        FSx for Lustre
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        Hive Metastore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Spot instances resiliency
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Spot instances resiliency" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Spot instances resiliency
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../spot-instances-resiliency/docs/copying-shuffle-data/" class="md-nav__link">
+        Copying Shuffle data
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#shared-responsibility-model" class="md-nav__link">
+    Shared responsibility model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-for-data-in-transit" class="md-nav__link">
+    Encryption for data in-transit
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption for data in-transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-infrastructure-physical-layer" class="md-nav__link">
+    AWS Infrastructure - Physical layer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-emr-on-eks" class="md-nav__link">
+    Amazon EMR on EKS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-for-data-at-rest" class="md-nav__link">
+    Encryption for data at-rest
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption for data at-rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-s3" class="md-nav__link">
+    Amazon S3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ebs" class="md-nav__link">
+    Amazon EBS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-efs" class="md-nav__link">
+    Amazon EFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-fsx-for-lustre" class="md-nav__link">
+    Amazon FSx for Lustre
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-spark-to-encrypt-data" class="md-nav__link">
+    Using Spark to encrypt data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/security/docs/spark/encryption.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+<h1 id="emr-on-eks-encryption-best-practices"><strong>EMR on EKS - Encryption Best Practices</strong><a class="headerlink" href="#emr-on-eks-encryption-best-practices" title="Permanent link">&para;</a></h1>
+<p>This document will describe how to think about security and its best practices when applying to EMR on EKS service. We will cover topics related to encryption at rest and in-transit when you run EMR on EKS jobs on EKS cluster.</p>
+<p>Its important to understand the shared responsibility model when using managed services such as EMR on EKS in order to improve the overall security posture of your environment. Generally speaking AWS is responsible for security "of" the cloud whereas you, the customer, are responsible for security "in" the cloud. The diagram below depicts this high level definition.
+<img alt="" src="../../resources/images/shared-responsibility-model.png" /></p>
+<h3 id="shared-responsibility-model">Shared responsibility model<a class="headerlink" href="#shared-responsibility-model" title="Permanent link">&para;</a></h3>
+<p>EMR on EKS provides simple way to run spark jobs on top of EKS clusters. The architecture itself is loosely coupled and is abstracted from customers so that they can run secure environment for running spark applications. Because EMR on EKS uses combination of two services (EMR and EKS) at a minimal, we will cover how EKS enables infrastructure components that are consumable by EMR spark workload and how to handle encryption for each service.</p>
+<p>AWS assumes different levels of responsibility depending on the features being consumed by EMR on EKS customers. At this time of writing, the features from EKS are managed node groups, self-managed workers, and Fargate. We won’t go in-depth on these architectures as they are detailed in EKS best practices guide (https://aws.github.io/aws-eks-best-practices/security/docs/). Below diagrams depict how this responsibility changes between customer and AWS based on consumed features.</p>
+<!-- <img src="../resources/images/emr-on-eks-self-and-managed.png" alt="emr-on-eks-self-and-managed" width="1000" />
+//<img src="../resources/images/emr-on-eks-fargate.png" alt="emr-on-eks-fargate" width="500" /> -->
+<p><img alt="" src="../../resources/images/emr-on-eks-self-and-managed.png" />
+<img alt="" src="../../resources/images/emr-on-eks-fargate.png" /></p>
+<h3 id="encryption-for-data-in-transit">Encryption for data in-transit<a class="headerlink" href="#encryption-for-data-in-transit" title="Permanent link">&para;</a></h3>
+<p>In this section, we will cover encryption for data in-transit. We will highlight AWS platform capabilities from the physical layer and then review how AWS handles encryption in the EMR on EKS architecture layer. Lastly, we will cover how customers can enable encryption between spark drivers and executors.</p>
+<h4 id="aws-infrastructure-physical-layer">AWS Infrastructure - Physical layer<a class="headerlink" href="#aws-infrastructure-physical-layer" title="Permanent link">&para;</a></h4>
+<p>AWS provides secure and private connectivity between EC2 instances of all types. All data flowing across AWS Regions over the AWS global network is automatically encrypted at the physical layer before it leaves AWS secured facilities. All traffic between AZs is encrypted. All cross-Region traffic that uses Amazon VPC and Transit Gateway peering is automatically bulk-encrypted when it exits a Region. In addition, if you use Nitro family of instances, all traffic between instances is encrypted in-transit using AEAD algorithms with 256-bit encryption. We highly recommend reviewing <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html#encryption-transit">EC2 documentation</a> for more information.</p>
+<h4 id="amazon-emr-on-eks">Amazon EMR on EKS<a class="headerlink" href="#amazon-emr-on-eks" title="Permanent link">&para;</a></h4>
+<p>Below diagram depicts high-level architecture implementation of EMR on EKS. In this section, we will cover encryption in-transit for communication between managed services such as EMR &amp; EKS. All traffic with AWS API’s that support EMR and EKS are encrypted by default. EKS enables Kubernetes API server using https endpoint. Both the kubelet that runs on EKS worker nodes and Kubernetes client such as kubectl interacts with EKS cluster API using TLS. Amazon EMR on EKS uses the same secure channel to interact with EKS cluster API to run spark jobs on worker nodes. In addition, EMR on EKS provides an encrypted endpoint for accessing spark history server.  </p>
+<p><img alt="" src="../../resources/images/emr-on-eks-network-communication.png" /></p>
+<p>Spark offers AES-based encryption for RPC connections. EMR on EKS customers may choose to encrypt the traffic between spark drivers and executors using this encryption mechanism. In order to enable encryption, RPC authentication must also be enabled in your spark configuration.</p>
+<div class="codehilite"><pre><span></span><code>--conf spark.authenticate=true \
+--conf spark.network.crypto.enabled=true \
+</code></pre></div>
+
+<p>The encryption key is generated by the driver and distributed to executors via environment variables. Because these environment variables can be accessed by users who has access to Kubernetes API (kubectl), we recommend securing access so that only authorized users have access to your environment. You should also configure proper <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">Kubernetes RBAC</a> permissions so that only authorized <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/">service accounts</a> can use these variables.</p>
+<h3 id="encryption-for-data-at-rest">Encryption for data at-rest<a class="headerlink" href="#encryption-for-data-at-rest" title="Permanent link">&para;</a></h3>
+<p>In this section, we will cover encryption for data at-rest. We will review how to enable storage-level encryption so that it is transparent for spark application to use this data securely. We will also see how to enable encryption from spark application while using AWS native storage options.</p>
+<h4 id="amazon-s3">Amazon S3<a class="headerlink" href="#amazon-s3" title="Permanent link">&para;</a></h4>
+<p>Amazon S3 offers server-side encryption for encrypting all data that is stored in an S3 bucket. You can enable default encryption using either S3 managed keys (SSE-S3) or KMS managed keys (SSE-KMS). Amazon S3 will encrypt all data before storing it on disks based on the keys specified. We recommend using server-side encryption at a minimum so that your data at-rest is encrypted. Please review <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html">Amazon S3 documentation</a> and use the mechanisms that apply to your encryption standards and acceptable performance.</p>
+<p>Amazon S3 supports client-side encryption as well. Using this approach, you can let spark application to encrypt all data with desired KMS keys and upload this data to S3 buckets. Below examples shows spark application reading and writing parquet data in S3. During job submission, we use EMRFS encryption mechanism to encrypt all data with KMS key into the desired S3 location.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span>\
+        <span class="o">.</span><span class="n">builder</span>\
+        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;trip-count-join-fsx&quot;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/trip-data.parquet&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total trips: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/write-encrypt-trip-data.parquet&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encrypt - KMS- CSE writew to s3 compeleted&quot;</span><span class="p">)</span>
+    <span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Below is the job submission request that depicts KMS specification needed for EMRFS to perform this encryption. For complete end-to-end example, please see <a href="https://aws.github.io/aws-emr-containers-best-practices/security/docs/spark/data-encryption/">EMR on EKS best practices documentation</a></p>
+<div class="codehilite"><pre><span></span><code>cat &gt; spark-python-in-s3-encrypt-cse-kms-write.json &lt;&lt;EOF
+{
+  &quot;name&quot;: &quot;spark-python-in-s3-encrypt-cse-kms-write&quot;,
+  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;,
+  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;,
+  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;,
+  &quot;jobDriver&quot;: {
+    &quot;sparkSubmitJobDriver&quot;: {
+      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;trip-count-encrypt-write.py&quot;,
+       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.instances=10 --conf spark.driver.cores=2  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=2&quot;
+    }
+  },
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;,
+        &quot;properties&quot;: {
+          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
+         }
+       },
+       {
+         &quot;classification&quot;: &quot;emrfs-site&quot;,
+         &quot;properties&quot;: {
+          &quot;fs.s3.cse.enabled&quot;:&quot;true&quot;,
+          &quot;fs.s3.cse.encryptionMaterialsProvider&quot;:&quot;com.amazon.ws.emr.hadoop.fs.cse.KMSEncryptionMaterialsProvider&quot;,
+          &quot;fs.s3.cse.kms.keyId&quot;:&quot;&lt;KMS Key Id&gt;&quot;
+         }
+      }
+    ],
+    &quot;monitoringConfiguration&quot;: {
+      &quot;persistentAppUI&quot;: &quot;ENABLED&quot;,
+      &quot;cloudWatchMonitoringConfiguration&quot;: {
+        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;,
+        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
+      },
+      &quot;s3MonitoringConfiguration&quot;: {
+        &quot;logUri&quot;: &quot;s3://joblogs&quot;
+      }
+    }
+  }
+}
+EOF
+
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-encrypt-cse-kms-write.json
+</code></pre></div>
+
+<p>Amazon EKS offers three different storage offerings (EBS, EFS, FSx) that can be directly consumed by pods. Each storage offering provides encryption mechanism that can be enabled at the storage level.</p>
+<h4 id="amazon-ebs">Amazon EBS<a class="headerlink" href="#amazon-ebs" title="Permanent link">&para;</a></h4>
+<p>Amazon EBS supports default encryption that can be turned on a per region basis. Once its turned on, you can have newly created EBS volumes and snapshots encrypted using AWS managed KMS keys. Please review <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default">EBS documentation</a> to learn more on how to enable this feature</p>
+<p>You can use Kubernetes (k8s) in-tree storage driver or choose to use <a href="https://github.com/kubernetes-sigs/aws-ebs-csi-driver">EBS CSI driver</a> to consume EBS volumes within your pods. Both choices offer options to enable encryption. In the below example, we use k8s in-tree storage driver to create <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">storage class</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">persistent volume claim</a>. You can create similar resources using EBS CSI driver as well.  </p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">storage</span><span class="o">.</span><span class="na">k8s</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">StorageClass</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">encrypted</span><span class="o">-</span><span class="n">sc</span>
+<span class="n">provisioner</span><span class="o">:</span> <span class="n">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">aws</span><span class="o">-</span><span class="n">ebs</span>
+<span class="n">volumeBindingMode</span><span class="o">:</span> <span class="n">WaitForFirstConsumer</span>
+<span class="n">parameters</span><span class="o">:</span>
+  <span class="n">type</span><span class="o">:</span> <span class="n">gp2</span>
+  <span class="n">fsType</span><span class="o">:</span> <span class="n">ext4</span>
+  <span class="n">encrypted</span><span class="o">:</span> <span class="s2">&quot;true&quot;</span>
+
+<span class="n">apiVersion</span><span class="o">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">PersistentVolumeClaim</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="o">-</span><span class="n">pvc</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">storageClassName</span><span class="o">:</span> <span class="n">encrypted</span><span class="o">-</span><span class="n">sc</span>
+  <span class="n">accessModes</span><span class="o">:</span>
+    <span class="o">-</span> <span class="n">ReadWriteOnce</span>
+  <span class="n">resources</span><span class="o">:</span>
+    <span class="n">requests</span><span class="o">:</span>
+      <span class="n">storage</span><span class="o">:</span> <span class="mi">10</span><span class="n">Gi</span>
+</code></pre></div>
+
+<p>Once these resources are created, you can specify them in your drivers and executors. You can see an example of this specification below.</p>
+<div class="codehilite"><pre><span></span><code>--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.options.claimName=spark-driver-pvc
+--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.mount.readOnly=false
+--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.mount.path=/data
+...
+--conf spark.kubernetes.executor.volumes.persistentVolumeClaim.data.options.claimName=spark-executor-pvc
+--conf spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.readOnly=false
+--conf spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path=/data
+</code></pre></div>
+
+<p>Another approach is to let k8s create EBS volumes dynamically based on your spark workload. You can do so by specifying just the storageClass  and sizeLimit  options and specify OnDemand for the persistent volume claim (PVC). This is useful in case of <a href="https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation">Dynamic Resource Allocation</a>. Please be sure to use EMR 6.3.0 release and above to use this feature because dynamic PVC support was added in Spark 3.1. Below is an example for dynamically creating volumes for executors within your job</p>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">claimName</span><span class="o">=</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="o">-</span><span class="n">pvc</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">readOnly</span><span class="o">=</span><span class="bp">false</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">path</span><span class="o">=/</span><span class="n">data</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">claimName</span><span class="o">=</span><span class="n">OnDemand</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">storageClass</span><span class="o">=</span><span class="n">encrypted</span><span class="o">-</span><span class="n">sc</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">sizeLimit</span><span class="o">=</span><span class="mi">10</span><span class="n">Gi</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">path</span><span class="o">=/</span><span class="n">data</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">readOnly</span><span class="o">=</span><span class="bp">false</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">spark</span><span class="o">-</span><span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">-</span><span class="n">spill</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">claimName</span><span class="o">=</span><span class="n">OnDemand</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">spark</span><span class="o">-</span><span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">-</span><span class="n">spill</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">storageClass</span><span class="o">=</span><span class="n">encrypted</span><span class="o">-</span><span class="n">sc</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">spark</span><span class="o">-</span><span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">-</span><span class="n">spill</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">sizeLimit</span><span class="o">=</span><span class="mi">10</span><span class="n">Gi</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">spark</span><span class="o">-</span><span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">-</span><span class="n">spill</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">path</span><span class="o">=/</span><span class="k">var</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">spill</span>
+<span class="o">--</span><span class="n">conf</span> <span class="n">spark</span><span class="o">.</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">persistentVolumeClaim</span><span class="o">.</span><span class="n">spark</span><span class="o">-</span><span class="n">local</span><span class="o">-</span><span class="n">dir</span><span class="o">-</span><span class="n">spill</span><span class="o">.</span><span class="n">mount</span><span class="o">.</span><span class="n">readOnly</span><span class="o">=</span><span class="bp">false</span>
+</code></pre></div>
+
+<p>For a complete list of available options, please refer to the <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html#spark-properties">Spark Documentation</a></p>
+<h4 id="amazon-efs">Amazon EFS<a class="headerlink" href="#amazon-efs" title="Permanent link">&para;</a></h4>
+<p>Similar to EBS, you can consume EFS volumes via <a href="https://github.com/kubernetes-sigs/aws-efs-csi-driver">EFS CSI driver</a> and FSx for Lustre volumes via <a href="https://github.com/kubernetes-sigs/aws-fsx-csi-driver">FSx CSI driver</a>. There are two provisioning methods before these storage volumes are consumed by workloads, namely static provisioning and dynamic provisioning. For static provisioning, you have to pre-create volumes using AWS API’s, CLI or AWS console. For dynamic provisioning, volume is created dynamically by the CSI drivers as workloads are deployed onto Kubernetes cluster. Currently, EFS CSI driver doesn’t support dynamic volume provisioning. However, you can create the volume using EFS API or AWS console before creating a <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">persistent volume (PV)</a> that can be used within your spark application. If you plan to encrypt the data stored in EFS, you need to specify encryption during volume creation. For further information about EFS file encryption, please refer to <a href="https://docs.aws.amazon.com/efs/latest/ug/encryption-at-rest.html">Encrypting Data at Rest</a>. One of the advantages of using EFS is that it provides <a href="https://aws.amazon.com/blogs/aws/new-encryption-of-data-in-transit-for-amazon-efs/">encryption in transit</a> support using TLS and its enabled by default by the CSI driver. You can see the example below if you need to enforce TLS encryption during PV creation</p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span> <span class="n">PersistentVolume</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">efs</span><span class="o">-</span><span class="n">pv</span>
+<span class="n">spec</span><span class="o">:</span>
+  <span class="n">capacity</span><span class="o">:</span>
+    <span class="n">storage</span><span class="o">:</span> <span class="mi">5</span><span class="n">Gi</span>
+  <span class="n">volumeMode</span><span class="o">:</span> <span class="n">Filesystem</span>
+  <span class="n">accessModes</span><span class="o">:</span>
+    <span class="o">-</span> <span class="n">ReadWriteOnce</span>
+  <span class="n">persistentVolumeReclaimPolicy</span><span class="o">:</span> <span class="n">Retain</span>
+  <span class="n">storageClassName</span><span class="o">:</span> <span class="n">efs</span><span class="o">-</span><span class="n">sc</span>
+  <span class="n">csi</span><span class="o">:</span>
+    <span class="n">driver</span><span class="o">:</span> <span class="n">efs</span><span class="o">.</span><span class="na">csi</span><span class="o">.</span><span class="na">aws</span><span class="o">.</span><span class="na">com</span>
+    <span class="n">volumeHandle</span><span class="o">:</span> <span class="n">fs</span><span class="o">-</span><span class="mi">4</span><span class="n">af69aab</span>
+    <span class="n">volumeAttributes</span><span class="o">:</span>
+      <span class="n">encryptInTransit</span><span class="o">:</span> <span class="s2">&quot;true&quot;</span>
+</code></pre></div>
+
+<h4 id="amazon-fsx-for-lustre">Amazon FSx for Lustre<a class="headerlink" href="#amazon-fsx-for-lustre" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/kubernetes-sigs/aws-fsx-csi-driver">Amazon FSx CSI driver</a>supports both static and dynamic provisioning. Encryption for data in-transit is automatically enabled from Amazon EC2 instances that support encryption in transit. To learn which EC2 instances support encryption in transit, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/data-protection.html#encryption-transit">Encryption in Transit</a> in the Amazon EC2 User Guide for Linux Instances. Encryption for data at rest is automatically enabled when you create the FSx filesystem. Amazon FSx for Lustre supports two types of filesystems, namely persistent and scratch. You can use the default encryption method where encryption keys are managed by Amazon FSx. However, if you prefer to manage your own KMS keys, you can do so for persistent filesystem. The example below shows how to create <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">storage class</a> using FSx for Lustre for persistent filesystem using your own KMS managed keys.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">kind</span><span class="o">:</span> <span class="n">StorageClass</span>
+<span class="n">apiVersion</span><span class="o">:</span> <span class="n">storage</span><span class="o">.</span><span class="na">k8s</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">metadata</span><span class="o">:</span>
+  <span class="n">name</span><span class="o">:</span> <span class="n">fsx</span><span class="o">-</span><span class="n">sc</span>
+<span class="n">provisioner</span><span class="o">:</span> <span class="n">fsx</span><span class="o">.</span><span class="na">csi</span><span class="o">.</span><span class="na">aws</span><span class="o">.</span><span class="na">com</span>
+<span class="n">parameters</span><span class="o">:</span>
+  <span class="n">subnetId</span><span class="o">:</span> <span class="n">subnet</span><span class="o">-</span><span class="mi">056</span><span class="n">da83524edbe641</span>
+  <span class="n">securityGroupIds</span><span class="o">:</span> <span class="n">sg</span><span class="o">-</span><span class="mi">086</span><span class="n">f61ea73388fb6b</span>
+  <span class="n">deploymentType</span><span class="o">:</span> <span class="n">PERSISTENT_1</span>
+  <span class="n">kmsKeyId</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">kms_arn</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>You can then create persistent volume claim (see an example in <a href="https://github.com/kubernetes-sigs/aws-fsx-csi-driver/tree/master/examples/kubernetes/dynamic_provisioning">FSx repo</a>) and use within your spark application as below</p>
+<div class="codehilite"><pre><span></span><code>--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.options.claimName=fsx-claim
+--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.mount.readOnly=false
+--conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.mount.path=/data
+</code></pre></div>
+
+<h4 id="using-spark-to-encrypt-data">Using Spark to encrypt data<a class="headerlink" href="#using-spark-to-encrypt-data" title="Permanent link">&para;</a></h4>
+<p>Apache Spark supports encrypting temporary data that is stored on storage volumes. These volumes can be instance storage such as <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html">NVMe SSD volumes</a>, EBS, EFS or FSx volumes. Temporary data can be shuffle files, shuffle spills and data blocks stored on disk (for both caching and broadcast variables). Its important to note that the data on NVMe instance storage is encrypted using an XTS-AES-256 block cipher implemented in a hardware module on the instance. Even though, instance storage is available, you need to format and mount them while you bootstrap EC2 instances. Below is an example to show how to use instance storage using eksctl</p>
+<div class="codehilite"><pre><span></span><code>managedNodeGroups:
+- name: nvme
+  minSize: 2
+  desiredCapacity: 2
+  maxSize: 10
+  instanceType: r5d.4xlarge
+  ssh:
+    enableSsm: true
+  preBootstrapCommands:
+    - IDX=1
+    - for DEV in /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_*-ns-1; do  mkfs.xfs <span class="cp">${</span><span class="n">DEV</span><span class="cp">}</span>;mkdir -p /local<span class="cp">${</span><span class="n">IDX</span><span class="cp">}</span>;echo <span class="cp">${</span><span class="n">DEV</span><span class="cp">}</span> /local<span class="cp">${</span><span class="n">IDX</span><span class="cp">}</span> xfs defaults,noatime 1 2 &gt;&gt; /etc/fstab; IDX=$((<span class="cp">${</span><span class="n">IDX</span><span class="cp">}</span> + 1)); done
+    - mount -a
+</code></pre></div>
+
+<p>If you use non-NVMe SSD volumes, you can follow the best practice to encrypt shuffle data before you write them to disks. You can see an example below that shows this example. For more information about the type of instance store volume supported by each instance type, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html#instance-store-volumes">Instance store volumes</a>.</p>
+<div class="codehilite"><pre><span></span><code>--conf spark.io.encryption.enabled=true
+</code></pre></div>
+
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h3>
+<p>In this document, we covered shared responsibility model for running EMR on EKS workload. We then reviewed platform capabilities available through AWS infrastructure and how to enable encryption for both storage-level and via spark application. To quote Werner Vogels, AWS CTO “Security is everyone’s job now, not just the security team’s”. We hope this document provides prescriptive guidance into how to enable encryption for running secure EMR on EKS workload.   </p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../../../outposts/emr-containers-on-outposts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: EMR on EKS(AWS Outposts)" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              EMR on EKS(AWS Outposts)
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../data-encryption/" class="md-footer__link md-footer__link--next" aria-label="Next: Data Encryption" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Data Encryption
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      
+    
+  </body>
+</html>
