@@ -11,9 +11,10 @@ EMR on EKS provides simple way to run spark jobs on top of EKS clusters. The arc
 
 AWS assumes different levels of responsibility depending on the features being consumed by EMR on EKS customers. At this time of writing, the features from EKS are managed node groups, self-managed workers, and Fargate. We won’t go in-depth on these architectures as they are detailed in EKS best practices guide (https://aws.github.io/aws-eks-best-practices/security/docs/). Below diagrams depict how this responsibility changes between customer and AWS based on consumed features.
 
-<img src="../resources/images/emr-on-eks-self-and-managed.png" alt="emr-on-eks-self-and-managed" width="1000" />
-
-<img src="../resources/images/emr-on-eks-fargate.png" alt="emr-on-eks-fargate" width="500" />
+<!-- <img src="../resources/images/emr-on-eks-self-and-managed.png" alt="emr-on-eks-self-and-managed" width="1000" />
+//<img src="../resources/images/emr-on-eks-fargate.png" alt="emr-on-eks-fargate" width="500" /> -->
+![](../resources/images/emr-on-eks-self-and-managed.png)
+![](../resources/images/emr-on-eks-fargate.png)
 
 ### Encryption for data in-transit
 
