@@ -90,7 +90,7 @@ Output from driver logs - Displays the number of rows.
 
 
 
-####**AWS Glue catalog in different account**
+#### **AWS Glue catalog in different account**
 The Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to [AWS Glue catalog in Account B.](https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html) The IAM policy attached to the job execution role `("executionRoleArn": "<execution-role-arn>") `is in Account A
 
 ```
@@ -193,9 +193,10 @@ Output from driver logs - displays the number of rows.
 +----------+
 ```
 
-####**Sync Hudi table with AWS Glue catalog**
-In the below example a Spark application will be configured to use [AWS Glue data catalog](https://docs.aws.amazon.com/glue/latest/dg/components-overview.html) as the hive metastore.  
-Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Glue catalog via the Hive Metastore Service (HMS) in hive sync mode. This example runs a Hudi ETL job with EMR on EKS, and interact with AWS Glue metaStore to create a table.
+#### **Sync Hudi table with AWS Glue catalog**
+In this example, a Spark application will be configured to use [AWS Glue data catalog](https://docs.aws.amazon.com/glue/latest/dg/components-overview.html) as the hive metastore. 
+
+Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Glue catalog via the Hive Metastore Service (HMS) in hive sync mode. This example runs a Hudi ETL job with EMR on EKS, and interact with AWS Glue metaStore to create a table. It provides you the native and serverless capabilities to manage your technical metadata. Also you can query Hudi tables in Athena straigt away after the ETL job, which provides your end user an easy data access and shortens the time to insight.
 
 **HudiEMRonEKS.py**
 
@@ -283,4 +284,4 @@ aws emr-containers start-job-run \
     "monitoringConfiguration": {
       "s3MonitoringConfiguration": {"logUri": "s3://'$S3BUCKET'/elasticmapreduce/emr-containers"}}}'
 ```
-NOTE: To get a correct verison of hudi library, we directly download the jar from the maven repository with the synctax of `"sparkSubmitParameters": "--jars https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_2.12/0.9.0/hudi-spark3-bundle_2.12-0.9.0.jar`
+NOTE: To get a correct verison of hudi library, we directly download the jar from the maven repository with the synctax of `"sparkSubmitParameters": "--jars https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_2.12/0.9.0/hudi-spark3-bundle_2.12-0.9.0.jar`. Starting from EMR 6.5, the Hudi-spark3-bundle library will be included in EMR docker images.
