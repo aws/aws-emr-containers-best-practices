@@ -160,7 +160,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-hms
 ### **3-Connect Hive metastore via thrift service hosted on EKS**
 In this example, our Spark application connects to a standalone Hive metastore service (HMS) running in EKS.
 
-Running the standalone HMS in EKS unifies your analytics applications with other business critical apps in a single platform. It simplifies your solution architecture and infrastructure design. The helm chart solution includes autoscaling feature, so your EKS cluster can automatically expand or shrink when the HMS request volume changes. Also it follows the security best practice to manage JDBC credentials via AWS Secrets Manager. However, the solution requires DevOps and k8s skills, also you need to be able to maintain the workload stability and resiliency in EKS.
+Running the standalone HMS in EKS unifies your analytics applications with other business critical apps in a single platform. It simplifies your solution architecture and infrastructure design. The helm chart solution includes autoscaling feature, so your EKS cluster can automatically expand or shrink when the HMS request volume changes. Also it follows the security best practice to manage JDBC credentials via AWS Secrets Manager. However, you will need a combination of analytics and k8s skills to maintain this solution.
 
 To install the [HMS helm chart](https://github.com/melodyyangaws/hive-emr-on-eks/tree/main/hive-metastore-chart), simply replace the environment variables in values.yaml, then manually `helm install` via the command below. Otherwise, deploy the HMS via a CDK/CFN template with a security best practice. Check out the [CDK project](https://github.com/melodyyangaws/hive-emr-on-eks/blob/5faa5201cb9fb437e70fe895bcebc94bd076a74a/source/lib/spark_on_eks_stack.py#L81) for more details.
 
@@ -194,7 +194,8 @@ spark.sql("SHOW DATABASES").show()
 spark.sql("CREATE DATABASE IF NOT EXISTS `demo`")
 spark.sql("DROP TABLE IF EXISTS demo.amazonreview3")
 spark.sql("CREATE EXTERNAL TABLE IF NOT EXISTS `demo`.`amazonreview3`( `marketplace` string,`customer_id`string,`review_id` string,`product_id` string,`product_parent` string,`product_title` string,`star_rating` integer,`helpful_votes` integer,`total_votes` integer,`vine` string,`verified_purchase` string,`review_headline` string,`review_body` string,`review_date` date,`year` integer) STORED AS PARQUET LOCATION '"+sys.argv[1]+"/app_code/data/toy/'")
-
+spark.sql("SELECT coount(*) FROM demo.amazonreview3").show()
+spark.stop()
 ``` 
 An environment variable `HIVE_METASTORE_SERVICE_HOST` appears in your Spark application pods automatically, once the standalone HMS is up running in EKS. You can directly set the `hive.metastore.uris` to `thrift://"+environ['HIVE_METASTORE_SERVICE_HOST']+":9083"`.
 
@@ -221,7 +222,7 @@ aws emr-containers start-job-run \
       
 ### **4-Run thrift service as a sidecar in Spark Driver's pod**
 
-This advanced solution runs the standalone HMS thrift service inside a Spark driver as a sidecar. It means each Spark job will have its dedicated thrift server. The benefit of the design is HMS is no long a single point of failure, since each Spark application has its own HMS. Also it is no long a long running service, i.e. it spins up when your Spark job starts, then terminates when your job is done. The disadvantage is the initial setup against an existing EKS cluster is not easy and it requires combination skills of analytics and k8s. 
+This advanced solution runs the standalone HMS thrift service inside a Spark driver as a sidecar. It means each Spark job will have its dedicated thrift server. The benefit of the design is HMS is no long a single point of failure, since each Spark application has its own HMS. Also it is no long a long running service, i.e. it spins up when your Spark job starts, then terminates when your job is done. The sidecar follows the security best practice via leveraging Secrets Manager to extract JDBC crednetials. However, the maintenance of the sidecar increases because you now need to manage the hms sidecar, custom configmaps and sidecar pod templates. Also this solution requires combination skills of analytics and k8s. 
 
 The CDK/CFN template is available to simplify the installation against a new EKS cluster. If you have an existing EKS cluster, the prerequisite details can be found in the [github repository](https://github.com/melodyyangaws/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
 
@@ -241,7 +242,7 @@ spark.sql("SHOW DATABASES").show()
 spark.sql("CREATE DATABASE IF NOT EXISTS `demo`")
 spark.sql("DROP TABLE IF EXISTS demo.amazonreview4")
 spark.sql("CREATE EXTERNAL TABLE `demo`.`amazonreview4`( `marketplace` string,`customer_id`string,`review_id` string,`product_id` string,`product_parent` string,`product_title` string,`star_rating` integer,`helpful_votes` integer,`total_votes` integer,`vine` string,`verified_purchase` string,`review_headline` string,`review_body` string,`review_date` date,`year` integer) STORED AS PARQUET LOCATION '"+sys.argv[1]+"/app_code/data/toy/'")
-
+spark.sql("SELECT coount(*) FROM demo.amazonreview4").show()
 spark.stop()
 ```
 
@@ -282,7 +283,7 @@ aws emr-containers start-job-run \
 
 Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Hive metastore in HMS sync mode, with this setting `'hoodie.datasource.hive_sync.mode': 'hms'`. 
 
-This example runs a Hudi job with EMR on EKS, and interact with hive metastore to create a table. As a serverless option, it can interact with AWS Glue catalog. check out the [AWS Glue](./aws-glue.md) section for more details.
+This example runs a Hudi job with EMR on EKS, and interact with a remote RDS hive metastore to create a Hudi table. As a serverless option, it can interact with AWS Glue catalog. check out the [AWS Glue](./aws-glue.md) section for more details.
 
 **HudiEMRonEKS.py**
 

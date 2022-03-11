@@ -196,7 +196,7 @@ Output from driver logs - displays the number of rows.
 #### **Sync Hudi table with AWS Glue catalog**
 In this example, a Spark application will be configured to use [AWS Glue data catalog](https://docs.aws.amazon.com/glue/latest/dg/components-overview.html) as the hive metastore. 
 
-Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Glue catalog via the Hive Metastore Service (HMS) in hive sync mode. This example runs a Hudi ETL job with EMR on EKS, and interact with AWS Glue metaStore to create a table. It provides you the native and serverless capabilities to manage your technical metadata. Also you can query Hudi tables in Athena straigt away after the ETL job, which provides your end user an easy data access and shortens the time to insight.
+Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Glue catalog via the Hive Metastore Service (HMS) in hive sync mode. This example runs a Hudi ETL job with EMR on EKS, and interact with AWS Glue metaStore to create a Hudi table. It provides you the native and serverless capabilities to manage your technical metadata. Also you can query Hudi tables in Athena straigt away after the ETL job, which provides your end user an easy data access and shortens the time to insight.
 
 **HudiEMRonEKS.py**
 
