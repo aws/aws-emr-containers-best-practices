@@ -90,7 +90,7 @@ Output from driver logs - Displays the number of rows.
 
 
 
-####**AWS Glue catalog in different account**
+#### **AWS Glue catalog in different account**
 The Spark application is submitted to EMR Virtual cluster in Account A and is configured to connect to [AWS Glue catalog in Account B.](https://docs.aws.amazon.com/glue/latest/dg/cross-account-access.html) The IAM policy attached to the job execution role `("executionRoleArn": "<execution-role-arn>") `is in Account A
 
 ```
@@ -193,3 +193,95 @@ Output from driver logs - displays the number of rows.
 +----------+
 ```
 
+#### **Sync Hudi table with AWS Glue catalog**
+In this example, a Spark application will be configured to use [AWS Glue data catalog](https://docs.aws.amazon.com/glue/latest/dg/components-overview.html) as the hive metastore. 
+
+Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Glue catalog via the Hive Metastore Service (HMS) in hive sync mode. This example runs a Hudi ETL job with EMR on EKS, and interact with AWS Glue metaStore to create a Hudi table. It provides you the native and serverless capabilities to manage your technical metadata. Also you can query Hudi tables in Athena straigt away after the ETL job, which provides your end user an easy data access and shortens the time to insight.
+
+**HudiEMRonEKS.py**
+
+```
+cat > HudiEMRonEKS.py <<EOF
+import sys
+from pyspark.sql import SparkSession
+
+spark = SparkSession \
+    .builder \
+    .config("spark.sql.warehouse.dir", sys.argv[1]+"/warehouse/" ) \
+    .enableHiveSupport() \
+    .getOrCreate()
+
+# Create a DataFrame
+inputDF = spark.createDataFrame(
+    [
+        ("100", "2015-01-01", "2015-01-01T13:51:39.340396Z"),
+        ("101", "2015-01-01", "2015-01-01T12:14:58.597216Z"),
+        ("102", "2015-01-01", "2015-01-01T13:51:40.417052Z"),
+        ("103", "2015-01-01", "2015-01-01T13:51:40.519832Z"),
+        ("104", "2015-01-02", "2015-01-01T12:15:00.512679Z"),
+        ("105", "2015-01-02", "2015-01-01T13:51:42.248818Z"),
+    ],
+    ["id", "creation_date", "last_update_time"]
+)
+
+# Specify common DataSourceWriteOptions in the single hudiOptions variable
+test_tableName = "hudi_tbl"
+hudiOptions = {
+'hoodie.table.name': test_tableName,
+'hoodie.datasource.write.recordkey.field': 'id',
+'hoodie.datasource.write.partitionpath.field': 'creation_date',
+'hoodie.datasource.write.precombine.field': 'last_update_time',
+'hoodie.datasource.hive_sync.enable': 'true',
+'hoodie.datasource.hive_sync.table': test_tableName,
+'hoodie.datasource.hive_sync.database': 'default',
+'hoodie.datasource.write.hive_style_partitioning': 'true',
+'hoodie.datasource.hive_sync.partition_fields': 'creation_date',
+'hoodie.datasource.hive_sync.partition_extractor_class': 'org.apache.hudi.hive.MultiPartKeysValueExtractor',
+'hoodie.datasource.hive_sync.mode': 'hms'
+}
+
+
+# Write a DataFrame as a Hudi dataset
+inputDF.write \
+.format('org.apache.hudi') \
+.option('hoodie.datasource.write.operation', 'bulk_insert') \
+.options(**hudiOptions) \
+.mode('overwrite') \
+.save(sys.argv[1]+"/hudi_hive_insert")
+EOF
+```
+
+NOTE: configure the `warehouse dir` property to point to a S3 location as your hive warehouse storage. The s3 location can be dynamic, which is based on an argument passed in or an environament vairable.
+```
+.config("spark.sql.warehouse.dir", sys.argv[1]+"/warehouse/" )
+```
+
+**Request**
+
+```
+export S3BUCKET=YOUR_S3_BUCKET_NAME
+
+aws emr-containers start-job-run \
+--virtual-cluster-id $VIRTUAL_CLUSTER_ID \
+--name hudi-test1 \
+--execution-role-arn $EMR_ROLE_ARN \
+--release-label emr-6.3.0-latest \
+--job-driver '{
+  "sparkSubmitJobDriver": {
+      "entryPoint": "s3://'$S3BUCKET'/app_code/job/HudiEMRonEKS.py",
+      "entryPointArguments":["s3://'$S3BUCKET'"],
+      "sparkSubmitParameters": "--jars https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_2.12/0.9.0/hudi-spark3-bundle_2.12-0.9.0.jar --conf spark.executor.cores=1 --conf spark.executor.instances=2"}}' \
+--configuration-overrides '{
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.serializer": "org.apache.spark.serializer.KryoSerializer",
+          "spark.sql.hive.convertMetastoreParquet": "false",
+          "spark.hadoop.hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
+        }}
+    ], 
+    "monitoringConfiguration": {
+      "s3MonitoringConfiguration": {"logUri": "s3://'$S3BUCKET'/elasticmapreduce/emr-containers"}}}'
+```
+NOTE: To get a correct verison of hudi library, we directly download the jar from the maven repository with the synctax of `"sparkSubmitParameters": "--jars https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_2.12/0.9.0/hudi-spark3-bundle_2.12-0.9.0.jar`. Starting from EMR 6.5, the Hudi-spark3-bundle library will be included in EMR docker images.
