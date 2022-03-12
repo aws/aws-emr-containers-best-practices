@@ -1,6 +1,6 @@
 # **EMR Containers integration with Hive Metastore**
 
-For more details, check out the [github repository](https://github.com/melodyyangaws/hive-emr-on-eks), which includes CDK/CFN templates that help you to get started quickly.
+For more details, check out the [github repository](https://github.com/aws-samples/hive-emr-on-eks), which includes CDK/CFN templates that help you to get started quickly.
 
 ### **1-Hive metastore Database through JDBC**
 
@@ -162,7 +162,7 @@ In this example, our Spark application connects to a standalone Hive metastore s
 
 Running the standalone HMS in EKS unifies your analytics applications with other business critical apps in a single platform. It simplifies your solution architecture and infrastructure design. The helm chart solution includes autoscaling feature, so your EKS cluster can automatically expand or shrink when the HMS request volume changes. Also it follows the security best practice to manage JDBC credentials via AWS Secrets Manager. However, you will need a combination of analytics and k8s skills to maintain this solution.
 
-To install the [HMS helm chart](https://github.com/melodyyangaws/hive-emr-on-eks/tree/main/hive-metastore-chart), simply replace the environment variables in values.yaml, then manually `helm install` via the command below. Otherwise, deploy the HMS via a CDK/CFN template with a security best practice. Check out the [CDK project](https://github.com/melodyyangaws/hive-emr-on-eks/blob/5faa5201cb9fb437e70fe895bcebc94bd076a74a/source/lib/spark_on_eks_stack.py#L81) for more details.
+To install the [HMS helm chart](https://github.com/aws-samples/hive-emr-on-eks/tree/main/hive-metastore-chart), simply replace the environment variables in values.yaml, then manually `helm install` via the command below. Otherwise, deploy the HMS via a CDK/CFN template with a security best practice. Check out the [CDK project](https://github.com/aws-samples/hive-emr-on-eks/blob/5faa5201cb9fb437e70fe895bcebc94bd076a74a/source/lib/spark_on_eks_stack.py#L81) for more details.
 
 ```bash
 cd hive-emr-on-eks/hive-metastore-chart
@@ -172,7 +172,7 @@ sed -i '' -e 's/{RDS_USERNAME}/'$YOUR_USER_NAME'/g' values.yaml
 sed -i '' -e 's/{RDS_PASSWORD}/'$YOUR_PASSWORD'/g' values.yaml
 sed -i '' -e 's/{S3BUCKET}/s3:\/\/'$YOUR_S3BUCKET'/g' values.yaml
 
-helm repo add hive-metastore https://melodyyangaws.github.io/hive-metastore-chart 
+helm repo add hive-metastore https://aws-samples.github.io/hive-metastore-chart 
 helm install hive hive-metastore/hive-metastore -f values.yaml --namespace=emr --debug
 ```
 
@@ -224,7 +224,7 @@ aws emr-containers start-job-run \
 
 This advanced solution runs the standalone HMS thrift service inside a Spark driver as a sidecar. It means each Spark job will have its dedicated thrift server. The benefit of the design is HMS is no long a single point of failure, since each Spark application has its own HMS. Also it is no long a long running service, i.e. it spins up when your Spark job starts, then terminates when your job is done. The sidecar follows the security best practice via leveraging Secrets Manager to extract JDBC crednetials. However, the maintenance of the sidecar increases because you now need to manage the hms sidecar, custom configmaps and sidecar pod templates. Also this solution requires combination skills of analytics and k8s. 
 
-The CDK/CFN template is available to simplify the installation against a new EKS cluster. If you have an existing EKS cluster, the prerequisite details can be found in the [github repository](https://github.com/melodyyangaws/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
+The CDK/CFN template is available to simplify the installation against a new EKS cluster. If you have an existing EKS cluster, the prerequisite details can be found in the [github repository](https://github.com/aws-samples/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
 
 **sidecar_hivethrift_eks.py:**
 
@@ -250,7 +250,7 @@ spark.stop()
 
 Now that the HMS is running inside your Spark driver, it share common attributes such as the network config, the `spark.hive.metastore.uris` can set to "thrift://localhost:9083". Don't forget to assign the sidecar pod template to the Spark Driver like this `"spark.kubernetes.driver.podTemplateFile": "s3://'$S3BUCKET'/app_code/job/sidecar_hms_pod_template.yaml"` 
 
-For more details, check out the [github repo](https://github.com/melodyyangaws/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
+For more details, check out the [github repo](https://github.com/aws-samples/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
 
 ```bash
 #!/bin/bash
