@@ -144,7 +144,7 @@ spec:
     requests:
       storage: 10Gi
 ```
-Once these resources are created, you can specify them in your drivers and executors. You can see an example of this specification below.
+Once these resources are created, you can specify them in your drivers and executors. You can see an example of this specification below. Keep in mind, you can only attach an EBS volume to single EC2 instance or a Kubernetes pod. Therefore, if you have multiple executor pods, you need to create multiple PVCs to fulfill this request 
 ```
 --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.options.claimName=spark-driver-pvc
 --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.data.mount.readOnly=false
