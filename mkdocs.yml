@@ -23,6 +23,7 @@ nav:
       - AWS Glue: 'metastore-integrations/docs/aws-glue.md'
   - Debugging:
       - Change Log Level: 'debugging/docs/change-log-level.md'
+      - Connect to Spark UI: 'debugging/docs/connect-spark-ui.md'
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
