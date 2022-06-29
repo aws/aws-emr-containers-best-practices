@@ -13,7 +13,7 @@
     
     
       
-        <title>EKS Fargate Node placement - EMR Containers Best Practices Guides</title>
+        <title>PVC permission - EMR Containers Best Practices Guides</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#eks-fargate-node-placement" class="md-skip">
+        <a href="#troubleshoot-spark-application" class="md-skip">
           Skip to content
         </a>
       
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              EKS Fargate Node placement
+              PVC permission
             
           </span>
         </div>
@@ -259,13 +259,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../troubleshoot/docs/pvc-permission/" class="md-tabs__link">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Troubleshoot
       </a>
     </li>
@@ -275,15 +277,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../eks-node-placement/" class="md-tabs__link md-tabs__link--active">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
         Node Placement
       </a>
     </li>
@@ -730,12 +730,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
       
       
       
@@ -756,11 +758,93 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../troubleshoot/docs/pvc-permission/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          PVC permission
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         PVC permission
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-1-persistentvolumeclaims-is-forbidden" class="md-nav__link">
+    Scenario 1 - "PersistentVolumeClaims is forbidden"
+  </a>
+  
+    <nav class="md-nav" aria-label="Scenario 1 - "PersistentVolumeClaims is forbidden"">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cause" class="md-nav__link">
+    Cause:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution" class="md-nav__link">
+    Solution:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-via-automated-script" class="md-nav__link">
+    Patch via automated script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-patch" class="md-nav__link">
+    Manual patch
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -778,14 +862,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
       
       
       
@@ -808,7 +890,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../eks-node-placement/" class="md-nav__link">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
         EKS Node placement
       </a>
     </li>
@@ -820,86 +902,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          EKS Fargate Node placement
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
         EKS Fargate Node placement
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#fargate-node-placement" class="md-nav__link">
-    Fargate Node Placement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-fargate-profile" class="md-nav__link">
-    AWS Fargate profile
-  </a>
-  
-    <nav class="md-nav" aria-label="AWS Fargate profile">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
-    1- Place entire job including driver pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
-    2- Place driver pod on EC2 and executor pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
-    3- Define a NodeSelector in Pod Templates
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1048,37 +1055,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fargate-node-placement" class="md-nav__link">
-    Fargate Node Placement
+  <a href="#scenario-1-persistentvolumeclaims-is-forbidden" class="md-nav__link">
+    Scenario 1 - "PersistentVolumeClaims is forbidden"
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-fargate-profile" class="md-nav__link">
-    AWS Fargate profile
-  </a>
-  
-    <nav class="md-nav" aria-label="AWS Fargate profile">
+    <nav class="md-nav" aria-label="Scenario 1 - "PersistentVolumeClaims is forbidden"">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
-    1- Place entire job including driver pod on Fargate
+  <a href="#cause" class="md-nav__link">
+    Cause:
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
-    2- Place driver pod on EC2 and executor pod on Fargate
+  <a href="#solution" class="md-nav__link">
+    Solution:
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
-    3- Define a NodeSelector in Pod Templates
+  <a href="#verification" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patch-via-automated-script" class="md-nav__link">
+    Patch via automated script
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-patch" class="md-nav__link">
+    Manual patch
   </a>
   
 </li>
@@ -1100,165 +1114,92 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/node-placement/docs/fargate-node-placement.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/troubleshoot/docs/pvc-permission.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
-<h1 id="eks-fargate-node-placement"><strong>EKS Fargate Node Placement</strong><a class="headerlink" href="#eks-fargate-node-placement" title="Permanent link">&para;</a></h1>
-<h2 id="fargate-node-placement"><strong>Fargate Node Placement</strong><a class="headerlink" href="#fargate-node-placement" title="Permanent link">&para;</a></h2>
-<p>AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you don't have to provision, configure, or scale groups of EC2 instances on your own to run containers. You also don't need to choose server types, decide when to scale your node groups, or optimize cluster packing. Instead you can control which pods start on Fargate and how they run with Fargate profiles.</p>
-<h2 id="aws-fargate-profile">AWS Fargate profile<a class="headerlink" href="#aws-fargate-profile" title="Permanent link">&para;</a></h2>
-<p>Before you can schedule pods on Fargate in your cluster, you must define at least one Fargate profile that specifies which pods use Fargate when launched.  You must define a namespace for every selector. The Fargate profile allows an administrator to declare which pods run on Fargate. This declaration is done through the profile’s selectors. If a namespace selector is defined without any labels, Amazon EKS attempts to schedule all pods that run in that namespace onto Fargate using the profile.</p>
-<p><strong>Create Fargate Profile</strong>
-Create your Fargate profile with the following eksctl command, replacing the <code>&lt;variable text&gt;</code> (including &lt;&gt;) with your own values. You're required to specify a namespace. The <code>--labels</code> option is not required to create your Fargate profile, but will be required if you want to only run Spark executors on Fargate.</p>
-<div class="codehilite"><pre><span></span><code>eksctl create fargateprofile \
-    --cluster &lt;cluster_name&gt; \
-    --name &lt;fargate_profile_name&gt; \
-    --namespace &lt;virtual_cluster_mapped_namespace&gt; \
-    --labels spark-node-placement=fargate
+<h1 id="troubleshoot-spark-application"><strong>Troubleshoot Spark application</strong><a class="headerlink" href="#troubleshoot-spark-application" title="Permanent link">&para;</a></h1>
+<p>To obtain application error details, find the CloudWatch log or s3 log location defined by your job submission script. 
+For example the driver log is stored in s3://S3BUCKET_NAME/emr-containers-log/CLUSTER_ID/jobs/JOB_ID/containers/spark-JOB_ID/spark-JOB_ID-driver/stderr.gz defined by the following submission config:</p>
+<div class="codehilite"><pre><span></span><code>--configuration-overrides <span class="s1">&#39;{</span>
+<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/emr-containers-log&quot;}}}&#39;</span>
 </code></pre></div>
 
-<h3 id="1-place-entire-job-including-driver-pod-on-fargate">1- Place entire job including driver pod on Fargate<a class="headerlink" href="#1-place-entire-job-including-driver-pod-on-fargate" title="Permanent link">&para;</a></h3>
-<p>When both Driver and Executors use the same labels as the Fargate Selector, the entire job including the driver pod will run on Fargate.</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=4  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.driver.label.spark-node-placement&quot;: &quot;fargate&quot;,
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<h2 id="scenario-1-persistentvolumeclaims-is-forbidden"><strong>Scenario 1 - "PersistentVolumeClaims is forbidden"</strong><a class="headerlink" href="#scenario-1-persistentvolumeclaims-is-forbidden" title="Permanent link">&para;</a></h2>
+<p>Running Spark jobs that require creation, listing or deletion of Persistent Volume Claims (PVC) is not supported before EMR6.8. Jobs that require these permissions will fail with the exception “persistentvolumeclaims is forbidden". Looking into application logs, you can see the driver log shows an error something look like this: <code>persistentvolumeclaims is forbidden. User "system:serviceaccount:emr:emr-containers-sa-spark-client-93ztm12rnjz163mt3rgdb3bjqxqfz1cgvqh1e9be6yr81" cannot create resource "persistentvolumeclaims" in API group "" in namesapce "emr".</code></p>
+<h3 id="cause"><strong>Cause:</strong><a class="headerlink" href="#cause" title="Permanent link">&para;</a></h3>
+<p>This is due to the default Kubernetes role: “emr-containers” missing the required PVC permissions. As a result, the <code>emr-containers</code> primary role can’t dynamically create necessary permissions in its childern roles of Spark driver, Spark executor or Spark client when submit a job. </p>
+<h3 id="solution"><strong>Solution:</strong><a class="headerlink" href="#solution" title="Permanent link">&para;</a></h3>
+<p>Add the required permissions to emr-containers related roles in EKS.</p>
+<h3 id="verification"><strong>Verification</strong><a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
+<p>To verify whether your <strong>emr-containers</strong> role has the necessary permissions, run the command:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">NAMESPACE</span><span class="o">=</span>YOUR_VALUE
+kubectl describe role emr-containers -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-When the job starts, the driver pod and executor pods are scheduled only on Fargate since both are labeled with the <code>spark-node-placement: fargate</code>. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. </p>
-<h3 id="2-place-driver-pod-on-ec2-and-executor-pod-on-fargate">2- Place driver pod on EC2 and executor pod on Fargate<a class="headerlink" href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" title="Permanent link">&para;</a></h3>
-<p>Remove the label from the driver pod to schedule the driver pod on EC2 instances. This is especially helpful when driver pod needs more resources (i.e. &gt; 4 vCPU).</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=6 --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<p>In addition, verify whether the spark driver/client roles have the necessary permissions with:</p>
+<div class="codehilite"><pre><span></span><code>kubectl describe role emr-containers-role-spark-driver -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
+kubectl describe role emr-containers-role-spark-client -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-When the job starts, the driver pod schedules on an EC2 instance. EKS picks an instance from the first Node Group that has the matching resources available to the driver pod.</p>
-<h3 id="3-define-a-nodeselector-in-pod-templates">3- Define a NodeSelector in Pod Templates<a class="headerlink" href="#3-define-a-nodeselector-in-pod-templates" title="Permanent link">&para;</a></h3>
-<p>Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example Spark configurations do not support defining individual node selectors for the driver pod and the executor pods. Define a node selector <strong>only</strong> for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.</p>
-<p><strong>Driver Pod Template</strong></p>
-<p><code>apiVersion: v1
-kind: Pod
-spec:
-  volumes:
-    - name: source-data-volume
-      emptyDir: {}
-    - name: metrics-files-volume
-      emptyDir: {}
-  nodeSelector:
-    &lt;ec2-instance-node-label-key&gt;: &lt;ec2-instance-node-label-value&gt;
-  containers:
-  - name: spark-kubernetes-driver # This will be interpreted as Spark driver container</code></p>
-<p>Store the pod template file onto a S3 location:</p>
-<p><code>aws s3 cp /driver-pod-template.yaml s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml</code></p>
-<p><strong>Request</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;,
-            &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<p>If the permissions aren’t there, proceed with the <strong>Patch</strong> steps:</p>
+<h3 id="patch-via-automated-script"><strong>Patch via automated script</strong><a class="headerlink" href="#patch-via-automated-script" title="Permanent link">&para;</a></h3>
+<p>1.If there’s any job(s) running that needs the PVC permissions and failing, stop the job(s).</p>
+<p>2.Download the python script <a href="https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/pvc-permission/rbac_patch.py"><code>rbac_patch.py</code></a>, then execute it:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">python3</span> <span class="n">rbac_patch</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">n</span> <span class="err">$</span><span class="p">{</span><span class="n">NAMESPACE</span><span class="p">}</span> 
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-The driver pod schedules on an EC2 instance with enough capacity and matching label key / value with the node selector.</p>
+<p>3.After running the command, it will show a kubectl diff between the new permissions and the old ones. Press <code>y</code> to patch the role.</p>
+<p>4.Verify the impacted roles have additional permissions:</p>
+<div class="codehilite"><pre><span></span><code>kubectl describe role -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
+</code></pre></div>
+
+<p>5.Submit your EMR on EKS job again.</p>
+<h3 id="manual-patch"><strong>Manual patch</strong><a class="headerlink" href="#manual-patch" title="Permanent link">&para;</a></h3>
+<p>If the permission required is not included by the PVC rules addressed previously, you can modify the patch script above or manually adjust the Kubernetes permission as needed.</p>
+<p>NOTE: the “emr-containers” is a primary role, which must provide all the necessary permissions before changing your underlying Driver or Client roles.</p>
+<p>1.Download the current permissions into yaml files by running the commands:</p>
+<div class="codehilite"><pre><span></span><code>kubectl get role -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> emr-containers -o yaml &gt;&gt; emr-containers-role-patch.yaml
+kubectl get role -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> emr-containers-role-spark-driver -o yaml &gt;&gt; driver-role-patch.yaml
+kubectl get role -n <span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span> emr-containers-role-spark-client -o yaml &gt;&gt; client-role-patch.yaml
+</code></pre></div>
+
+<p>2.Edit each yaml file and add additional rules, based on the permission your application required:</p>
+<p>For example:
+<strong>emr-containers-role-patch.yaml</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">verbs</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<p><strong>driver-role-patch.yaml</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">verbs</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+<span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;services&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">verbs</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;describe&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<p><strong>client-role-patch.yaml</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">apiGroups</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">resources</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
+  <span class="nt">verbs</span><span class="p">:</span>  <span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<p>3.Remove the following attributes and their values. This is necessary to be able to apply the update, or else an error will pop up:
+    - creationTimestamp
+    - resourceVersion
+    - uid
+4.Finally run the patch:</p>
+<div class="codehilite"><pre><span></span><code>kubectl apply -f emr-containers-role-patch.yaml
+kubectl apply -f driver-role-patch.yaml
+kubectl apply -f client-role-patch.yaml
+</code></pre></div>
+
+<p>5.Submit your EMR on EKS job again.</p>
 
               
             </article>
@@ -1272,7 +1213,7 @@ The driver pod schedules on an EC2 instance with enough capacity and matching la
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../eks-node-placement/" class="md-footer__link md-footer__link--prev" aria-label="Previous: EKS Node placement" rel="prev">
+        <a href="../../../debugging/docs/connect-spark-ui/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Connect to Spark UI" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1281,20 +1222,20 @@ The driver pod schedules on an EC2 instance with enough capacity and matching la
               <span class="md-footer__direction">
                 Previous
               </span>
-              EKS Node placement
+              Connect to Spark UI
             </div>
           </div>
         </a>
       
       
         
-        <a href="../../../performance/docs/dra/" class="md-footer__link md-footer__link--next" aria-label="Next: Dynamic Resource Allocation" rel="next">
+        <a href="../../../node-placement/docs/eks-node-placement/" class="md-footer__link md-footer__link--next" aria-label="Next: EKS Node placement" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Dynamic Resource Allocation
+              EKS Node placement
             </div>
           </div>
           <div class="md-footer__button md-icon">
