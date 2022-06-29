@@ -33,148 +33,18 @@ If the permissions aren’t there, proceed with the **Patch** steps:
 ###**Patch via automated script**
 
 1.If there’s any job(s) running that needs the PVC permissions and failing, stop the job(s).
-2.Create a script file named `RBAC_Patch.py`:
+
+2.Download the python script [`rbac_patch.py`](https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/pvc-permission/rbac_patch.py), then execute it:
 ```python
-import os
-import subprocess as sp
-import tempfile as temp
-import json
-import argparse
-import uuid
-
-
-def delete_if_exists(dictionary: dict, key: str):
-    if dictionary.get(key, None) is not None:
-        del dictionary[key]
-
-
-def doTerminalCmd(cmd):
-    with temp.TemporaryFile() as f:
-        process = sp.Popen(cmd, stdout=f, stderr=f)
-        process.wait()
-        f.seek(0)
-        msg = f.read().decode()
-    return msg
-
-
-def patchRole(roleName, namespace, extraRules, skipConfirmation=False):
-    cmd = f"kubectl get role {roleName} -n {namespace} --output json".split(" ")
-    msg = doTerminalCmd(cmd)
-    if "(NotFound)" in msg and "Error" in msg:
-        print(msg)
-        return False
-    role = json.loads(msg)
-    rules = role["rules"]
-    rulesToAssign = extraRules[::]
-    passedRules = []
-    for rule in rules:
-        apiGroups = set(rule["apiGroups"])
-        resources = set(rule["resources"])
-        verbs = set(rule["verbs"])
-        for extraRule in extraRules:
-            passes = 0
-            apiGroupsExtra = set(extraRule["apiGroups"])
-            resourcesExtra = set(extraRule["resources"])
-            verbsExtra = set(extraRule["verbs"])
-            passes += len(apiGroupsExtra.intersection(apiGroups)) >= len(apiGroupsExtra)
-            passes += len(resourcesExtra.intersection(resources)) >= len(resourcesExtra)
-            passes += len(verbsExtra.intersection(verbs)) >= len(verbsExtra)
-            if passes >= 3:
-                if extraRule not in passedRules:
-                    passedRules.append(extraRule)
-                    if extraRule in rulesToAssign:
-                        rulesToAssign.remove(extraRule)
-                break
-    prompt_text = "Apply Changes?"
-    if len(rulesToAssign) == 0:
-        print(f"The role {roleName} seems to already have the necessary permissions!")
-        prompt_text = "Proceed anyways?"
-    for ruleToAssign in rulesToAssign:
-        role["rules"].append(ruleToAssign)
-    delete_if_exists(role, "creationTimestamp")
-    delete_if_exists(role, "resourceVersion")
-    delete_if_exists(role, "uid")
-    new_role = json.dumps(role, indent=3)
-    uid = uuid.uuid4()
-    filename = f"Role-{roleName}-New_Permissions-{uid}-TemporaryFile.json"
-    try:
-        with open(filename, "w+") as f:
-            f.write(new_role)
-            f.flush()
-        prompt = "y"
-        if not skipConfirmation:
-            prompt = input(
-                doTerminalCmd(f"kubectl diff -f {filename}".split(" ")) + f"\n{prompt_text} y/n: "
-            ).lower().strip()
-            while prompt != "y" and prompt != "n":
-                prompt = input("Please make a valid selection. y/n: ").lower().strip()
-        if prompt == "y":
-            print(doTerminalCmd(f"kubectl apply -f {filename}".split(" ")))
-    except Exception as e:
-        print(e)
-    os.remove(f"./{filename}")
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--namespace",
-                        help="Namespace of the Role. By default its the VirtualCluster's namespace",
-                        required=True,
-                        dest="namespace"
-                        )
-
-    parser.add_argument("-p", "--no-prompt",
-                        help="Applies the patches without asking first",
-                        dest="no_prompt",
-                        default=False,
-                        action="store_true"
-                        )
-    args = parser.parse_args()
-
-    emrRoleRules = [
-        {
-            "apiGroups": [""],
-            "resources": ["persistentvolumeclaims"],
-            "verbs": ["list", "create", "delete"]
-        
-    ]
-
-    driverRoleRules = [
-        {
-            "apiGroups": [""],
-            "resources": ["persistentvolumeclaims"],
-            "verbs": ["list", "create", "delete"]
-        },
-        {
-            "apiGroups": [""],
-            "resources": ["services"],
-            "verbs": ["get", "list", "describe", "create", "delete", "watch"]
-        }
-    ]
-
-    clientRoleRules = [
-        {
-            "apiGroups": [""],
-            "resources": ["persistentvolumeclaims"],
-            "verbs": ["list", "create", "delete"]
-        }
-    ]
-
-    patchRole("emr-containers", args.namespace, emrRoleRules, args.no_prompt)
-    patchRole("emr-containers-role-spark-driver", args.namespace, driverRoleRules, args.no_prompt)
-    patchRole("emr-containers-role-spark-client", args.namespace, clientRoleRules, args.no_prompt)
+python3 rbac_patch.py -n ${NAMESPACE} 
 ```
-3.Run the python script:
-```python
-python3 RBAC_Patch.py -n ${NAMESPACE} 
-```
-4.After running the command, it will show a kubectl diff between the new permissions and the old ones. Press `y` to patch the role.
+3.After running the command, it will show a kubectl diff between the new permissions and the old ones. Press `y` to patch the role.
 
-5.Verify the impacted roles have additional permissions:
+4.Verify the impacted roles have additional permissions:
 ```bash
 kubectl describe role -n ${NAMESPACE}
 ```
-6.Submit your EMR on EKS job again.
+5.Submit your EMR on EKS job again.
 
 ###**Manual patch**
 
@@ -193,47 +63,24 @@ kubectl get role -n ${NAMESPACE} emr-containers-role-spark-client -o yaml >> cli
 For example:
 **emr-containers-role-patch.yaml**
 ```yaml
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  verbs:
-  - list
-  - create
-  - delete
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["create", "delete", "list"]
 ```
 **driver-role-patch.yaml**
 ```yaml
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  verbs:
-  - list
-  - create
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - services
-  verbs:
-  - get 
-  - list 
-  - describe 
-  - create
-  - delete 
-  - watch
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["create", "delete", "list"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "describe", "list", "create", "delete", "watch"]
 ```
 **client-role-patch.yaml**
 ```yaml
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  verbs:
-  - list
-  - create
-  - delete
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs:  ["create", "delete", "list"]
 ```
 3.Remove the following attributes and their values. This is necessary to be able to apply the update, or else an error will pop up:
     - creationTimestamp
