@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6e60f8b8.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1087,60 +1087,60 @@
 </table>
 <p>This feature can currently be enabled through a temporary workaround on EMR 6.3.0+ releases. To enable it, Spark’s decom.sh file permission must be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html">custom image</a>. Once the code is fixed, the page will be updated.</p>
 <p><strong>Dockerfile for custom image:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">FROM</span> <span class="o">&lt;</span><span class="k">release</span> <span class="n">account</span> <span class="n">id</span><span class="o">&gt;</span><span class="p">.</span><span class="n">dkr</span><span class="p">.</span><span class="n">ecr</span><span class="p">.</span><span class="o">&lt;</span><span class="n">aws</span> <span class="n">region</span><span class="o">&gt;</span><span class="p">.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">spark</span><span class="o">/&lt;</span><span class="k">release</span><span class="o">&gt;</span>
-<span class="n">USER</span> <span class="n">root</span>
-<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span>
-<span class="n">RUN</span> <span class="n">chown</span> <span class="nl">hadoop:</span><span class="n">hadoop</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">decom</span><span class="p">.</span><span class="n">sh</span>
+<div class="codehilite"><pre><span></span><code><span class="n">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="k">release</span><span class="w"> </span><span class="n">account</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;</span><span class="p">.</span><span class="n">dkr</span><span class="p">.</span><span class="n">ecr</span><span class="p">.</span><span class="o">&lt;</span><span class="n">aws</span><span class="w"> </span><span class="n">region</span><span class="o">&gt;</span><span class="p">.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">spark</span><span class="o">/&lt;</span><span class="k">release</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">USER</span><span class="w"> </span><span class="n">root</span><span class="w"></span>
+<span class="n">WORKDIR</span><span class="w"> </span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="w"></span>
+<span class="n">RUN</span><span class="w"> </span><span class="n">chown</span><span class="w"> </span><span class="nl">hadoop:</span><span class="n">hadoop</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">decom</span><span class="p">.</span><span class="n">sh</span><span class="w"></span>
 </code></pre></div>
 
 <p><strong>Setting decommission timeout:</strong></p>
 <p>Each executor has to be decommissioned within a certain time limit controlled by the pod’s terminationGracePeriodSeconds configuration.  The default value is 30 secs but can be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/pod-templates.html">custom pod template</a>. The pod template for this modification would look like </p>
-<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span> <span class="n">v1</span>
-<span class="n">kind</span><span class="o">:</span> <span class="n">Pod</span>
-<span class="n">spec</span><span class="o">:</span>
-  <span class="n">terminationGracePeriodSeconds</span><span class="o">:</span> <span class="o">&lt;</span><span class="n">seconds</span><span class="o">&gt;</span>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span><span class="w"></span>
+<span class="n">spec</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">terminationGracePeriodSeconds</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">seconds</span><span class="o">&gt;</span><span class="w"></span>
 </code></pre></div>
 
 <p><strong>Note: terminationGracePeriodSeconds timeout should be lesser than spot instance timeout with around 5 seconds buffer kept aside for triggering the node termination</strong></p>
 <p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">decommissioning</span><span class="p">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
-<span class="p">{</span>
-   <span class="s">&quot;name&quot;</span><span class="o">:</span> <span class="s">&quot;my-job-run-with-node-decommissioning&quot;</span><span class="p">,</span>
-   <span class="s">&quot;virtualClusterId&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span>
-   <span class="s">&quot;executionRoleArn&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span>
-   <span class="s">&quot;releaseLabel&quot;</span><span class="o">:</span> <span class="s">&quot;emr-6.3.0-latest&quot;</span><span class="p">,</span> 
-   <span class="s">&quot;jobDriver&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s">&quot;sparkSubmitJobDriver&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s">&quot;entryPoint&quot;</span><span class="o">:</span> <span class="s">&quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;</span><span class="p">,</span> 
-       <span class="s">&quot;sparkSubmitParameters&quot;</span><span class="o">:</span> <span class="s">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
-    <span class="p">}</span>
-   <span class="p">},</span> 
-   <span class="s">&quot;configurationOverrides&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s">&quot;applicationConfiguration&quot;</span><span class="o">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-       <span class="s">&quot;classification&quot;</span><span class="o">:</span> <span class="s">&quot;spark-defaults&quot;</span><span class="p">,</span>
-       <span class="s">&quot;properties&quot;</span><span class="o">:</span> <span class="p">{</span>
-       <span class="s">&quot;spark.kubernetes.container.image&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com/&lt;custom_image_repo&gt;&quot;</span><span class="p">,</span>
-       <span class="s">&quot;spark.executor.instances&quot;</span><span class="o">:</span> <span class="s">&quot;5&quot;</span><span class="p">,</span>
-        <span class="s">&quot;spark.decommission.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
-        <span class="s">&quot;spark.storage.decommission.rddBlocks.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
-        <span class="s">&quot;spark.storage.decommission.shuffleBlocks.enabled&quot;</span> <span class="o">:</span> <span class="s">&quot;true&quot;</span><span class="p">,</span>
-        <span class="s">&quot;spark.storage.decommission.enabled&quot;</span><span class="o">:</span> <span class="s">&quot;true&quot;</span>
-       <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">],</span> 
-    <span class="s">&quot;monitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s">&quot;logGroupName&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;log group&gt;&quot;</span><span class="p">,</span> 
-        <span class="s">&quot;logStreamNamePrefix&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;log-group-prefix&gt;&quot;</span>
-      <span class="p">},</span> 
-      <span class="s">&quot;s3MonitoringConfiguration&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s">&quot;logUri&quot;</span><span class="o">:</span> <span class="s">&quot;&lt;S3 URI&gt;&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-   <span class="p">}</span> 
-<span class="p">}</span>
-<span class="n">EOF</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">decommissioning</span><span class="p">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;my-job-run-with-node-decommissioning&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;virtualClusterId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;executionRoleArn&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;releaseLabel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;emr-6.3.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="s">&quot;jobDriver&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;sparkSubmitJobDriver&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;entryPoint&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="s">&quot;sparkSubmitParameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">   </span><span class="p">},</span><span class="w"> </span>
+<span class="w">   </span><span class="s">&quot;configurationOverrides&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;applicationConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;classification&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;spark.kubernetes.container.image&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com/&lt;custom_image_repo&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;spark.executor.instances&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.decommission.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.rddBlocks.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.shuffleBlocks.enabled&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"></span>
+<span class="w">       </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s">&quot;monitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;logGroupName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;log group&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;logStreamNamePrefix&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;log-group-prefix&gt;&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s">&quot;s3MonitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;logUri&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;S3 URI&gt;&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong></p>
@@ -1197,10 +1197,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.22074ed6.min.js"}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.960e086b.min.js"></script>
       
     
   </body>

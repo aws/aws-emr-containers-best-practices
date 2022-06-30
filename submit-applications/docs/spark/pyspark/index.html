@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.8">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6e60f8b8.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1346,44 +1346,44 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3.jso
 <blockquote>
 <p>This approach can be used to provide spark application code and dependencies for execution. Persistent Volume mounted  to the driver and executor pods lets you access the application code and dependencies with <code>local://</code> prefix. </p>
 </blockquote>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">FSx</span><span class="o">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
-<span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-python-in-FSx&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="s2">&quot;local:///var/data/FSxLustre-pi.py&quot;</span><span class="p">,</span> 
-       <span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="s2">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span>
-    <span class="p">}</span>
-  <span class="p">},</span> 
-  <span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span>
-         <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">],</span> 
-    <span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;demo&quot;</span>
-      <span class="p">},</span> 
-      <span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logUri&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://joblogs&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">EOF</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">FSx</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-FSx&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local:///var/data/FSxLustre-pi.py&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="w"></span>
+<span class="w">         </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
 
-<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="n">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">cli</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">json</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">Fsx</span><span class="o">.</span><span class="n">json</span>
+<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">cli</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">json</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">Fsx</span><span class="o">.</span><span class="n">json</span><span class="w"></span>
 </code></pre></div>
 
 <h3 id="python-code-with-python-dependencies">Python code with python dependencies<a class="headerlink" href="#python-code-with-python-dependencies" title="Permanent link">&para;</a></h3>
@@ -1563,9 +1563,9 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dep
 <p>Create a folder structure as in the below screenshot with the code from the previous example - <code>py-files-zip-pi.py, dependentFunc.py</code>
 <img alt="" src="../../../resources/images/pyspark-packaged-example-zip-folder-structure.png" />  </p>
 <p>Steps to create .egg file</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cd</span> <span class="o">/</span><span class="n">pyspark</span><span class="o">-</span><span class="n">packaged</span><span class="o">-</span><span class="n">example</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">setuptools</span>
-<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">bdist_egg</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cd</span><span class="w"> </span><span class="o">/</span><span class="n">pyspark</span><span class="o">-</span><span class="n">packaged</span><span class="o">-</span><span class="n">example</span><span class="w"></span>
+<span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">setuptools</span><span class="w"></span>
+<span class="n">python</span><span class="w"> </span><span class="n">setup</span><span class="o">.</span><span class="n">py</span><span class="w"> </span><span class="n">bdist_egg</span><span class="w"></span>
 </code></pre></div>
 
 <p>Upload <code>dist/pyspark_packaged_example-0.0.3-py3.8.egg</code> to a S3 location  </p>
@@ -1671,60 +1671,60 @@ pex --python=python3 --inherit-path=prefer -v numpy -o numpy_dep.pex
 <p>Upload <code>numpy_dep.pex</code> to a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_dep.pex</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.<br />
 <strong>Request:</strong>
 <code>kmeans.py</code> used in the below request is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/kmeans.py">spark examples</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="o">.</span><span class="n">json</span> <span class="o">&lt;&lt;</span> <span class="n">EOF</span>
-<span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-python-in-s3-pex-fsx&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;entryPointArguments&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;3&quot;</span>
-       <span class="p">],</span> 
-       <span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="s2">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span>
-    <span class="p">}</span>
-  <span class="p">},</span> 
-  <span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s2">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driverEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="s2">&quot;./tmp&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.executorEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="s2">&quot;./tmp&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driverEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="s2">&quot;prefer&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.executorEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="s2">&quot;prefer&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driverEnv.PEX_VERBOSE&quot;</span><span class="p">:</span><span class="s2">&quot;10&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driverEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="s2">&quot;python3&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.executorEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="s2">&quot;python3&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span>
-         <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">],</span> 
-    <span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span> 
-      <span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;demo&quot;</span>
-      <span class="p">},</span> 
-      <span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logUri&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://joblogs&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-pex-fsx&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPointArguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;3&quot;</span><span class="w"></span>
+<span class="w">       </span><span class="p">],</span><span class="w"> </span>
+<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driverEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="s2">&quot;./tmp&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.executorEnv.PEX_ROOT&quot;</span><span class="p">:</span><span class="s2">&quot;./tmp&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driverEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="s2">&quot;prefer&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.executorEnv.PEX_INHERIT_PATH&quot;</span><span class="p">:</span><span class="s2">&quot;prefer&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driverEnv.PEX_VERBOSE&quot;</span><span class="p">:</span><span class="s2">&quot;10&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driverEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="s2">&quot;python3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.executorEnv.PEX_PYTHON&quot;</span><span class="p">:</span><span class="s2">&quot;python3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_dep.pex&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="w"></span>
+<span class="w">         </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 
-<span class="n">aws</span> <span class="n">emr</span><span class="o">-</span><span class="n">containers</span> <span class="n">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">cli</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">json</span> <span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="o">.</span><span class="n">json</span>
+<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">cli</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">json</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">pex</span><span class="o">-</span><span class="n">fsx</span><span class="o">.</span><span class="n">json</span><span class="w"></span>
 </code></pre></div>
 
 <p><strong>Approach 2: Using Custom Pod Templates</strong></p>
@@ -1848,53 +1848,53 @@ conda pack -f -o numpy_environment.tar.gz
 
 <p>Upload <code>numpy_environment.tar.gz</code> to a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_environment.tar.gz</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.Alternatively, S3 path for <code>numpy_environment.tar.gz</code> can also be passed using <a href="# List of .py files">--py-files</a>  </p>
 <p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-python-in-s3-conda-fsx&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span> <span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span> 
-  <span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;entryPointArguments&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;3&quot;</span>
-       <span class="p">],</span> 
-       <span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span> <span class="s2">&quot;--verbose --archives /var/data/numpy_environment.tar.gz#environment --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span>
-    <span class="p">}</span>
-  <span class="p">},</span> 
-  <span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="p">{</span>
-        <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s2">&quot;spark.executor.instances&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.files&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_environment.tar.gz#environment&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="s2">&quot;./environment/bin/python&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="s2">&quot;./environment/bin/python&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span>
-         <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">],</span> 
-    <span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span> <span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span> 
-        <span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;demo&quot;</span>
-      <span class="p">},</span> 
-      <span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;logUri&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://joblogs&quot;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-conda-fsx&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans.py&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPointArguments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/kmeans_data.txt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;3&quot;</span><span class="w"></span>
+<span class="w">       </span><span class="p">],</span><span class="w"> </span>
+<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--verbose --archives /var/data/numpy_environment.tar.gz#environment --conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=4&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.executor.instances&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.files&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/numpy_environment.tar.gz#environment&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.pyspark.pythonVersion&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.pyspark.driver.python&quot;</span><span class="p">:</span><span class="s2">&quot;./environment/bin/python&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.pyspark.python&quot;</span><span class="p">:</span><span class="s2">&quot;./environment/bin/python&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="w"></span>
+<span class="w">         </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 
 <p><strong>The above request doesn't work with spark on kubernetes</strong></p>
@@ -1908,10 +1908,10 @@ In this implementation for YARN - the dependencies will be installed from the re
 <h4 id="custom-docker-image">Custom docker image<a class="headerlink" href="#custom-docker-image" title="Permanent link">&para;</a></h4>
 <p>See the details in the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html">official documentation</a>.  </p>
 <p><strong>Dockerfile</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span> <span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
-<span class="k">USER</span><span class="s"> root</span>
-<span class="k">RUN</span> pip3 install boto3
-<span class="k">USER</span><span class="s"> hadoop:hadoop</span>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
+<span class="k">RUN</span><span class="w"> </span>pip3 install boto3
+<span class="k">USER</span><span class="w"> </span><span class="s">hadoop:hadoop</span>
 </code></pre></div>
 
 <h3 id="python-code-with-java-dependencies">Python code with java dependencies<a class="headerlink" href="#python-code-with-java-dependencies" title="Permanent link">&para;</a></h3>
@@ -1978,22 +1978,22 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-with-jars
 <li>Copy the URL of the jar file of all compile dependencies</li>
 </ol>
 <p><strong>Dockerfile</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span> <span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
 
-<span class="k">USER</span><span class="s"> root</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
 
-<span class="k">ARG</span> <span class="nv">JAR_HOME</span><span class="o">=</span>/usr/lib/spark/jars/
+<span class="k">ARG</span><span class="w"> </span><span class="nv">JAR_HOME</span><span class="o">=</span>/usr/lib/spark/jars/
 
 <span class="c"># Kafka</span>
-<span class="k">ADD</span> https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.1.1/spark-sql-kafka-0-10_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
-<span class="k">ADD</span> https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar <span class="nv">$JAR_HOME</span>
-<span class="k">ADD</span> https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.6.0/kafka-clients-2.6.0.jar <span class="nv">$JAR_HOME</span>
-<span class="k">ADD</span> https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
-<span class="k">ADD</span> https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.12/3.1.1/spark-tags_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
+<span class="k">ADD</span><span class="w"> </span>https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.1.1/spark-sql-kafka-0-10_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
+<span class="k">ADD</span><span class="w"> </span>https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar <span class="nv">$JAR_HOME</span>
+<span class="k">ADD</span><span class="w"> </span>https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.6.0/kafka-clients-2.6.0.jar <span class="nv">$JAR_HOME</span>
+<span class="k">ADD</span><span class="w"> </span>https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
+<span class="k">ADD</span><span class="w"> </span>https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.12/3.1.1/spark-tags_2.12-3.1.1.jar <span class="nv">$JAR_HOME</span>
 
-<span class="k">RUN</span> chmod -R +r  /usr/lib/spark/jars
+<span class="k">RUN</span><span class="w"> </span>chmod -R +r  /usr/lib/spark/jars
 
-<span class="k">USER</span><span class="s"> hadoop:hadoop</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">hadoop:hadoop</span>
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong><br />
@@ -2007,16 +2007,16 @@ and the files will have <code>-rw-r--r--</code> permission.</p>
 <p>This approach is a resource intensive (min 1vCPU, 2GB RAM) solution, because it will run a dummy spark job. Scale your local or CI/CD resources
 according to it. </p>
 <p><strong>Dockerfile</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span> <span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">107292555468.dkr.ecr.eu-central-1.amazonaws.com/spark/emr-6.3.0</span>
 
-<span class="k">USER</span><span class="s"> root</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
 
-<span class="k">ARG</span> <span class="nv">KAFKA_PKG</span><span class="o">=</span><span class="s2">&quot;org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2&quot;</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">KAFKA_PKG</span><span class="o">=</span><span class="s2">&quot;org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2&quot;</span>
 
-<span class="k">RUN</span> spark-submit run-example --packages <span class="nv">$KAFKA_PKG</span> --deploy-mode<span class="o">=</span>client --master<span class="o">=</span>local<span class="o">[</span><span class="m">1</span><span class="o">]</span> SparkPi
-<span class="k">RUN</span> mv /root/.ivy2/jars/* /usr/lib/spark/jars/
+<span class="k">RUN</span><span class="w"> </span>spark-submit run-example --packages <span class="nv">$KAFKA_PKG</span> --deploy-mode<span class="o">=</span>client --master<span class="o">=</span>local<span class="o">[</span><span class="m">1</span><span class="o">]</span> SparkPi
+<span class="k">RUN</span><span class="w"> </span>mv /root/.ivy2/jars/* /usr/lib/spark/jars/
 
-<span class="k">USER</span><span class="s"> hadoop:hadoop</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">hadoop:hadoop</span>
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong> <br />
@@ -2032,7 +2032,7 @@ The advantage of this method is ivy download the dependencies of the package as 
 <div class="codehilite"><pre><span></span><code><span class="cm">/* File : example.c */</span><span class="w"></span>
 
 <span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;example.h&quot;</span><span class="cp"></span>
-<span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"></span>
+<span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"></span>
 <span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Inside add function in C library </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">);</span><span class="w"></span>
@@ -2181,10 +2181,10 @@ Dynamic modules(.pyd, .so) can also be imported by bundling within  <a href="# B
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.22074ed6.min.js"}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.960e086b.min.js"></script>
       
     
   </body>
