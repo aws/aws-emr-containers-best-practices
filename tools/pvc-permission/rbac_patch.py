@@ -99,6 +99,7 @@ if __name__ == '__main__':
             "apiGroups": [""],
             "resources": ["persistentvolumeclaims"],
             "verbs": ["list", "create", "delete"]
+        }
         
     ]
 
