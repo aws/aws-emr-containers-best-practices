@@ -13,7 +13,7 @@ nav:
   - Security:
       - Encryption: 'security/docs/spark/encryption.md'
       - Data Encryption: 'security/docs/spark/data-encryption.md'
-      - Secrets: 'security/docs/spark/secrets.md'
+      - Network Security: 'security/docs/spark/network-security.md'
   - Submit applications:
       - Pyspark: 'submit-applications/docs/spark/pyspark.md'
   - Storage:
