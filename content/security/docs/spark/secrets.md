@@ -2,7 +2,7 @@
 
 Secrets can be credentials to APIs, Databases or other resources. There are various ways these secrets can be passed to your containers, some of them are pod environment variable or Kubernetes Secrets. These methods are not secure, as for environment variable, secrets are stored in clear text and any authorized user who has access to Kubernetes cluster with admin privileges can read those secrets. Storing secrets using Kubernetes secrets is also not secure because they are not encrypted and only base36 encoded.
 
-There is a secure method to expose these secrets in EKS through the Secrets Store CSI Driver. 
+There is a secure method to expose these secrets in EKS through the [Secrets Store CSI Driver](https://github.com/aws/secrets-store-csi-driver-provider-aws). 
 
 The Secrets Store CSI Driver integrate with a secret store like [AWS Secrets manager](https://aws.amazon.com/secrets-manager/) and mount the secrets as volume that can be accessed through your application code.
 This document describes how to set and use AWS Secrets Manager with EMR on EKS through the Secrets Store CSI Driver.

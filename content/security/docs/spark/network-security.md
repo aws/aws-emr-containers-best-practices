@@ -1,4 +1,4 @@
-# ** Managing VCP for EMR on EKS**
+# ** Managing VPC for EMR on EKS**
 
 This section address network security at VPC level. If you want to read more on network security for Spark in EMR on EKS please refer to this [section](https://aws.github.io/aws-emr-containers-best-practices/security/docs/spark/encryption/#amazon-emr-on-eks).
 
@@ -7,13 +7,13 @@ This section address network security at VPC level. If you want to read more on 
 The applications running on your EMR on EKS cluster often would need access to services that are running outside the cluster, 
 for example, these can Amazon Redshift, Amazon Relational Database Service, a service self hosted on an EC2 instance. To access these resource you need to allow network traffic at the security group level. The default mechanism in EKS is using security groups at the node level, 
 this means all the pods running on the node will inherit the rules on the security group. 
-For certain scenarios this is not a desired beahvior and you would want to use security groups at the pod level.
+For security conscious customers, this is not a desired behavior and you would want to use security groups at the pod level.
 
 This section address how you can use Security Groups with EMR on EKS.
 
 ### Configure EKS Cluster to use Security Groups for Pods
 
-The feature for using Security Group for pods you need to configure the VPC CNI for EKS. The following [link](https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html) guide through the prerequisites as well as configuring the EKS Cluster.
+In order to use Security Groups at the pod level, you need to configure the VPC CNI for EKS. The following [link](https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html) guide through the prerequisites as well as configuring the EKS Cluster.
 
 #### Define SecurityGroupPolicy
 
