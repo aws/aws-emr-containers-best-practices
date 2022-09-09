@@ -5,8 +5,7 @@ Secrets can be credentials to APIs, Databases or other resources. There are vari
 
 There is a secure method to expose these secrets in EKS through the [Secrets Store CSI Driver](https://github.com/aws/secrets-store-csi-driver-provider-aws). 
 
-The Secrets Store CSI Driver integrate with a secret store like [AWS Secrets manager](https://aws.amazon.com/secrets-manager/) and mount the secrets as volume that can be accessed through your application code.
-
+The Secrets Store CSI Driver integrate with a secret store like [AWS Secrets manager](https://aws.amazon.com/secrets-manager/) and mount the secrets as volume that can be accessed through your application code. This document describes how to set and use AWS Secrets Manager with EMR on EKS through the Secrets Store CSI Driver.
 
 ### Deploy Secrets Store CSI Drivers and AWS Secrets and Configuration Provider
 
