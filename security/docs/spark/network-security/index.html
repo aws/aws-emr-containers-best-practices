@@ -13,7 +13,7 @@
     
     
       
-        <title>Network security - EMR Containers Best Practices Guides</title>
+        <title>Network Security - EMR Containers Best Practices Guides</title>
       
     
     
@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#managing-vpc-for-emr-on-eks" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -86,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Network security
+              Network Security
             
           </span>
         </div>
@@ -174,13 +179,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../encryption/" class="md-tabs__link">
+      <a href="../encryption/" class="md-tabs__link md-tabs__link--active">
         Security
       </a>
     </li>
@@ -427,12 +434,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
       
       
       
@@ -472,6 +481,114 @@
       <a href="../data-encryption/" class="md-nav__link">
         Data Encryption
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Network Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Network Security
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#security-group" class="md-nav__link">
+    Security Group
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-eks-cluster-to-use-security-groups-for-pods" class="md-nav__link">
+    Configure EKS Cluster to use Security Groups for Pods
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure EKS Cluster to use Security Groups for Pods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-securitygrouppolicy" class="md-nav__link">
+    Define SecurityGroupPolicy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-pod-template-to-use-security-group-for-pod" class="md-nav__link">
+    Define pod template to use Security Group for pod
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-a-job" class="md-nav__link">
+    Launch a job
+  </a>
+  
+    <nav class="md-nav" aria-label="Launch a job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-security-group-attached-to-the-pod-eni" class="md-nav__link">
+    Verify a security group attached to the Pod ENI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -958,6 +1075,92 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#security-group" class="md-nav__link">
+    Security Group
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Group">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-eks-cluster-to-use-security-groups-for-pods" class="md-nav__link">
+    Configure EKS Cluster to use Security Groups for Pods
+  </a>
+  
+    <nav class="md-nav" aria-label="Configure EKS Cluster to use Security Groups for Pods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-securitygrouppolicy" class="md-nav__link">
+    Define SecurityGroupPolicy
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-pod-template-to-use-security-group-for-pod" class="md-nav__link">
+    Define pod template to use Security Group for pod
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-a-job" class="md-nav__link">
+    Launch a job
+  </a>
+  
+    <nav class="md-nav" aria-label="Launch a job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-a-security-group-attached-to-the-pod-eni" class="md-nav__link">
+    Verify a security group attached to the Pod ENI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
@@ -968,9 +1171,92 @@
 </a>
 
 
-  <h1>Network security</h1>
+<h1 id="managing-vpc-for-emr-on-eks"><strong> Managing VPC for EMR on EKS</strong><a class="headerlink" href="#managing-vpc-for-emr-on-eks" title="Permanent link">&para;</a></h1>
+<p>This section address network security at VPC level. If you want to read more on network security for Spark in EMR on EKS please refer to this <a href="https://aws.github.io/aws-emr-containers-best-practices/security/docs/spark/encryption/#amazon-emr-on-eks">section</a>.</p>
+<h2 id="security-group"><strong>Security Group</strong><a class="headerlink" href="#security-group" title="Permanent link">&para;</a></h2>
+<p>The applications running on your EMR on EKS cluster often would need access to services that are running outside the cluster, 
+for example, these can Amazon Redshift, Amazon Relational Database Service, a service self hosted on an EC2 instance. To access these resource you need to allow network traffic at the security group level. The default mechanism in EKS is using security groups at the node level, 
+this means all the pods running on the node will inherit the rules on the security group. 
+For security conscious customers, this is not a desired behavior and you would want to use security groups at the pod level.</p>
+<p>This section address how you can use Security Groups with EMR on EKS.</p>
+<h3 id="configure-eks-cluster-to-use-security-groups-for-pods">Configure EKS Cluster to use Security Groups for Pods<a class="headerlink" href="#configure-eks-cluster-to-use-security-groups-for-pods" title="Permanent link">&para;</a></h3>
+<p>In order to use Security Groups at the pod level, you need to configure the VPC CNI for EKS. The following <a href="https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html">link</a> guide through the prerequisites as well as configuring the EKS Cluster.</p>
+<h4 id="define-securitygrouppolicy">Define SecurityGroupPolicy<a class="headerlink" href="#define-securitygrouppolicy" title="Permanent link">&para;</a></h4>
+<p>Once you have configured the VPC CNI, you need to create a SecurityGroupPolicy object. 
+This object define which <strong>security group</strong> (up to 5) to use, <strong>podselector</strong> to define which pod to apply the security group to and 
+the <strong>namespace</strong> in which the Security Group should be evaluated. Below you find an example of <code>SecurityGroupPolicy</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">vpcresources</span><span class="o">.</span><span class="na">k8s</span><span class="o">.</span><span class="na">aws</span><span class="o">/</span><span class="n">v1beta1</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">SecurityGroupPolicy</span><span class="w"></span>
+<span class="n">metadata</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="kd">namespace</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="n">VC</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">spec</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">podSelector</span><span class="o">:</span><span class="w"> </span>
+<span class="w">    </span><span class="n">matchLabels</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="n">role</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span><span class="w"></span>
+<span class="w">  </span><span class="n">securityGroups</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">groupIds</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">sg</span><span class="o">-</span><span class="n">xxxxx</span><span class="w"></span>
+</code></pre></div>
 
+<h3 id="define-pod-template-to-use-security-group-for-pod">Define pod template to use Security Group for pod<a class="headerlink" href="#define-pod-template-to-use-security-group-for-pod" title="Permanent link">&para;</a></h3>
+<p>In order for the security group to be applied to the Spark driver and executors, you need to provide a podtemplate which add label(s) to the pods.
+The labels should match the one defined above in the <code>podSelector</code> in our example it is <code>role: spark</code>. 
+The snippet below define the pod template that you can upload in S3 and then reference when launching your job.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span><span class="w"></span>
+<span class="n">metadata</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">labels</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">role</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span><span class="w"></span>
+</code></pre></div>
 
+<h3 id="launch-a-job">Launch a job<a class="headerlink" href="#launch-a-job" title="Permanent link">&para;</a></h3>
+<p>The command below can be used to run a job.</p>
+<div class="codehilite"><pre><span></span><code>    <span class="nv">aws</span> <span class="nv">emr</span><span class="o">-</span><span class="nv">containers</span> <span class="nv">start</span><span class="o">-</span><span class="nv">job</span><span class="o">-</span><span class="nv">run</span> <span class="o">--</span><span class="nv">virtual</span><span class="o">-</span><span class="nv">cluster</span><span class="o">-</span><span class="nv">id</span> <span class="o">&lt;</span><span class="nv">EMR</span><span class="o">-</span><span class="nv">VIRTUAL</span><span class="o">-</span><span class="nv">CLUSTER</span><span class="o">-</span><span class="nv">ID</span><span class="o">&gt;</span> <span class="o">--</span><span class="nv">name</span> <span class="nv">spark</span><span class="o">-</span><span class="nv">jdbc</span> <span class="o">--</span><span class="nv">execution</span><span class="o">-</span><span class="nv">role</span><span class="o">-</span><span class="nv">arn</span> <span class="o">&lt;</span><span class="nv">EXECUTION</span><span class="o">-</span><span class="nv">ROLE</span><span class="o">-</span><span class="nv">ARN</span><span class="o">&gt;</span> <span class="o">--</span><span class="nv">release</span><span class="o">-</span><span class="nv">label</span> <span class="nv">emr</span><span class="o">-</span><span class="mi">6</span>.<span class="mi">7</span>.<span class="mi">0</span><span class="o">-</span><span class="nv">latest</span> <span class="o">--</span><span class="nv">job</span><span class="o">-</span><span class="nv">driver</span> <span class="s1">&#39;</span><span class="s">{</span>
+    <span class="s2">&quot;</span><span class="s">sparkSubmitJobDriver</span><span class="s2">&quot;</span>: {
+    <span class="s2">&quot;</span><span class="s">entryPoint</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">&lt;S3-URI-FOR-PYSPARK-JOB-DEFINED-ABOVE&gt;</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">sparkSubmitParameters</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.executor.cores=2 --conf spark.driver.cores=1</span><span class="s2">&quot;</span>
+    }
+    }<span class="s1">&#39;</span><span class="s"> --configuration-overrides </span><span class="s1">&#39;</span>{
+    <span class="s2">&quot;</span><span class="s">applicationConfiguration</span><span class="s2">&quot;</span>: [
+    {
+    <span class="s2">&quot;</span><span class="s">classification</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">spark-defaults</span><span class="s2">&quot;</span>, 
+    <span class="s2">&quot;</span><span class="s">properties</span><span class="s2">&quot;</span>: {
+    <span class="s2">&quot;</span><span class="s">spark.hadoop.hive.metastore.client.factory.class</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.sql.catalogImplementation</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">hive</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.enabled</span><span class="s2">&quot;</span>:<span class="s2">&quot;</span><span class="s">true</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.minExecutors</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">8</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.maxExecutors</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">40</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.kubernetes.allocation.batch.size</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">8</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.executorAllocationRatio</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">1</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.shuffleTracking.enabled</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">true</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.dynamicAllocation.shuffleTracking.timeout</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">300s</span><span class="s2">&quot;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.kubernetes.driver.podTemplateFile</span><span class="s2">&quot;</span>:<span class="o">&lt;</span><span class="nv">S3</span><span class="o">-</span><span class="nv">URI</span><span class="o">-</span><span class="nv">TO</span><span class="o">-</span><span class="nv">DRIVER</span><span class="o">-</span><span class="nv">POD</span><span class="o">-</span><span class="nv">TEMPLATE</span><span class="o">&gt;</span>,
+    <span class="s2">&quot;</span><span class="s">spark.kubernetes.executor.podTemplateFile</span><span class="s2">&quot;</span>:<span class="o">&lt;</span><span class="nv">S3</span><span class="o">-</span><span class="nv">URI</span><span class="o">-</span><span class="nv">TO</span><span class="o">-</span><span class="nv">EXECUTOR</span><span class="o">-</span><span class="nv">POD</span><span class="o">-</span><span class="nv">TEMPLATE</span><span class="o">&gt;</span>
+    }
+    }
+    ],
+    <span class="s2">&quot;</span><span class="s">monitoringConfiguration</span><span class="s2">&quot;</span>: {
+        <span class="s2">&quot;</span><span class="s">persistentAppUI</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">ENABLED</span><span class="s2">&quot;</span>,
+        <span class="s2">&quot;</span><span class="s">cloudWatchMonitoringConfiguration</span><span class="s2">&quot;</span>: {
+            <span class="s2">&quot;</span><span class="s">logGroupName</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">/aws/emr-containers/</span><span class="s2">&quot;</span>,
+            <span class="s2">&quot;</span><span class="s">logStreamNamePrefix</span><span class="s2">&quot;</span>: <span class="s2">&quot;</span><span class="s">default</span><span class="s2">&quot;</span>
+        }
+    }
+    }<span class="s1">&#39;</span>
+</code></pre></div>
+
+<h4 id="verify-a-security-group-attached-to-the-pod-eni">Verify a security group attached to the Pod ENI<a class="headerlink" href="#verify-a-security-group-attached-to-the-pod-eni" title="Permanent link">&para;</a></h4>
+<p>To verify that spark driver and executor driver have the security group attached to, apply the first command to get the podname then the second one to see the annotation in pod with the ENI associated to the pod which has the secuity group defined in the <strong>SecurityGroupPolicy</strong>.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">POD_NAME</span><span class="o">=$</span><span class="p">(</span><span class="n">kubectl</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="o">&gt;</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"> </span><span class="n">role</span><span class="o">=</span><span class="n">spark</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="n">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[].metadata.name}&#39;</span><span class="p">)</span><span class="w"></span>
+
+<span class="n">kubectl</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="o">&gt;</span><span class="w">  </span><span class="n">describe</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="o">$</span><span class="n">POD_NAME</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">-</span><span class="mi">11</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">Annotations</span><span class="o">:</span><span class="w">  </span><span class="n">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">psp</span><span class="o">:</span><span class="w"> </span><span class="n">eks</span><span class="o">.</span><span class="na">privileged</span><span class="w"></span>
+<span class="w">              </span><span class="n">vpc</span><span class="o">.</span><span class="na">amazonaws</span><span class="o">.</span><span class="na">com</span><span class="o">/</span><span class="n">pod</span><span class="o">-</span><span class="n">eni</span><span class="o">:</span><span class="w"></span>
+<span class="w">                </span><span class="o">[{</span><span class="s2">&quot;eniId&quot;</span><span class="o">:</span><span class="s2">&quot;eni-xxxxxxx&quot;</span><span class="o">,</span><span class="s2">&quot;ifAddress&quot;</span><span class="o">:</span><span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="o">,</span><span class="s2">&quot;privateIp&quot;</span><span class="o">:</span><span class="s2">&quot;x.x.x.x&quot;</span><span class="o">,</span><span class="s2">&quot;vlanId&quot;</span><span class="o">:</span><span class="mi">1</span><span class="o">,</span><span class="s2">&quot;subnetCidr&quot;</span><span class="o">:</span><span class="s2">&quot;x.x.x.x/x&quot;</span><span class="o">}]</span><span class="w"></span>
+</code></pre></div>
 
               
             </article>
@@ -980,6 +1266,41 @@
       </main>
       
         <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../data-encryption/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Data Encryption" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Data Encryption
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../secrets/" class="md-footer__link md-footer__link--next" aria-label="Next: Secrets" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Secrets
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
