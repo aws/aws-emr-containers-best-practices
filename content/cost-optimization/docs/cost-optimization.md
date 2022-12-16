@@ -5,7 +5,7 @@
 Amazon EMR on Amazon EKS enables you to submit Apache Spark jobs on demand on Amazon Elastic Kubernetes Service (EKS) without provisioning dedicated EMR clusters. With EMR on EKS, you can consolidate analytical workloads with your other Kubernetes-based applications on the same Amazon EKS cluster to improve resource utilization and simplify infrastructure management. Cost Optimization of the underlying infrastructure is often the key
 requirement for our customers, and this can be achieved by using [Amazon EC2 Spot Instances](https://aws.amazon.com/ec2/spot/). Spot Instances are spare EC2 capacity and is available at up to 90% discount compared to On-Demand Instance prices. If EC2 needs capacity back for On-Demand Instance usage, Spot Instances can be interrupted. Handling interruptions to build resilient workloads is simple and there are best practices to manage interruption by automation or AWS services like EKS. 
 
-This document will describe how to think about EC2 Spot and its best practices when applying to EMR on EKS service. We will cover Spark features related to EC2 Spot when you run EMR on EKS jobs on EKS cluster. 
+This document will describe how to architect with EC2 spot best practices and apply to EMR on EKS jobs. We will also cover Spark features related to EC2 Spot when you run EMR on EKS jobs
 
 ### EC2 Spot Capacity Provisioning
 
@@ -134,6 +134,8 @@ The Spark executor logs sample below shows the process of reusing the shuffle fi
 22/06/07 20:42:50 DEBUG BlockManagerMasterEndpoint: Received shuffle index block update for 0 52, updating.
 22/06/07 20:42:50 INFO ShuffleStatus: Recover 52 BlockManagerId(fallback, remote, 7337, None)
 ```
+
+More details on this can be found [here](./node-decommission.md)
 
 **PVC Reuse:**
 
