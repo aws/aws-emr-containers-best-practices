@@ -1,10 +1,6 @@
-# **Spot instances interruption resiliency by copying shuffle data**
+# **Node Decommission**
 
-[Amazon EC2 Spot Instances](https://aws.amazon.com/ec2/spot/) allow AWS customers to run EC2 instances at steep discounts by tapping into EC2 spare capacity pools. Using Amazon EKS’s managed node groups, EKS can provision and manage the underlying Spot Instances (worker nodes) that provide compute capacity to EKS clusters. Using an EKS cluster with Spot instances to run EMR on EKS jobs allows customers to provision and maintain the desired capacity while benefiting from steep cost savings. 
-
-However, Spot Instances can be interrupted with a two-minute notification when EC2 needs the capacity back. Termination of the Spot instance will result in termination of the executors on the node. The shuffle data and cached RDD data on these nodes will be lost and may need to be recalculated. This operation is very costly and will result in a high increase in the execution time of EMR on EKS jobs.
-
-This section shows how to use a new [Apache Spark feature](https://issues.apache.org/jira/browse/SPARK-20629) that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. 
+This section shows how to use a [Apache Spark feature](https://issues.apache.org/jira/browse/SPARK-20629) that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. 
 
 This feature is supported for releases EMR 6.3.0+.
 
@@ -91,7 +87,3 @@ EOF
 **Observed Behavior:**
   
 When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines `Updating map output for <shuffle_id> to BlockManagerId(<executor_id>, <ip_address>, <port>, <topology_info>)` denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation as of yet.
-  
-**Node decommissioning with fallback storage**
-
-Spark supports a fallback storage configuration (spark.storage.decommission.fallbackStorage.path) and it can be used if migrating shuffle blocks to peer executors fails. However, there is an [existing issue](https://issues.apache.org/jira/browse/SPARK-18105) in Spark where these blocks cannot be read from the fallback path properly and a job fails with exception `java.io.IOException: Stream is corrupted, net.jpountz.lz4.LZ4Exception: Error decoding offset <offset_id> of input buffer`.
