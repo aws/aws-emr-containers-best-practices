@@ -85,7 +85,7 @@ Node decommissioning is a Spark feature that enables the removal of an executor 
 Node decommission begins when a Spark executor node receives a Spot Interruption Notice or Spot Rebalance Recommendation signal. The executor node immediately starts the process of decommissioning by sending a message to the Spark driver. The driver will identify the RDD/Shuffle files that it needs to migrate off the executor node in question, and will try to identify another Executor node which can take over the execution. If an executor is identified, the RDD/Shuffle files are copied to the new executor and the job execution continues on the new executor. If all the executors are busy, the RDD/Shuffle files are copied to an external storage.
 
 <p align="center">
-  <img src="./resources/images/node_decom.gif" width="640" height="400"/>
+  <img src="../resources/images/node_decom.gif" width="640" height="400"/>
 </p>
 
 The key advantage of this process is that it enables block and shuffle data of a Spark executor that receives EC2 Spot Interruption signal to be migrated, reducing the re-computation of the Spark tasks. The reduction in the re-computation for the interrupted Spark tasks improves the resiliency of the system and reduces overall execution time. We recommend to enable node decommissioning feature because it would help to reduce the overall compute cycles when there is a Spot interruption.
@@ -144,7 +144,7 @@ A PersistentVolume is a Kubernetes feature to provide persistent storage to cont
 If a Spark executor is killed due to EC2 Spot interruption or any other failure then the PVC is not deleted but persisted and reattached to another executor. If there are shuffle files in that volume then they are reused. Previously if an external shuffle service process or node became unavailable, the executors were killed and all the shuffle blocks were lost, which needed to be recomputed.
 
 <p align="center">
-  <img src="./resources/images/pvc_reuse.gif " width="640" height="400"/>
+  <img src="../resources/images/pvc_reuse.gif " width="640" height="400"/>
 </p>
 
 This feature is available on Amazon EMR version 6.8 and above. To setup this feature, you can add these lines to the executor configuration:
@@ -180,7 +180,7 @@ Scaling of the infrastructure by adding more nodes can be achieved by using Clus
 Cluster Autoscaler (CAS) is a Kubernetes open-source tool that automatically scale-out the size of the Kubernetes cluster when there are pending pods due to insufficient capacity on existing cluster, or scale-in when there are underutilized nodes in a cluster for extended period of time. The configuration below shows multiple Nodegroups with different vCPU and RAM configurations which adheres to the Spot best practice of diversification. Note each nodegroup has the same vCPU to memory ratio as discussed above. CAS works with EKS Managed and Self-Managed Nodegroups.
 
 <p align="center">
-  <img src="./resources/images/ca.png" />
+  <img src="../resources/images/ca.png" />
 </p>
 
 **Karpenter**
@@ -188,7 +188,7 @@ Cluster Autoscaler (CAS) is a Kubernetes open-source tool that automatically sca
 Karpenter is an open-source, flexible, high-performance auto-scaler built for Kubernetes. Karpenter automatically launches just the right compute resources to handle your cluster's applications. Karpenter observes aggregate resource requests of un-schedulable pods, computes and launches best-fit new capacity.
 
 <p align="center">
-  <img src="./resources/images/karpenter.png" />
+  <img src="../resources/images/karpenter.png" />
 </p>
 
 The Provisioner CRD’s configuration flexibility is very useful in adopting Spot best practices of diversification. It can include as many Spot Instance types as possible as we do not restrict specific instance types in the configuration. This approach is also future proof when AWS launches new instance types. It also manages Spot instance lifecycle management through Spot interruptions. We recommend to use Karpenter with Spot Instances as it has faster node scheduling with early pod binding and binpacking to optimize the resource utilization. An example of a Karpenter provisioner with Spot instances below.
