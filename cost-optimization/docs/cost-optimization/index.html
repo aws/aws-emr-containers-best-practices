@@ -1,0 +1,1436 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Cost Optimization using EC2 Spot Instances - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cost-optimization-using-ec2-spot-instances" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cost Optimization using EC2 Spot Instances
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../troubleshoot/docs/pvc-permission/" class="md-tabs__link">
+        Troubleshoot
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        Cost Optimization
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        Secrets
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        FSx for Lustre
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        Hive Metastore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+        Connect to Spark UI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Troubleshoot
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshoot" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshoot
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshoot/docs/pvc-permission/" class="md-nav__link">
+        PVC permission
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Cost Optimization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cost Optimization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Cost Optimization using EC2 Spot Instances
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Cost Optimization using EC2 Spot Instances
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-spot-best-practices" class="md-nav__link">
+    EC2 Spot Best Practices
+  </a>
+  
+    <nav class="md-nav" aria-label="EC2 Spot Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ec2-spot-capacity-provisioning" class="md-nav__link">
+    EC2 Spot Capacity Provisioning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-interruption-and-spark" class="md-nav__link">
+    Spot Interruption and Spark
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-emr-on-eks-and-ec2-spot" class="md-nav__link">
+    Scaling EMR on EKS and EC2 Spot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-on-eks-and-ec2-spot-instances-best-practices" class="md-nav__link">
+    EMR on EKS and EC2 Spot Instances: Best Practices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../node-decommission/" class="md-nav__link">
+        Node Decommission
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-spot-best-practices" class="md-nav__link">
+    EC2 Spot Best Practices
+  </a>
+  
+    <nav class="md-nav" aria-label="EC2 Spot Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ec2-spot-capacity-provisioning" class="md-nav__link">
+    EC2 Spot Capacity Provisioning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-interruption-and-spark" class="md-nav__link">
+    Spot Interruption and Spark
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-emr-on-eks-and-ec2-spot" class="md-nav__link">
+    Scaling EMR on EKS and EC2 Spot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-on-eks-and-ec2-spot-instances-best-practices" class="md-nav__link">
+    EMR on EKS and EC2 Spot Instances: Best Practices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/cost-optimization/docs/cost-optimization.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="cost-optimization-using-ec2-spot-instances"><strong>Cost Optimization using EC2 Spot Instances</strong><a class="headerlink" href="#cost-optimization-using-ec2-spot-instances" title="Permanent link">&para;</a></h1>
+<h2 id="ec2-spot-best-practices">EC2 Spot Best Practices<a class="headerlink" href="#ec2-spot-best-practices" title="Permanent link">&para;</a></h2>
+<p>Amazon EMR on Amazon EKS enables you to submit Apache Spark jobs on demand on Amazon Elastic Kubernetes Service (EKS) without provisioning dedicated EMR clusters. With EMR on EKS, you can consolidate analytical workloads with your other Kubernetes-based applications on the same Amazon EKS cluster to improve resource utilization and simplify infrastructure management. Cost Optimization of the underlying infrastructure is often the key
+requirement for our customers, and this can be achieved by using <a href="https://aws.amazon.com/ec2/spot/">Amazon EC2 Spot Instances</a>. Spot Instances are spare EC2 capacity and is available at up to 90% discount compared to On-Demand Instance prices. If EC2 needs capacity back for On-Demand Instance usage, Spot Instances can be interrupted. Handling interruptions to build resilient workloads is simple and there are best practices to manage interruption by automation or AWS services like EKS. </p>
+<p>This document will describe how to architect with EC2 spot best practices and apply to EMR on EKS jobs. We will also cover Spark features related to EC2 Spot when you run EMR on EKS jobs</p>
+<h3 id="ec2-spot-capacity-provisioning">EC2 Spot Capacity Provisioning<a class="headerlink" href="#ec2-spot-capacity-provisioning" title="Permanent link">&para;</a></h3>
+<p>EMR on EKS runs open-source big data framework like Spark on Amazon EKS, so basically when you are run on Spot instances you are, provisioning capacity for the underlying EKS cluster. The key point to remember when you are using Spot instances is <a href="https://ec2spotworkshops.com/using_ec2_spot_instances_with_eks/040_eksmanagednodegroupswithspot/selecting_instance_types.html">instance diversification</a>. There are three ways that EC2 Spot capacity can be provisioned in an EKS cluster.</p>
+<p><strong>EKS Managed Nodegroup:</strong></p>
+<p>We highly recommend to use Managed Nodegroup for provisioning Spot instances. This requires significantly less operational effort when compared to self-managed nodegroups. The Spot instance interruption is handled proactively using the <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/rebalance-recommendations.html">Instance Rebalancing Recommendation</a> and Spot best practice of using <a href="https://aws.amazon.com/blogs/compute/introducing-the-capacity-optimized-allocation-strategy-for-amazon-ec2-spot-instances/">Capacity Optimized Allocation strategy</a> is adopted by default along with other useful features. If you are planning to scale your cluster then Cluster Autoscaler can be used but keep in mind, one caveat with this approach is to maintain same vCPU to memory ratio for nodes defined in a nodegroup.</p>
+<p><strong>Karpenter:</strong></p>
+<p>An open-source node provisioning tool for Kubernetes which works seamlessly with EMR on EKS. Karpenter can help to improve the efficiency and cost of running workloads. It provisions nodes based on pod resource requirements. The key advantage of Karpenter is flexibility not only in terms of EC2 pricing (Spot/On-Demand) but it also aligns with the Spot best practice of instance diversification, and uses capacity optimized prioritized allocation strategy; more details can be found in this <a href="https://ec2spotworkshops.com/karpenter.html">workshop</a>. Karpenter will also be useful to scale the infrastructure which will be further discussed under the scaling section below.</p>
+<p><strong>Self-Managed Nodegroup:</strong></p>
+<p>EMR on EKS clusters can also run on self-managed nodegroups on EKS. You need to manage the Spot instance lifecycle if there is an interruption by installing an open-source tool named <a href="https://github.com/aws/aws-node-termination-handler">AWS Node Termination Handler</a>. AWS Node Termination Handler ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-instances-status-check_sched.html">EC2 maintenance events</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html">EC2 Spot interruptions</a>, <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroupLifecycle.html#as-lifecycle-scale-in">ASG Scale-In</a>, <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/auto-scaling-benefits.html#AutoScalingBehavior.InstanceUsage">ASG AZ Rebalance</a>, and EC2 Instance Termination via the API or Console. Please remember you need to manage all the software updates manually if you plan to use this. When you are using dynamic allocation the nodegroups needs to autoscale, and if you are using cluster autoscaler then you need to maintain the vCPU to memory ratio for nodes defined in a nodegroup.</p>
+<h3 id="spot-interruption-and-spark">Spot Interruption and Spark<a class="headerlink" href="#spot-interruption-and-spark" title="Permanent link">&para;</a></h3>
+<p>EC2 Spot instances are suitable for flexible and fault tolerant workloads. Spark is a semi-resilient by design because if the executor fails, new executors are spun up by the driver to continue the job. However, if the driver fails, the entire job fails. For added resiliency, EMR of EKS retries up to 5 times for driver pods so that the k8s can find suitable host and job starts successfully. If k8s fails to find a host, job is cancelled after 15 min timeout. If driver pod fails for other reasons, job is cancelled with an error message for troubleshooting. Hence, we recommend to run Spark driver on On-Demand instances and executors on Spot instances to cost optimize the workloads. You can use PodTemplates to configure this scheduling constraint. NodeSelector can be used  as the node selection constraint to run executors on Spot instances as in the example below. This is simple to use and works well with Karpenter too. The pod template for this would look like </p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">eks.amazonaws.com/capacityType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPOT</span><span class="w"></span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-kubernetes-executor</span><span class="w"></span>
+</code></pre></div>
+
+<p>Node affinity can also be used here, this allows for more flexibility for the constraints defined. We recommend to use ‘hard affinity’ as highlighted in the code below for this purpose. For jobs which have strict SLA and are not suitable to run on Spot we suggest to use NoSchedule taint effect to ensure no Pods are scheduled. The key thing to note here is that the bulk of the compute required in a Spark job runs on executors and if they can be run on EC2 Spot instances you can benefit from the steep discount available with Spot instances.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">spark-role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">driver</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emr-eks-workshop-namespace</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">affinity</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="nt">nodeAffinity</span><span class="p">:</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">requiredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchExpressions</span><span class="p">:</span><span class="w"> </span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;eks.amazonaws.com/capacityType&#39;</span><span class="w"> </span>
+<span class="w">                </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span><span class="w"> </span>
+<span class="w">                </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ON_DEMAND</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">spark-role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">executor</span><span class="w"></span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emr-eks-workshop-namespace</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">affinity</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="nt">nodeAffinity</span><span class="p">:</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">requiredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchExpressions</span><span class="p">:</span><span class="w"> </span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;eks.amazonaws.com/capacityType&#39;</span><span class="w"> </span>
+<span class="w">                </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span><span class="w"> </span>
+<span class="w">                </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPOT</span><span class="w"></span>
+</code></pre></div>
+
+<p>When Spot instances are interrupted the executors running on them may lose (if any) the shuffle and cached RDDs which would require re-computation. This requires more compute cycles to be spent which will impact the overall SLA of the EMR on EKS jobs. EMR on EKS has incorporated two new Spark features which can help to address these issues. In the following sections we will discuss them.</p>
+<p><strong>Node Decommissioning:</strong></p>
+<p>Node decommissioning is a Spark feature that enables the removal of an executor gracefully, by preserving its state before removing it and not scheduling any new jobs on it. This feature is particularly useful when the Spark executors are running on Spot instances, and the Spark executor node is interrupted via a ‘rebalance recommendation’ or ‘instance termination’ notice to reclaim the instance. </p>
+<p>Node decommission begins when a Spark executor node receives a Spot Interruption Notice or Spot Rebalance Recommendation signal. The executor node immediately starts the process of decommissioning by sending a message to the Spark driver. The driver will identify the RDD/Shuffle files that it needs to migrate off the executor node in question, and will try to identify another Executor node which can take over the execution. If an executor is identified, the RDD/Shuffle files are copied to the new executor and the job execution continues on the new executor. If all the executors are busy, the RDD/Shuffle files are copied to an external storage.</p>
+<p align="center">
+  <img src="./resources/images/node_decom.gif" width="640" height="400"/>
+</p>
+
+<p>The key advantage of this process is that it enables block and shuffle data of a Spark executor that receives EC2 Spot Interruption signal to be migrated, reducing the re-computation of the Spark tasks. The reduction in the re-computation for the interrupted Spark tasks improves the resiliency of the system and reduces overall execution time. We recommend to enable node decommissioning feature because it would help to reduce the overall compute cycles when there is a Spot interruption.</p>
+<p>This feature is available on Amazon EMR version 6.3 and above. To setup this feature, add this configuration to the Spark job under the executor section:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.decommission.enabled&quot;</span>: <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;spark.storage.decommission.rddBlocks.enabled&quot;</span>: <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;spark.storage.decommission.shuffleBlocks.enabled&quot;</span> : <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;spark.storage.decommission.enabled&quot;</span>: <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;spark.storage.decommission.fallbackStorage.path&quot;</span>: <span class="s2">&quot;s3://&lt;&lt;bucket&gt;&gt;&quot;</span>
+</code></pre></div>
+
+<p>The Spark executor logs sample shown below shows the process of decommission and sending message to the driver:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">17</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">41</span><span class="w"> </span><span class="n">WARN</span><span class="w"> </span><span class="n">KubernetesClusterSchedulerBackend$KubernetesDriverEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="mf">7</span><span class="w"> </span><span class="n">decommissioned</span><span class="w"> </span><span class="n">message</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">17</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">41</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">TaskSetManager</span><span class="p">:</span><span class="w"> </span><span class="nb">Val</span><span class="n">id</span><span class="w"> </span><span class="n">locality</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">TaskSet</span><span class="w"> </span><span class="mf">2.0</span><span class="p">:</span><span class="w"> </span><span class="n">NO_PREF</span><span class="p">,</span><span class="w"> </span><span class="n">ANY</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">17</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">41</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">KubernetesClusterSchedulerBackend</span><span class="p">:</span><span class="w"> </span><span class="n">Decommission</span><span class="w"> </span><span class="n">executors</span><span class="p">:</span><span class="w"> </span><span class="mf">7</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">17</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">41</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">TaskSchedulerImpl</span><span class="p">:</span><span class="w"> </span><span class="n">parentName</span><span class="p">:</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="n">TaskSet_2</span><span class="mf">.0</span><span class="p">,</span><span class="w"> </span><span class="kr">run</span><span class="n">ningTasks</span><span class="p">:</span><span class="w"> </span><span class="mf">10</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">17</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">41</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">BlockManagerMasterEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Mark</span><span class="w"> </span><span class="n">BlockManagers</span><span class="w"> </span><span class="p">(</span><span class="n">BlockManagerId</span><span class="p">(</span><span class="mf">7</span><span class="p">,</span><span class="w"> </span><span class="mf">192.168.82.107</span><span class="p">,</span><span class="w"> </span><span class="mf">39007</span><span class="p">,</span><span class="w"> </span><span class="n">None</span><span class="p">))</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">being</span><span class="w"> </span><span class="n">decommissioning</span><span class="mf">.</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">22</span><span class="p">:</span><span class="mf">17</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">CoarseGrainedExecutorBackend</span><span class="p">:</span><span class="w"> </span><span class="n">Decommission</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="mf">1.</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">22</span><span class="p">:</span><span class="mf">17</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">CoarseGrainedExecutorBackend</span><span class="p">:</span><span class="w"> </span><span class="n">Will</span><span class="w"> </span><span class="n">exit</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="n">finished</span><span class="w"> </span><span class="n">decommissioning</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">22</span><span class="p">:</span><span class="mf">17</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">BlockManager</span><span class="p">:</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="n">decommissioning</span><span class="w"> </span><span class="n">process</span><span class="mf">...</span><span class="w"></span>
+<span class="mf">21</span><span class="o">/</span><span class="mf">05</span><span class="o">/</span><span class="mf">05</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">22</span><span class="p">:</span><span class="mf">17</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">FileSystem</span><span class="p">:</span><span class="w"> </span><span class="n">Looking</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">FS</span><span class="w"> </span><span class="n">supporting</span><span class="w"> </span><span class="n">s3a</span><span class="w"></span>
+</code></pre></div>
+
+<p>The Spark driver logs sample below shows the process of looking for an executor to migrate the shuffle data:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">38</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">ShuffleStatus</span><span class="p">:</span><span class="w"> </span><span class="n">Updating</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="mf">46</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">BlockManagerId</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="mf">192.168.13.235</span><span class="p">,</span><span class="w"> </span><span class="mf">34737</span><span class="p">,</span><span class="w"> </span><span class="n">None</span><span class="p">)</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">38</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">BlockManagerMasterEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">shuffle</span><span class="w"> </span><span class="kd">data</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="mf">46</span><span class="p">,</span><span class="w"> </span><span class="n">ignore</span><span class="mf">.</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">41</span><span class="p">:</span><span class="mf">38</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">BlockManagerMasterEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">shuffle</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="mf">46</span><span class="p">,</span><span class="w"> </span><span class="n">updating</span><span class="mf">.</span><span class="w"></span>
+</code></pre></div>
+
+<p>The Spark executor logs sample below shows the process of reusing the shuffle files:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">BasicExecutorFeatureStep</span><span class="p">:</span><span class="w"> </span><span class="n">Adding</span><span class="w"> </span><span class="n">decommission</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">lifecycle</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsAllocator</span><span class="p">:</span><span class="w"> </span><span class="n">Requested</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mf">19</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">Kubernetes</span><span class="mf">.</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="n">bfd0a5813fd1b80f</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">19</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">ADDED</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">BlockManagerMasterEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">shuffle</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="mf">52</span><span class="p">,</span><span class="w"> </span><span class="n">updating</span><span class="mf">.</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">07</span><span class="w"> </span><span class="mf">20</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">ShuffleStatus</span><span class="p">:</span><span class="w"> </span><span class="n">Recover</span><span class="w"> </span><span class="mf">52</span><span class="w"> </span><span class="n">BlockManagerId</span><span class="p">(</span><span class="n">fallback</span><span class="p">,</span><span class="w"> </span><span class="c1">remote, 7337, None)</span>
+</code></pre></div>
+
+<p>More details on this can be found <a href="../node-decommission/">here</a></p>
+<p><strong>PVC Reuse:</strong></p>
+<p>A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, <a href="https://issues.apache.org/jira/browse/SPARK-25299">SPARK-25299</a> for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create the claims/volumes for the executors and delete it during the executor decommissioning.</p>
+<p>If a Spark executor is killed due to EC2 Spot interruption or any other failure then the PVC is not deleted but persisted and reattached to another executor. If there are shuffle files in that volume then they are reused. Previously if an external shuffle service process or node became unavailable, the executors were killed and all the shuffle blocks were lost, which needed to be recomputed.</p>
+<p align="center">
+  <img src="./resources/images/pvc_reuse.gif " width="640" height="400"/>
+</p>
+
+<p>This feature is available on Amazon EMR version 6.8 and above. To setup this feature, you can add these lines to the executor configuration:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;</span>: <span class="s2">&quot;true&quot;</span>
+<span class="s2">&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;</span>: <span class="s2">&quot;true</span>
+</code></pre></div>
+
+<p>One key benefit is that if any Executor running on EC2 Spot becomes unavailable, the new executor replacement can reuse the shuffle files from the PVC, avoiding recompute of the shuffle block. Dynamic PVC or persistence volume claim enables ‘true’ decoupling of data and processing when we are running Spark jobs on Kubernetes, as it can be used as a local storage to spill in-process files too. We recommend to enable PVC reuse feature because the time taken to resume the task when there is a Spot interruption is optimized as the files are used in-situ and there is no time required to move the files around.</p>
+<p>If one or more of the nodes which are running executors is interrupted the underlying pods gets deleted and the driver gets the update. Note the driver is the owner of the PVC of the executors and they are not deleted.</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">DELETED</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">MODIFIED</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">DELETED</span><span class="w"></span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">MODIFIED</span><span class="w"></span>
+</code></pre></div>
+
+<p>The ExecutorPodsAllocator tries to allocate new executor pods to replace the ones killed due to interruption. During the allocation it tries to figure out how many of the existing PVC has some files and can be reused.</p>
+<h3 id="scaling-emr-on-eks-and-ec2-spot">Scaling EMR on EKS and EC2 Spot<a class="headerlink" href="#scaling-emr-on-eks-and-ec2-spot" title="Permanent link">&para;</a></h3>
+<p>One of the key advantages of using Spot instances is it helps to increase the throughput of Big Data workloads at a fraction of the cost of On-Demand instances. There are spark workloads where there is a need to scale the ‘number of executors’ and the infrastructure dynamically. Scaling in a Spark process is done by spawning pod replicas and when they cannot be scheduled in the existing cluster the cluster need to be scaled up by adding more nodes. When you scale up using Spot instances you get the cost benefits of using the lowest price for EC2 Compute and thus increase the throughput of the job at a lower cost, as you can provision more compute capacity (at the same cost of On-Demand instances) to reduce the time taken to process large data sets.</p>
+<p>Dynamic Resource Allocation (DRA) enables the Spark driver to spawn the initial number of executors (pod replicas) and then scale up the number until the specified maximum number of executors is met to process the pending tasks. When the executors have no tasks running on them, they are terminated. This enables the nodes deployed in the Amazon EKS cluster to be better utilized while running multiple Spark jobs. DRA has mechanisms to dynamically adjust the resources your application occupies based on the workload. Idle executors are terminated when there are no pending tasks. This feature is available on Amazon EMR version 6.x. More details can be found <a href="https://aws.github.io/aws-emr-containers-best-practices/performance/docs/dra/">here</a>.</p>
+<p>Scaling of the infrastructure by adding more nodes can be achieved by using Cluster Autoscaler or Karpenter.</p>
+<p><strong>Cluster Autoscaler:</strong></p>
+<p>Cluster Autoscaler (CAS) is a Kubernetes open-source tool that automatically scale-out the size of the Kubernetes cluster when there are pending pods due to insufficient capacity on existing cluster, or scale-in when there are underutilized nodes in a cluster for extended period of time. The configuration below shows multiple Nodegroups with different vCPU and RAM configurations which adheres to the Spot best practice of diversification. Note each nodegroup has the same vCPU to memory ratio as discussed above. CAS works with EKS Managed and Self-Managed Nodegroups.</p>
+<p align="center">
+  <img src="./resources/images/ca.png" />
+</p>
+
+<p><strong>Karpenter</strong></p>
+<p>Karpenter is an open-source, flexible, high-performance auto-scaler built for Kubernetes. Karpenter automatically launches just the right compute resources to handle your cluster's applications. Karpenter observes aggregate resource requests of un-schedulable pods, computes and launches best-fit new capacity.</p>
+<p align="center">
+  <img src="./resources/images/karpenter.png" />
+</p>
+
+<p>The Provisioner CRD’s configuration flexibility is very useful in adopting Spot best practices of diversification. It can include as many Spot Instance types as possible as we do not restrict specific instance types in the configuration. This approach is also future proof when AWS launches new instance types. It also manages Spot instance lifecycle management through Spot interruptions. We recommend to use Karpenter with Spot Instances as it has faster node scheduling with early pod binding and binpacking to optimize the resource utilization. An example of a Karpenter provisioner with Spot instances below.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">karpenter.sh/v1alpha5</span><span class="w"></span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provisioner</span><span class="w"></span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">intent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps</span><span class="w"></span>
+<span class="w">  </span><span class="nt">requirements</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">karpenter.sh/capacity-type</span><span class="w"></span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span><span class="w"></span>
+<span class="w">      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;spot&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">karpenter.k8s.aws/instance-size</span><span class="w"></span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NotIn</span><span class="w"></span>
+<span class="w">      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">nano</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">micro</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">small</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">medium</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">large</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w"></span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000Gi</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ttlSecondsAfterEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ttlSecondsUntilExpired</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2592000</span><span class="w"></span>
+<span class="w">  </span><span class="nt">providerRef</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="emr-on-eks-and-ec2-spot-instances-best-practices">EMR on EKS and EC2 Spot Instances: Best Practices<a class="headerlink" href="#emr-on-eks-and-ec2-spot-instances-best-practices" title="Permanent link">&para;</a></h3>
+<p>To summarize here are our recommendations 
+- Use EC2 Spot instances for Spark executors and On-Demand instances for drivers.
+  - Diversify the instances types (Instance family and size) used in a cluster. 
+- Use a single AZ to launch a cluster to save Inter-AZ data transfer cost.
+- Use Karpenter for capacity provisioning and scaling when running EMR on EKS jobs
+- If using EKS nodegroups use EKS Managed Nodegroups with Cluster Autoscaler.
+- If using EKS self-managed nodegroups use Capacity Optimized Allocation strategy with the nodegroup and AWS Node Termination Handler.
+- Use Node decommission/PVC Reuse features, they help to reduce the time taken to complete EMR on EKS jobs running on EC2 Spot.
+- Use Dynamic Resource Allocation, this feature is particularly useful if multiple applications share resources in your Spark cluster, and Spot helps to improve the throughput at a low cost. 
+- Decouple Compute and Storage (S3 for Input/Output data). It allows independent scaling of processing and storage. There is low chance of losing data in case of a Spot interruption too. 
+- Reduce Spark’s Shuffle Size and Blast Radius. This allows to select more Spot instances for diversification and also reduces the time taken to recompute/move the shuffle files in case of an interruption.
+- Automate Spot Interruption handling using existing tools and services.</p>
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h3>
+<p>In this document, we covered best practices to cost effectively run EMR on EKS workloads using EC2 Spot Instances. We covered three key aspects of Provisioning, Interruption Handling and Scaling and the best practices under each of them. We hope this document provides prescriptive guidance on running EMR workload on EKS with significant cost savings by utilizing Spot instances.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-footer__link md-footer__link--prev" aria-label="Previous: EKS Best Practices" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              EKS Best Practices
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../node-decommission/" class="md-footer__link md-footer__link--next" aria-label="Next: Node Decommission" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Node Decommission
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>
