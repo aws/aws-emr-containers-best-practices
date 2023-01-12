@@ -19,7 +19,7 @@
     
     
       
-        <title>PVC permission - EMR Containers Best Practices Guides</title>
+        <title>Troubleshooting EMR on EKS Issues - EMR Containers Best Practices Guides</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshoot-spark-application" class="md-skip">
+        <a href="#troubleshooting-emr-on-eks-issues" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PVC permission
+              Troubleshooting EMR on EKS Issues
             
           </span>
         </div>
@@ -277,7 +277,7 @@
   
     <li class="md-tabs__item">
       <a href="./" class="md-tabs__link md-tabs__link--active">
-        Troubleshoot
+        Troubleshooting
       </a>
     </li>
   
@@ -787,14 +787,14 @@
       
       
         <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="true">
-          Troubleshoot
+          Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Troubleshoot" data-md-level="1">
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
         <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
-          Troubleshoot
+          Troubleshooting
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -814,12 +814,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          PVC permission
+          Troubleshooting EMR on EKS Issues
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        PVC permission
+        Troubleshooting EMR on EKS Issues
       </a>
       
         
@@ -838,44 +838,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scenario-1-persistentvolumeclaims-is-forbidden" class="md-nav__link">
-    Scenario 1 - "PersistentVolumeClaims is forbidden"
+  <a href="#error-persistentvolumeclaims-is-forbidden" class="md-nav__link">
+    Error - "PersistentVolumeClaims is forbidden"
   </a>
   
-    <nav class="md-nav" aria-label="Scenario 1 - "PersistentVolumeClaims is forbidden"">
+    <nav class="md-nav" aria-label="Error - "PersistentVolumeClaims is forbidden"">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cause" class="md-nav__link">
-    Cause:
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#solution" class="md-nav__link">
     Solution:
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#verification" class="md-nav__link">
-    Verification
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#patch-via-automated-script" class="md-nav__link">
-    Patch via automated script
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#manual-patch" class="md-nav__link">
-    Manual patch
   </a>
   
 </li>
@@ -1116,44 +1088,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scenario-1-persistentvolumeclaims-is-forbidden" class="md-nav__link">
-    Scenario 1 - "PersistentVolumeClaims is forbidden"
+  <a href="#error-persistentvolumeclaims-is-forbidden" class="md-nav__link">
+    Error - "PersistentVolumeClaims is forbidden"
   </a>
   
-    <nav class="md-nav" aria-label="Scenario 1 - "PersistentVolumeClaims is forbidden"">
+    <nav class="md-nav" aria-label="Error - "PersistentVolumeClaims is forbidden"">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cause" class="md-nav__link">
-    Cause:
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#solution" class="md-nav__link">
     Solution:
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#verification" class="md-nav__link">
-    Verification
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#patch-via-automated-script" class="md-nav__link">
-    Patch via automated script
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#manual-patch" class="md-nav__link">
-    Manual patch
   </a>
   
 </li>
@@ -1182,87 +1126,50 @@
 
 
 
-<h1 id="troubleshoot-spark-application"><strong>Troubleshoot Spark application</strong><a class="headerlink" href="#troubleshoot-spark-application" title="Permanent link">&para;</a></h1>
-<p>To obtain application error details, find the CloudWatch log or s3 log location defined by your job submission script. 
-For example the driver log is stored in s3://S3BUCKET_NAME/emr-containers-log/CLUSTER_ID/jobs/JOB_ID/containers/spark-JOB_ID/spark-JOB_ID-driver/stderr.gz defined by the following submission config:</p>
+<h1 id="troubleshooting-emr-on-eks-issues"><strong>Troubleshooting EMR on EKS issues</strong><a class="headerlink" href="#troubleshooting-emr-on-eks-issues" title="Permanent link">&para;</a></h1>
+<p>In this section, you will find several scenarios for troubleshooting described with errors and solutions. You can find these errors using one of these methods</p>
+<ol>
+<li>using <a href="https://docs.aws.amazon.com/cli/latest/reference/emr-containers/describe-job-run.html">EMR on EKS describe API call</a></li>
+<li>using CloudWatch Logs. In the job submission example below, you can find logs in <code>/emr-containers/jobs</code> location</li>
+<li>using logs shipped to s3. In the job submission example below, you can find logs in <code>s3://'$S3BUCKET'/emr-containers-log</code> path. For driver logs, you need traverse few folders to find the logs. For example, <code>s3://S3BUCKET_NAME/emr-containers-log/CLUSTER_ID/jobs/JOB_ID/containers/spark-JOB_ID/spark-JOB_ID-driver/stderr.gz</code></li>
+</ol>
 <div class="codehilite"><pre><span></span><code>--configuration-overrides<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
-<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/emr-containers-log&quot;}}}&#39;</span>
+<span class="s1">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="s1">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="s1">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="s1">      },               </span>
+<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="s1">        &quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/emr-containers-log&quot;</span>
+<span class="s1">        }</span>
+<span class="s1">      }</span>
+<span class="s1">    }&#39;</span>
 </code></pre></div>
 
-<h2 id="scenario-1-persistentvolumeclaims-is-forbidden"><strong>Scenario 1 - "PersistentVolumeClaims is forbidden"</strong><a class="headerlink" href="#scenario-1-persistentvolumeclaims-is-forbidden" title="Permanent link">&para;</a></h2>
-<p>Running Spark jobs that require creation, listing or deletion of Persistent Volume Claims (PVC) is not supported before EMR6.8. Jobs that require these permissions will fail with the exception “persistentvolumeclaims is forbidden". Looking into application logs, you can see the driver log shows an error something look like this: <code>persistentvolumeclaims is forbidden. User "system:serviceaccount:emr:emr-containers-sa-spark-client-93ztm12rnjz163mt3rgdb3bjqxqfz1cgvqh1e9be6yr81" cannot create resource "persistentvolumeclaims" in API group "" in namesapce "emr".</code></p>
-<h3 id="cause"><strong>Cause:</strong><a class="headerlink" href="#cause" title="Permanent link">&para;</a></h3>
-<p>This is due to the default Kubernetes role: “emr-containers” missing the required PVC permissions. As a result, the <code>emr-containers</code> primary role can’t dynamically create necessary permissions in its childern roles of Spark driver, Spark executor or Spark client when submit a job. </p>
+<h2 id="error-persistentvolumeclaims-is-forbidden"><strong>Error - "PersistentVolumeClaims is forbidden"</strong><a class="headerlink" href="#error-persistentvolumeclaims-is-forbidden" title="Permanent link">&para;</a></h2>
+<p>Occassionally, there is a drift in RBAC permission required for EMR on EKS and Managed endpoint (EMR Studio) installation to work with EKS clusters. This can happen due to upstream changes in Kubernetes RBAC policies. Here is an example of one such <a href="https://kubernetes.io/blog/2021/07/14/upcoming-changes-in-kubernetes-1-22/#api-changes">change in Kubernetes v1.22</a>. Previously, EMR needed permissions for <code>ingresses.extensions</code> to create managed endpoint. But for Kubernetes v1.22 or higher versions, EMR needs <code>ingresses.networking.k8s.io</code> permissions as well. </p>
+<p>In addition, EMR adds newer features that require newer set of RBAC permissions. For example, Spark jobs that require creation, listing or deletion of Persistent Volume Claims (PVC) was not supported before EMR6.8. Jobs that require these permissions will fail with the exception “persistentvolumeclaims is forbidden". Looking into driver logs, you may see an error like this: </p>
+<div class="codehilite"><pre><span></span><code>persistentvolumeclaims is forbidden. User &quot;system:serviceaccount:emr:emr-containers-sa-spark-client-93ztm12rnjz163mt3rgdb3bjqxqfz1cgvqh1e9be6yr81&quot; cannot create resource &quot;persistentvolumeclaims&quot; in API group &quot;&quot; in namesapce &quot;emr&quot;.
+</code></pre></div>
+
+<p>You may encounter this error because the default Kubernetes role <code>emr-containers</code> is missing the required RBAC permissions. As a result, the <code>emr-containers</code> primary role can’t dynamically create necessary permissions for additional roles such as Spark driver, Spark executor or Spark client when you submit a job. Because EMR on EKS and Managed endpoint can be installed using different tooling (AWS CLI, SDK, eksctl, terraform, cdk), there can be slight delay in adding most current RBAC permissions into the tooling </p>
 <h3 id="solution"><strong>Solution:</strong><a class="headerlink" href="#solution" title="Permanent link">&para;</a></h3>
-<p>Add the required permissions to emr-containers related roles in EKS.</p>
-<h3 id="verification"><strong>Verification</strong><a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
-<p>To verify whether your <strong>emr-containers</strong> role has the necessary permissions, run the command:</p>
+<p>Add the required permissions to <code>emr-containers</code>. </p>
+<p>Here are the complete RBAC permissions for EMR on EKS: </p>
+<ul>
+<li><a href="https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/k8s-rbac-policies/emr-containers.yaml">emr-containers.yaml</a></li>
+</ul>
+<p>You can compare whether you have complete RBAC permissions using the steps below, </p>
 <div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">NAMESPACE</span><span class="o">=</span>YOUR_VALUE
 kubectl<span class="w"> </span>describe<span class="w"> </span>role<span class="w"> </span>emr-containers<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
 </code></pre></div>
 
-<p>In addition, verify whether the spark driver/client roles have the necessary permissions with:</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>role<span class="w"> </span>emr-containers-role-spark-driver<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
-kubectl<span class="w"> </span>describe<span class="w"> </span>role<span class="w"> </span>emr-containers-role-spark-client<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
+<p>If the permissions don't match, proceed to apply latest permissions</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">NAMESPACE</span><span class="o">=</span>YOUR_VALUE
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/k8s-rbac-policies/emr-containers.yaml<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
 </code></pre></div>
 
-<p>If the permissions aren’t there, proceed with the <strong>Patch</strong> steps:</p>
-<h3 id="patch-via-automated-script"><strong>Patch via automated script</strong><a class="headerlink" href="#patch-via-automated-script" title="Permanent link">&para;</a></h3>
-<p>1.If there’s any job(s) running that needs the PVC permissions and failing, stop the job(s).</p>
-<p>2.Download the python script <a href="https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/pvc-permission/rbac_patch.py"><code>rbac_patch.py</code></a>, then execute it:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">python3</span> <span class="n">rbac_patch</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">n</span> <span class="err">$</span><span class="p">{</span><span class="n">NAMESPACE</span><span class="p">}</span> 
-</code></pre></div>
-
-<p>3.After running the command, it will show a kubectl diff between the new permissions and the old ones. Press <code>y</code> to patch the role.</p>
-<p>4.Verify the impacted roles have additional permissions:</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>role<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span>
-</code></pre></div>
-
-<p>5.Submit your EMR on EKS job again.</p>
-<h3 id="manual-patch"><strong>Manual patch</strong><a class="headerlink" href="#manual-patch" title="Permanent link">&para;</a></h3>
-<p>If the permission required is not included by the PVC rules addressed previously, you can modify the patch script above or manually adjust the Kubernetes permission as needed.</p>
-<p>NOTE: the “emr-containers” is a primary role, which must provide all the necessary permissions before changing your underlying Driver or Client roles.</p>
-<p>1.Download the current permissions into yaml files by running the commands:</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>role<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span><span class="w"> </span>emr-containers<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;&gt;<span class="w"> </span>emr-containers-role-patch.yaml
-kubectl<span class="w"> </span>get<span class="w"> </span>role<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span><span class="w"> </span>emr-containers-role-spark-driver<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;&gt;<span class="w"> </span>driver-role-patch.yaml
-kubectl<span class="w"> </span>get<span class="w"> </span>role<span class="w"> </span>-n<span class="w"> </span><span class="si">${</span><span class="nv">NAMESPACE</span><span class="si">}</span><span class="w"> </span>emr-containers-role-spark-client<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;&gt;<span class="w"> </span>client-role-patch.yaml
-</code></pre></div>
-
-<p>2.Edit each yaml file and add additional rules, based on the permission your application required:</p>
-<p>For example:
-<strong>emr-containers-role-patch.yaml</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-
-<p><strong>driver-role-patch.yaml</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;services&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;describe&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-
-<p><strong>client-role-patch.yaml</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;persistentvolumeclaims&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;create&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;delete&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-
-<p>3.Remove the following attributes and their values. This is necessary to be able to apply the update, or else an error will pop up:
-    - creationTimestamp
-    - resourceVersion
-    - uid
-4.Finally run the patch:</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>emr-containers-role-patch.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>driver-role-patch.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>client-role-patch.yaml
-</code></pre></div>
-
-<p>5.Submit your EMR on EKS job again.</p>
+<p>You can delete other two spark driver/client roles bcoz they will be dynamically created when you run next job. </p>
 
 
 
