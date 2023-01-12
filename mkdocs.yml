@@ -26,8 +26,8 @@ nav:
   - Debugging:
       - Change Log Level: 'debugging/docs/change-log-level.md'
       - Connect to Spark UI: 'debugging/docs/connect-spark-ui.md'
-  - Troubleshoot:
-      - PVC permission: 'troubleshoot/docs/pvc-permission.md'    
+  - Troubleshooting:
+      - Troubleshooting EMR on EKS Issues: 'troubleshoot/docs/troubleshooting.md'    
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
