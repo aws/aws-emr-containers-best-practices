@@ -12,106 +12,102 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - events
   - serviceaccounts
   - services
-  - pods/log
-  - pods
   - configmaps
+  - events
+  - pods
+  - pods/log
   verbs:
+  - get
   - list
   - watch
-  - annotate
   - describe
+  - create
   - edit
-  - create
+  - delete
+  - deletecollection
+  - annotate
+  - patch
   - label
-  - deletecollection
-  - patch
-  - get
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  verbs:
-  - list
-  - watch
-  - create
-  - update
-  - deletecollection
-  - patch
-  - get
-  - delete
 - apiGroups:
   - ""
   resources:
   - secrets
   verbs:
-  - watch
   - create
   - patch
   - delete
+  - watch
 - apiGroups:
   - apps
   resources:
   - statefulsets
   - deployments
   verbs:
+  - get
   - list
   - watch
-  - annotate
   - describe
-  - edit
   - create
-  - label
-  - patch
-  - get
+  - edit
   - delete
+  - annotate
+  - patch
+  - label
 - apiGroups:
   - batch
   resources:
   - jobs
   verbs:
+  - get
   - list
   - watch
-  - annotate
   - describe
-  - edit
   - create
-  - label
-  - patch
-  - get
+  - edit
   - delete
+  - annotate
+  - patch
+  - label
 - apiGroups:
   - extensions
+  - networking.k8s.io
   resources:
   - ingresses
   verbs:
+  - get
   - list
   - watch
-  - annotate
   - describe
-  - edit
   - create
-  - label
-  - patch
-  - get
+  - edit
   - delete
+  - annotate
+  - patch
+  - label
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
-  - rolebindings
   - roles
+  - rolebindings
   verbs:
+  - get
   - list
   - watch
-  - annotate
   - describe
-  - edit
   - create
-  - label
+  - edit
+  - delete
   - deletecollection
+  - annotate
   - patch
-  - get
+  - label
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - list
   - delete
