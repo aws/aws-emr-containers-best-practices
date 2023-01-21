@@ -20,6 +20,7 @@ nav:
   - Storage:
       - EBS: 'storage/docs/spark/ebs.md'
       - FSx for Lustre: 'storage/docs/spark/fsx-lustre.md'
+      - Instance Store: 'storage/docs/spark/instance-store.md'
   - Metastore Integration:
       - Hive Metastore: 'metastore-integrations/docs/hive-metastore.md'
       - AWS Glue: 'metastore-integrations/docs/aws-glue.md'
@@ -27,7 +28,7 @@ nav:
       - Change Log Level: 'debugging/docs/change-log-level.md'
       - Connect to Spark UI: 'debugging/docs/connect-spark-ui.md'
   - Troubleshooting:
-      - Troubleshooting EMR on EKS Issues: 'troubleshoot/docs/troubleshooting.md'    
+      - Troubleshooting EMR on EKS Issues: 'troubleshoot/docs/troubleshooting.md'
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
