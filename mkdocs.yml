@@ -26,6 +26,7 @@ nav:
   - Debugging:
       - Change Log Level: 'debugging/docs/change-log-level.md'
       - Connect to Spark UI: 'debugging/docs/connect-spark-ui.md'
+      - Self Hosted SHS: 'debugging/docs/self-hosted-shs.md'
   - Troubleshooting:
       - Troubleshooting EMR on EKS Issues: 'troubleshoot/docs/troubleshooting.md'    
   - Node Placement:

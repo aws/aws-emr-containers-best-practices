@@ -129,6 +129,8 @@ kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 
 ### Dynamic Provisioning
 
+Dynamic Provisioning of volumes is supported for both, driver and executors for EMR versions >= 6.3.0
+
 #### EKS Admin Tasks
 
 Create EBS Storage Class
@@ -225,5 +227,3 @@ When the job gets started an EBS volume is provisioned dynamically by the EBS CS
 kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 ```
 
-**POINT TO NOTE**:   
-It is not possible to use this dynamic provisioning strategy for EBS to spark executors. It is not possible to mount a new EBS volume to every Spark executor. Instead use a distributed file system like Lustre, EFS, NFS to mount to executors. 
