@@ -9,13 +9,17 @@
       
       
       
+        <link rel="prev" href="../connect-spark-ui/">
+      
+      
+        <link rel="next" href="../../../troubleshoot/docs/troubleshooting/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>Index - EMR Containers Best Practices Guides</title>
+        <title>Self Hosted SHS - EMR Containers Best Practices Guides</title>
       
     
     
@@ -62,6 +66,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#self-hosted-spark-history-server" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -91,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              Self Hosted SHS
             
           </span>
         </div>
@@ -201,7 +210,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="pyspark/" class="md-tabs__link">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
         Submit applications
       </a>
     </li>
@@ -243,13 +252,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../debugging/docs/change-log-level/" class="md-tabs__link">
+      <a href="../change-log-level/" class="md-tabs__link md-tabs__link--active">
         Debugging
       </a>
     </li>
@@ -553,7 +564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pyspark/" class="md-nav__link">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
         Pyspark
       </a>
     </li>
@@ -699,18 +710,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
           Debugging
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -728,7 +741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../debugging/docs/change-log-level/" class="md-nav__link">
+      <a href="../change-log-level/" class="md-nav__link">
         Change Log Level
       </a>
     </li>
@@ -742,7 +755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+      <a href="../connect-spark-ui/" class="md-nav__link">
         Connect to Spark UI
       </a>
     </li>
@@ -754,11 +767,21 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../debugging/docs/self-hosted-shs/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Self Hosted SHS
       </a>
+      
     </li>
   
 
@@ -1025,6 +1048,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -1043,7 +1068,31 @@
 
 
 
+<h1 id="self-hosted-spark-history-server"><strong>Self Hosted Spark History Server</strong><a class="headerlink" href="#self-hosted-spark-history-server" title="Permanent link">&para;</a></h1>
+<p>In this section, you will learn how to self host Spark History Server instead of using the Persistent App UI on the AWS Console.</p>
+<ol>
+<li>
+<p>In your StartJobRun call for EMR on EKS, set the following conf. to point to an S3 bucket where you would like your event logs to go : <code>spark.eventLog.dir</code> and <code>spark.eventLog.enabled</code> as such:</p>
+<div class="codehilite"><pre><span></span><code>&quot;configurationOverrides&quot;: {
+  &quot;applicationConfiguration&quot;: [{
+    &quot;classification&quot;: &quot;spark-defaults&quot;,
+    &quot;properties&quot;: {
+      &quot;spark.eventLog.enabled&quot;: &quot;true&quot;,
+      &quot;spark.eventLog.dir&quot;: &quot;s3://your-bucket-here/some-directory&quot;
+...
+</code></pre></div>
 
+</li>
+<li>
+<p>Take note of the S3 bucket specified in #1, and use it in the instructions on step #3 wherever you are asked for <code>path_to_eventlog</code> and make sure it is prepended with <code>s3a://</code>, not <code>s3://</code>. An example is <code>-Dspark.history.fs.logDirectory=s3a://path_to_eventlog</code>.</p>
+</li>
+<li>
+<p>Follow instructions <a href="https://docs.aws.amazon.com/glue/latest/dg/monitor-spark-ui-history.html#monitor-spark-ui-history-local">here</a> to launch Spark History Server using a Docker image.</p>
+</li>
+<li>
+<p>After following the above steps, event logs should flow to the specified S3 bucket and the docker container should spin up Spark History Server (which will be available at <code>127.0.0.1:18080</code>). This instance of Spark History Server will pick up and parse event logs from the S3 bucket specified.</p>
+</li>
+</ol>
 
 
 
