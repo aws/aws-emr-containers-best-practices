@@ -13,9 +13,10 @@ The sample code within this documentation is made available under the MIT-0 lice
 ## How to make a change
 1. [Fork the repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository)
 2. Make your change and double check the [mkdocs.yml](./mkdocs.yml) is updated accordingly.
-3. Install the MkDocs command tool if needed:
+3. Install the MkDocs command tool and material theme if needed:
 ```bash
 pip install mkdocs
+pip install mkdocs-material # material theme
 ```
 4. MkDocs comes with a built-in dev-server that lets you preview your documentation as you work on it. Make sure you're in the same directory as the `mkdocs.yml` configuration file, then run the command:
 ```bash
