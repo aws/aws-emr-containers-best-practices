@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../encryption/">
+        <link rel="prev" href="../fsx-lustre/">
       
       
-        <link rel="next" href="../network-security/">
+        <link rel="next" href="../../../../metastore-integrations/docs/hive-metastore/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
     
     
       
-        <title>Data Encryption - EMR Containers Best Practices Guides</title>
+        <title>Instance Store - EMR Containers Best Practices Guides</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#emr-containers-spark-in-transit-and-at-rest-data-encryption" class="md-skip">
+        <a href="#instance-store-volumes" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Encryption
+              Instance Store
             
           </span>
         </div>
@@ -188,15 +188,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../encryption/" class="md-tabs__link md-tabs__link--active">
+      <a href="../../../../security/docs/spark/encryption/" class="md-tabs__link">
         Security
       </a>
     </li>
@@ -222,13 +220,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../../storage/docs/spark/ebs/" class="md-tabs__link">
+      <a href="../ebs/" class="md-tabs__link md-tabs__link--active">
         Storage
       </a>
     </li>
@@ -444,20 +444,18 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       
       
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
           Security
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -475,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../encryption/" class="md-nav__link">
+      <a href="../../../../security/docs/spark/encryption/" class="md-nav__link">
         Encryption
       </a>
     </li>
@@ -487,65 +485,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Data Encryption
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
         Data Encryption
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#encryption-at-rest" class="md-nav__link">
-    Encryption at Rest
-  </a>
-  
-    <nav class="md-nav" aria-label="Encryption at Rest">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#amazon-s3-client-side-encryption" class="md-nav__link">
-    Amazon S3 Client-Side Encryption
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -557,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../network-security/" class="md-nav__link">
+      <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
         Network Security
       </a>
     </li>
@@ -571,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../secrets/" class="md-nav__link">
+      <a href="../../../../security/docs/spark/secrets/" class="md-nav__link">
         Secrets
       </a>
     </li>
@@ -640,18 +584,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="true">
           Storage
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -669,7 +615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/ebs/" class="md-nav__link">
+      <a href="../ebs/" class="md-nav__link">
         EBS
       </a>
     </li>
@@ -683,7 +629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+      <a href="../fsx-lustre/" class="md-nav__link">
         FSx for Lustre
       </a>
     </li>
@@ -695,11 +641,59 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/instance-store/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Instance Store
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Instance Store
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mount-kubelet-pod-directory-on-nvme-disks" class="md-nav__link">
+    Mount kubelet pod directory on NVMe disks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mount-nvme-disks-as-data-volumes" class="md-nav__link">
+    Mount NVMe disks as data volumes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1116,22 +1110,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#encryption-at-rest" class="md-nav__link">
-    Encryption at Rest
-  </a>
-  
-    <nav class="md-nav" aria-label="Encryption at Rest">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#amazon-s3-client-side-encryption" class="md-nav__link">
-    Amazon S3 Client-Side Encryption
+  <a href="#mount-kubelet-pod-directory-on-nvme-disks" class="md-nav__link">
+    Mount kubelet pod directory on NVMe disks
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#mount-nvme-disks-as-data-volumes" class="md-nav__link">
+    Mount NVMe disks as data volumes
+  </a>
   
 </li>
       
@@ -1154,153 +1142,126 @@
 
 
 
-<h1 id="emr-containers-spark-in-transit-and-at-rest-data-encryption"><strong>EMR Containers Spark - In transit and At Rest data encryption</strong><a class="headerlink" href="#emr-containers-spark-in-transit-and-at-rest-data-encryption" title="Permanent link">&para;</a></h1>
-<h3 id="encryption-at-rest"><strong>Encryption at Rest</strong><a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h3>
-<h4 id="amazon-s3-client-side-encryption">Amazon S3 Client-Side Encryption<a class="headerlink" href="#amazon-s3-client-side-encryption" title="Permanent link">&para;</a></h4>
-<p>To utilize <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingClientSideEncryption.html">S3 Client side encryption</a>, you will need to create a KMS Key to be used to encrypt and decrypt data. If you do not have an KMS key, please follow this guide - <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html">AWS KMS create keys</a>. Also please note the job execution role needs access to this key, please see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-users">Add to Key policy</a> for instructions on how to add these permissions.</p>
-<p><strong>trip-count-encrypt-write.py:</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="o">&gt;</span> <span class="n">trip</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="n">encrypt</span><span class="o">-</span><span class="n">write</span><span class="o">.</span><span class="n">py</span><span class="o">&lt;&lt;</span><span class="n">EOF</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<h1 id="instance-store-volumes"><strong>Instance Store Volumes</strong><a class="headerlink" href="#instance-store-volumes" title="Permanent link">&para;</a></h1>
+<p>When working with Spark workloads, it might be useful to use instances powered by <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html">SSD instance store volumes</a> to improve the performance of your jobs. This storage is located on disks that are physically attached to the host computer and can provide better performance compared to traditional EBS volumes. In the context of Spark, this might be beneficial for wide transformations (e.g. JOIN, GROUP BY) that generate a significant amount of shuffle data that Spark persists on the local filesystem of the instances where the executors are running.</p>
+<p>In this document, we highlight two approaches to leverage NVMe disks in your workloads when using EMR on EKS. For a list of instances supporting NVMe disks, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html#instance-store-volumes">Instance store volumes</a> in the Amazon EC2 documentation.</p>
+<h2 id="mount-kubelet-pod-directory-on-nvme-disks"><strong>Mount kubelet pod directory on NVMe disks</strong><a class="headerlink" href="#mount-kubelet-pod-directory-on-nvme-disks" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/">kublet</a> service manages the lifecycle of pod containers that are created using Kubernetes. When a pod is launched on an instance, an ephemeral volume is automatically created for the pod, and this volume is mapped in a sub-directory within the path <code>/var/lib/kubelet</code> of the host node. This volume folder exists for the lifetime of K8s pod, and it will be automatically deleted once the pod ceases to exists.</p>
+<p>In order to leverage NVMe disk attached to an EC2 node in our Spark application, we should perform the following actions during node bootstrap:</p>
+<ul>
+<li>Prepare the NVMe disks attached to the instance (format disks and create a partition)</li>
+<li>Mount the <code>/var/lib/kubelet/pods</code> path on the NVMe</li>
+</ul>
+<p>By doing this, all local files generated by your Spark job (blockmanager data, shuffle data, etc.) will be automatically written to NVMe disks. This way, you don't have to configure Spark volume path when launching the pod (driver or executor). This approach is easier to adopt because it doesn’t require any additional configuration in your job. Besides, once the job is completed, all the data stored in ephemeral volumes will be automatically deleted when the EC2 instance is deleted.</p>
+<p>However, if you have multiple NVMe disks attached to the instance, you need to create RAID0 configuration of all the disks before mounting the <code>/var/lib/kubelet/pods</code> directory on the RAID partition. Without a RAID setup, it will not be possible to leverage all the disks capacity available on the node.</p>
+<p>The following example shows how to create a node group in your cluster using this approach. In order to prepare our NVMe disks, we can use the <a href="https://eksctl.io/">eksctl</a> <strong>preBootstrapCommands</strong> definition while creating the node group. The script will perform the following actions:</p>
+<ul>
+<li>For instances with a single NVMe disk, format the filesystem, create a Linux partition (e.g. ext4, xfs, etc.)</li>
+<li>For instances with multiple NVMe disks, create a RAID 0 configuration across all available volumes</li>
+</ul>
+<p>Once the disks are formatted and ready to use, we will mount the folder <strong>/var/lib/kubelet/pods</strong> using the filesystem and setup correct permissions. Below, you can find an example of an eksctl configuration to create a managed node group using this approach.</p>
+<p><strong>Example</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">eksctl</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1alpha5</span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">ClusterConfig</span>
 
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="n">metadata</span><span class="o">:</span>
+<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_CLUSTER_NAME</span>
+<span class="w">  </span><span class="n">region</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_REGION</span>
 
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
-    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span>\
-        <span class="o">.</span><span class="n">builder</span>\
-        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;trip-count-join-fsx&quot;</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-
-    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/trip-data.parquet&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total trips: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
-
-    <span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/write-encrypt-trip-data.parquet&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encrypt - KMS- CSE writew to s3 compeleted&quot;</span><span class="p">)</span>
-    <span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-    <span class="n">EOF</span>
+<span class="n">managedNodeGroups</span><span class="o">:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">ng</span><span class="o">-</span><span class="n">c5d</span><span class="o">-</span><span class="mi">9</span><span class="n">xlarge</span>
+<span class="w">    </span><span class="n">instanceType</span><span class="o">:</span><span class="w"> </span><span class="n">c5d</span><span class="o">.</span><span class="mi">9</span><span class="n">xlarge</span>
+<span class="w">    </span><span class="n">desiredCapacity</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">privateNetworking</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="n">subnets</span><span class="o">:</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">YOUR_NG_SUBNET</span>
+<span class="w">    </span><span class="n">preBootstrapCommands</span><span class="o">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">commands</span><span class="w"> </span><span class="n">executed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">root</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="n">mdadm</span><span class="w"> </span><span class="n">nvme</span><span class="o">-</span><span class="n">cli</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">nvme_disks</span><span class="o">=(</span><span class="n">$</span><span class="o">(</span><span class="n">nvme</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="s2">&quot;Amazon EC2 NVMe Instance Storage&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">awk</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="s1">&#39;[[:space:]][[:space:]]+&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="err">#</span><span class="n">nvme_disks</span><span class="o">[</span><span class="err">@</span><span class="o">]}</span><span class="w"> </span><span class="o">-</span><span class="n">eq</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mkfs</span><span class="o">.</span><span class="na">ext4</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="n">nvme_disks</span><span class="o">[*]}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mkdir</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="sr">/var/lib/kubelet/pods &amp;&amp; mount ${nvme_disks[*]} /var/lib/kubelet/pods &amp;&amp; chmod 750 /var/lib/</span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">docker</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">nvme_disks</span><span class="o">=(</span><span class="n">$</span><span class="o">(</span><span class="n">nvme</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="s2">&quot;Amazon EC2 NVMe Instance Storage&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">awk</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="s1">&#39;[[:space:]][[:space:]]+&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="err">#</span><span class="n">nvme_disks</span><span class="o">[</span><span class="err">@</span><span class="o">]}</span><span class="w"> </span><span class="o">-</span><span class="n">ge</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mdadm</span><span class="w"> </span><span class="o">--</span><span class="n">create</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="sr">/dev/md0 --level=0 --raid-devices=${#nvme_disks[@]} ${nvme_disks[*]} &amp;&amp; mkfs.ext4 -F /dev/md0 &amp;&amp; systemctl stop docker &amp;&amp; mkdir -p /var/lib/kubelet/pods &amp;&amp; mount /dev/md0 /var/lib/kubelet/pods &amp;&amp; chmod 750 /var/lib/</span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">docker</span>
 </code></pre></div>
 
-<p><strong>Request:</strong> </p>
-<div class="codehilite"><pre><span></span><code>cat &gt; spark-python-in-s3-encrypt-cse-kms-write.json &lt;&lt;EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-encrypt-cse-kms-write&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;trip-count-encrypt-write.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.instances=10 --conf spark.driver.cores=2  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=2&quot;
-    }
-  }, 
+<p><strong>Benefits</strong></p>
+<ul>
+<li>No need to mount the disk using Spark configurations or pod templates</li>
+<li>Data generated by the application, will immediately be deleted at the pod termination. Data will be also purged in case of pod failures.</li>
+<li>One time configuration for the node group</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>If multiple jobs are allocated on the same EC2 instance, contention of disk resources will occur because it is not possible to allocate instance store volume resources across jobs</li>
+</ul>
+<h2 id="mount-nvme-disks-as-data-volumes"><strong>Mount NVMe disks as data volumes</strong><a class="headerlink" href="#mount-nvme-disks-as-data-volumes" title="Permanent link">&para;</a></h2>
+<p>In this section, we’re going to explicitly mount instance store volumes as the mount path in Spark configuration for drivers and executors</p>
+<p>As in the previous example, this script will automatically format the instance store volumes and create an <strong>xfs</strong> partition. The disks are then mounted in local folders called <strong>/spark_data_IDX</strong> where IDX is an integer that corresponds to the disk mounted.</p>
+<p><strong>Example</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">eksctl</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1alpha5</span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">ClusterConfig</span>
+
+<span class="n">metadata</span><span class="o">:</span>
+<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_CLUSTER_NAME</span>
+<span class="w">  </span><span class="n">region</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_REGION</span>
+
+<span class="n">managedNodeGroups</span><span class="o">:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">ng</span><span class="o">-</span><span class="n">m5d</span><span class="o">-</span><span class="mi">4</span><span class="n">xlarge</span>
+<span class="w">    </span><span class="n">instanceType</span><span class="o">:</span><span class="w"> </span><span class="n">m5d</span><span class="o">.</span><span class="mi">4</span><span class="n">xlarge</span>
+<span class="w">    </span><span class="n">desiredCapacity</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">privateNetworking</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="n">subnets</span><span class="o">:</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">YOUR_NG_SUBNET</span>
+<span class="w">    </span><span class="n">preBootstrapCommands</span><span class="o">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">commands</span><span class="w"> </span><span class="n">executed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">root</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;IDX=1;for DEV in /dev/nvme[1-9]n1;do mkfs.xfs ${DEV}; mkdir -p /spark_data_${IDX}; echo ${DEV} /spark_data_${IDX} xfs defaults,noatime 1 2 &gt;&gt; /etc/fstab; IDX=$((${IDX} + 1)); done&quot;</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;mount -a&quot;</span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;chown 999:1000 /spark_data_*&quot;</span>
+</code></pre></div>
+
+<p>In order to successfully use ephemeral volumes within Spark, you need to specify additional configurations. In addition to spark configuration, the mounted volume name should start with <code>spark-local-dir-</code>.</p>
+<p>Below an example configuration provided during the EMR on EKS job submission, that shows how to configure Spark to use 2 volumes as local storage for the job.</p>
+<p><strong>Spark Configurations</strong></p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;name&quot;: ....,
+  &quot;virtualClusterId&quot;: ....,
+  &quot;executionRoleArn&quot;: ....,
+  &quot;releaseLabel&quot;: ....,
+  &quot;jobDriver&quot;: ....,
   &quot;configurationOverrides&quot;: {
     &quot;applicationConfiguration&quot;: [
       {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
+        &quot;classification&quot;: &quot;spark-defaults&quot;,
         &quot;properties&quot;: {
-          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
-         }
-       },
-       {
-         &quot;classification&quot;: &quot;emrfs-site&quot;, 
-         &quot;properties&quot;: {
-          &quot;fs.s3.cse.enabled&quot;:&quot;true&quot;,
-          &quot;fs.s3.cse.encryptionMaterialsProvider&quot;:&quot;com.amazon.ws.emr.hadoop.fs.cse.KMSEncryptionMaterialsProvider&quot;,
-          &quot;fs.s3.cse.kms.keyId&quot;:&quot;&lt;KMS Key Id&gt;&quot;
-         }
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.mount.path&quot;: &quot;/spark_data_1&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.mount.readOnly&quot;: &quot;false&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.options.path&quot;: &quot;/spark_data_1&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.mount.path&quot;: &quot;/spark_data_2&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.mount.readOnly&quot;: &quot;false&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.options.path&quot;: &quot;/spark_data_2&quot;
+        }
       }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;persistentAppUI&quot;: &quot;ENABLED&quot;, 
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
+    ]
   }
 }
-EOF
-
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-encrypt-cse-kms-write.json
 </code></pre></div>
 
-<p>In the above request, EMRFS encrypts the parquet file with the specified KMS key and the encrypted object is persisted to the specified s3 location.</p>
-<p>To verify the encryption - use the same KMS key to decrypt - the KMS key used is a symmetric key ( the same key can be used to both encrypt and decrypt)</p>
-<p><strong>trip-count-encrypt-read.py</strong>  </p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">trip</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="n">encrypt</span><span class="o">-</span><span class="n">read</span><span class="o">.</span><span class="n">py</span><span class="o">&lt;&lt;</span><span class="n">EOF</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<p>Please note that for this approach it is required to specify the following configurations for each volume that you want to use. (IDX is a label to identify the volume mounted)</p>
+<div class="codehilite"><pre><span></span><code># Mount path on the host node
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.options.path
 
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+# Mount path on the k8s pod
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.mount.path
 
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
-    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span>\
-        <span class="o">.</span><span class="n">builder</span>\
-        <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;trip-count-join-fsx&quot;</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
-
-    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/trip-data.parquet&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total trips: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
-
-    <span class="n">df_encrypt</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s1">&#39;s3://&lt;s3 prefix&gt;/write-encrypt-trip-data.parquet&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encrypt data - Total trips: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df_encrypt</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
-    <span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-   <span class="n">EOF</span>
+# (boolean) Should be defined as false to allow Spark to write in the path
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.mount.readOnly
 </code></pre></div>
 
-<p><strong>Request</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt; spark-python-in-s3-encrypt-cse-kms-read.json&lt;&lt;EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-encrypt-cse-kms-read&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;trip-count-encrypt-write.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.instances=10 --conf spark.driver.cores=2  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=2&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
-         }
-       },
-       {
-         &quot;classification&quot;: &quot;emrfs-site&quot;, 
-         &quot;properties&quot;: {
-          &quot;fs.s3.cse.enabled&quot;:&quot;true&quot;,
-          &quot;fs.s3.cse.encryptionMaterialsProvider&quot;:&quot;com.amazon.ws.emr.hadoop.fs.cse.KMSEncryptionMaterialsProvider&quot;,
-          &quot;fs.s3.cse.kms.keyId&quot;:&quot;&lt;KMS Key Id&gt;&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;persistentAppUI&quot;: &quot;ENABLED&quot;, 
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-encrypt-cse-kms-read.json
-</code></pre></div>
-
-<p><strong>Validate encryption:</strong> Try to read the encrypted data without specifying <code>"fs.s3.cse.enabled":"true"</code> - will get an error message in the driver and executor logs because the content is encrypted and cannot be read without decryption.</p>
+<p><strong>Benefits</strong></p>
+<ul>
+<li>You can allocate dedicated resources of instance store volumes across your Spark jobs (For example, lets take a scenario where an EC2 instance has two instance store volumes. If you run two spark jobs on this node, you can dedicate one volume per Spark job)</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Additional configurations are required for Spark jobs to use instance store volumes. This approach can be error prone if you don’t control the instance types being used (for example, multiple node groups with different instance types). You can mitigate this issue by using k8s node selectors and specify instance type in your spark configuraiton: <strong><a href="http://spark.kubernetes.node.selector.node.kubernetes.io/instance-type">spark.kubernetes.node.selector.node.kubernetes.io/instance-type</a></strong></li>
+<li>Data created on the volumes is automatically deleted once the job is completed and instance is terminated. However, you need to extra measures to delete the data on instance store volumes if EC2 instance is re-used or is not terminated.</li>
+</ul>
 
 
 
