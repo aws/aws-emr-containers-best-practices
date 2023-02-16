@@ -8,7 +8,6 @@
 
 
 ### **Static Provisioning**
-### **Static Provisioning**
 
 #### EKS Admin Tasks
 
