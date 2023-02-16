@@ -60,7 +60,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-deb
 
 The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and AWS Cloudwatch logs as configured in the request.
 
-Starting from the version 3.3.0, Spark has been [migrated from log4j1 to log4j2](https://issues.apache.org/jira/browse/SPARK-37814). EMR on EKS allows you still write the log4j properties to the same `"classification": "spark-log4j"`, however it now needed to be log4j2.properties, such as 
+Starting from the version 3.3.0, Spark has been [migrated from log4j1 to log4j2](https://issues.apache.org/jira/browse/SPARK-37814). EMR on EKS allows you still write the log4j properties to the same `"classification": "spark-log4j"`, however it now needs to be log4j2.properties, such as 
 ```
       {
         "classification": "spark-log4j",
