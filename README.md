@@ -27,6 +27,7 @@ mkdocs serve
 7. When everything looks good and you're ready to deploy the change, run the command to build/compile the website content:
 ```bash
 mkdocs build
+mkdocs gh-deploy
 ```
 8. This will refresh the directory `site`. Take a look inside the directory and make sure your changes are included.
 ```bash
