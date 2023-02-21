@@ -1174,8 +1174,8 @@
 <h4 id="using-emr-classification"><strong>Using EMR classification</strong><a class="headerlink" href="#using-emr-classification" title="Permanent link">&para;</a></h4>
 <p>Log level of spark applications can be changed using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html">EMR spark-log4j configuration classification.</a></p>
 <p><strong>Request</strong><br />
-pi.py used in the below request payload is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a><br />
-<code>spark-log4j</code> classification can be used to configure values in <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">log4j.properties</a></p>
+The <code>pi.py</code> application script is from the <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a>. EMR on EKS has included the example located at<code>/usr/lib/spark/examples/src/main</code> for you to try.</p>
+<p><code>spark-log4j</code> classification can be used to configure values in <a href="https://github.com/apache/spark/blob/branch-3.2/conf/log4j.properties.template">log4j.properties</a> for EMR releases 6.7.0 or lower , and <a href="https://github.com/apache/spark/blob/master/conf/log4j2.properties.template">log4j2.properties</a> for EMR releases 6.8.0+ .</p>
 <div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-debug-log.json &lt;&lt; EOF
 {
   &quot;name&quot;: &quot;spark-python-in-s3-debug-log-classification&quot;, 
@@ -1184,8 +1184,9 @@ pi.py used in the below request payload is from <a href="https://github.com/apac
   &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
   &quot;jobDriver&quot;: {
     &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/pi.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;
+      &quot;entryPoint&quot;: &quot;local:///usr/lib/spark/examples/src/main/python/pi.py&quot;,
+      &quot;entryPointArguments&quot;: [ &quot;200&quot; ],
+       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.memory=2G --conf spark.executor.cores=2 --conf spark.driver.memory=2G --conf spark.executor.instances=2&quot;
     }
   }, 
   &quot;configurationOverrides&quot;: {
@@ -1220,6 +1221,15 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-deb
 </code></pre></div>
 
 <p>The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and AWS Cloudwatch logs as configured in the request.</p>
+<p>Starting from the version 3.3.0, Spark has been <a href="https://issues.apache.org/jira/browse/SPARK-37814">migrated from log4j1 to log4j2</a>. EMR on EKS allows you still write the log4j properties to the same <code>"classification": "spark-log4j"</code>, however it now needs to be log4j2.properties, such as </p>
+<div class="codehilite"><pre><span></span><code>      {
+        &quot;classification&quot;: &quot;spark-log4j&quot;,
+        &quot;properties&quot;: {
+          &quot;rootLogger.level&quot; : &quot;DEBUG&quot;
+          }
+      }
+</code></pre></div>
+
 <h4 id="custom-log4j-properties"><strong>Custom log4j properties</strong><a class="headerlink" href="#custom-log4j-properties" title="Permanent link">&para;</a></h4>
 <p>Download log4j properties from <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">here</a>. Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre filesystem</a>. </p>
 <p><strong>Request</strong><br />
