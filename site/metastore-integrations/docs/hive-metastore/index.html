@@ -1,0 +1,1570 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Hive Metastore - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#emr-containers-integration-with-hive-metastore" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hive Metastore
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+        Cost Optimization
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        Secrets
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        FSx for Lustre
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        Instance Store
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Hive Metastore
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Hive Metastore
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-hive-metastore-database-through-jdbc" class="md-nav__link">
+    1-Hive metastore Database through JDBC
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hive-metastore-thrift-service-through-thrift-protocol" class="md-nav__link">
+    2-Hive metastore thrift service through thrift:// protocol
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-connect-hive-metastore-via-thrift-service-hosted-on-eks" class="md-nav__link">
+    3-Connect Hive metastore via thrift service hosted on EKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-run-thrift-service-as-a-sidecar-in-spark-drivers-pod" class="md-nav__link">
+    4-Run thrift service as a sidecar in Spark Driver's pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hudi-remote-hive-metastore-integration" class="md-nav__link">
+    5-Hudi + Remote Hive metastore integration
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+        Connect to Spark UI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/self-hosted-shs/" class="md-nav__link">
+        Self Hosted SHS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
+        Troubleshooting EMR on EKS Issues
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Cost Optimization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cost Optimization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        Cost Optimization using EC2 Spot Instances
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        Node Decommission
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-hive-metastore-database-through-jdbc" class="md-nav__link">
+    1-Hive metastore Database through JDBC
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hive-metastore-thrift-service-through-thrift-protocol" class="md-nav__link">
+    2-Hive metastore thrift service through thrift:// protocol
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-connect-hive-metastore-via-thrift-service-hosted-on-eks" class="md-nav__link">
+    3-Connect Hive metastore via thrift service hosted on EKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-run-thrift-service-as-a-sidecar-in-spark-drivers-pod" class="md-nav__link">
+    4-Run thrift service as a sidecar in Spark Driver's pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hudi-remote-hive-metastore-integration" class="md-nav__link">
+    5-Hudi + Remote Hive metastore integration
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/metastore-integrations/docs/hive-metastore.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="emr-containers-integration-with-hive-metastore"><strong>EMR Containers integration with Hive Metastore</strong><a class="headerlink" href="#emr-containers-integration-with-hive-metastore" title="Permanent link">&para;</a></h1>
+<p>For more details, check out the <a href="https://github.com/aws-samples/hive-emr-on-eks">github repository</a>, which includes CDK/CFN templates that help you to get started quickly.</p>
+<h3 id="1-hive-metastore-database-through-jdbc"><strong>1-Hive metastore Database through JDBC</strong><a class="headerlink" href="#1-hive-metastore-database-through-jdbc" title="Permanent link">&para;</a></h3>
+<p>In this example, a Spark application is configured to connect to a Hive Metastore database provisioned with <a href="https://aws.amazon.com/rds/aurora/">Amazon RDS Aurora</a> MySql via a JDBC connection. The Amazon RDS and <a href="https://aws.amazon.com/eks/">EKS</a> cluster should be in same VPC or else the Spark job will not be able to connect to RDS. </p>
+<p>You directly pass in the JDBC credentials at the job/application level, which is a simple and quick solution to make a connection to the HMS. However, it is not recommended in a production environment. From the security perspective, the password management could be a risk since the JDBC credentials will appear in all of your job logs. Also engineers may be required to hold the password when it is not necessary.</p>
+<p><strong>Request:</strong>  </p>
+<div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-hms-jdbc.json &lt;&lt; EOF
+{
+  &quot;name&quot;: &quot;spark-python-in-s3-hms-jdbc&quot;, 
+  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
+  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
+  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
+  &quot;jobDriver&quot;: {
+    &quot;sparkSubmitJobDriver&quot;: {
+      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/hivejdbc.py&quot;, 
+       &quot;sparkSubmitParameters&quot;: &quot;--jars s3://&lt;s3 prefix&gt;/mariadb-connector-java.jar --conf spark.hadoop.javax.jdo.option.ConnectionDriverName=org.mariadb.jdbc.Driver --conf spark.hadoop.javax.jdo.option.ConnectionUserName=&lt;connection-user-name&gt; --conf spark.hadoop.javax.jdo.option.ConnectionPassword=&lt;connection-password&gt; --conf spark.hadoop.javax.jdo.option.ConnectionURL=&lt;JDBC-Connection-string&gt; --conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;
+    }
+  }, 
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;, 
+        &quot;properties&quot;: {
+          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
+          }
+      }
+    ], 
+    &quot;monitoringConfiguration&quot;: {
+      &quot;cloudWatchMonitoringConfiguration&quot;: {
+        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
+        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
+      }, 
+      &quot;s3MonitoringConfiguration&quot;: {
+        &quot;logUri&quot;: &quot;s3://joblogs&quot;
+      }
+    }
+  }
+}
+EOF
+
+aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-hms-jdbc.json
+</code></pre></div>
+
+<p>In this example we are connecting to mysql db, so <code>mariadb-connector-java.jar</code> needs to be passed with <code>--jars</code> option. If you are using postgres, Oracle or any other database, the appropriate connector jar needs to be included.  </p>
+<p><strong>Configuration of interest:</strong></p>
+<div class="codehilite"><pre><span></span><code>--jars s3://&lt;s3 prefix&gt;/mariadb-connector-java.jar
+--conf spark.hadoop.javax.jdo.option.ConnectionDriverName=org.mariadb.jdbc.Driver 
+--conf spark.hadoop.javax.jdo.option.ConnectionUserName=&lt;connection-user-name&gt;  
+--conf spark.hadoop.javax.jdo.option.ConnectionPassword=&lt;connection-password&gt;
+--conf spark.hadoop.javax.jdo.option.ConnectionURL**=&lt;JDBC-Connection-string&gt;
+</code></pre></div>
+
+<p><strong>hivejdbc.py</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
+<span class="c1"># warehouse_location points to the default location for managed databases and tables</span>
+<span class="n">warehouse_location</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;spark-warehouse&#39;</span><span class="p">)</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">warehouse_location</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE `ehmsdb`.`sparkemrnyc5`( `dispatching_base_num` string, `pickup_datetime` string, `dropoff_datetime` string, `pulocationid` bigint, `dolocationid` bigint, `sr_flag` bigint) STORED AS PARQUET LOCATION &#39;s3://&lt;s3 prefix&gt;/nyctaxi_parquet/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT count(*) FROM ehmsdb.sparkemrnyc5 &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The above job lists databases from a remote RDS Hive Metastore, creates a new table and then queries it.</p>
+<h3 id="2-hive-metastore-thrift-service-through-thrift-protocol"><strong>2-Hive metastore thrift service through thrift:// protocol</strong><a class="headerlink" href="#2-hive-metastore-thrift-service-through-thrift-protocol" title="Permanent link">&para;</a></h3>
+<p>In this example, the spark application is configured to connect to an external Hive metastore thrift server. The thrift server is running on <code>EMR on EC2's master node</code> and AWS RDS Aurora is used as database for the Hive metastore. </p>
+<p>Running an EMR on EC2 cluster as a thrift server, simplify the application configuration and setup. You can start quickly with reduced engineering effort. However, your maintenance overhead may increase, since you will be monitoring two types of clusters, i.e. EMR on EC2 and EMR on EKS.</p>
+<p><strong>thriftscript.py:</strong> <br />
+<code>hive.metastore.uris</code> config needs to be set to read from external Hive metastore. The URI format looks like this: <code>thrift://EMR_ON_EC2_MASTER_NODE_DNS_NAME:9083</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
+<span class="c1"># warehouse_location points to the default location for managed databases and tables</span>
+<span class="n">warehouse_location</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;spark-warehouse&#39;</span><span class="p">)</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">warehouse_location</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;hive.metastore.uris&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;hive metastore thrift uri&gt;&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE ehmsdb.`sparkemrnyc2`( `dispatching_base_num` string, `pickup_datetime` string, `dropoff_datetime` string, `pulocationid` bigint, `dolocationid` bigint, `sr_flag` bigint) STORED AS PARQUET LOCATION &#39;s3://&lt;s3 prefix&gt;/nyctaxi_parquet/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM ehmsdb.sparkemrnyc2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p><strong>Request:</strong></p>
+<p>The below job lists databases from remote Hive Metastore, creates a new table and then queries it.</p>
+<div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-hms-thrift.json <span class="s">&lt;&lt; EOF</span>
+<span class="s">{</span>
+<span class="s">  &quot;name&quot;: &quot;spark-python-in-s3-hms-thrift&quot;, </span>
+<span class="s">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="s">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="s">  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, </span>
+<span class="s">  &quot;jobDriver&quot;: {</span>
+<span class="s">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/thriftscript.py&quot;, </span>
+<span class="s">       &quot;sparkSubmitParameters&quot;: &quot;--jars s3://&lt;s3 prefix&gt;/mariadb-connector-java.jar --conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span>
+<span class="s">    }</span>
+<span class="s">  }, </span>
+<span class="s">  &quot;configurationOverrides&quot;: {</span>
+<span class="s">    &quot;applicationConfiguration&quot;: [</span>
+<span class="s">      {</span>
+<span class="s">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="s">        &quot;properties&quot;: {</span>
+<span class="s">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;</span>
+<span class="s">          }</span>
+<span class="s">      }</span>
+<span class="s">    ], </span>
+<span class="s">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="s">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
+<span class="s">        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, </span>
+<span class="s">        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;</span>
+<span class="s">      }, </span>
+<span class="s">      &quot;s3MonitoringConfiguration&quot;: {</span>
+<span class="s">        &quot;logUri&quot;: &quot;s3://joblogs&quot;</span>
+<span class="s">      }</span>
+<span class="s">    }</span>
+<span class="s">  }</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-hms-thrift.json
+</code></pre></div>
+
+<h3 id="3-connect-hive-metastore-via-thrift-service-hosted-on-eks"><strong>3-Connect Hive metastore via thrift service hosted on EKS</strong><a class="headerlink" href="#3-connect-hive-metastore-via-thrift-service-hosted-on-eks" title="Permanent link">&para;</a></h3>
+<p>In this example, our Spark application connects to a standalone Hive metastore service (HMS) running in EKS.</p>
+<p>Running the standalone HMS in EKS unifies your analytics applications with other business critical apps in a single platform. It simplifies your solution architecture and infrastructure design. The helm chart solution includes autoscaling feature, so your EKS cluster can automatically expand or shrink when the HMS request volume changes. Also it follows the security best practice to manage JDBC credentials via AWS Secrets Manager. However, you will need a combination of analytics and k8s skills to maintain this solution.</p>
+<p>To install the <a href="https://github.com/aws-samples/hive-emr-on-eks/tree/main/hive-metastore-chart">HMS helm chart</a>, simply replace the environment variables in values.yaml, then manually <code>helm install</code> via the command below. Otherwise, deploy the HMS via a CDK/CFN template with a security best practice. Check out the <a href="https://github.com/aws-samples/hive-emr-on-eks/blob/5faa5201cb9fb437e70fe895bcebc94bd076a74a/source/lib/spark_on_eks_stack.py#L81">CDK project</a> for more details.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span> hive-emr-on-eks/hive-metastore-chart
+
+sed -i <span class="s1">&#39;&#39;</span> -e <span class="s1">&#39;s/{RDS_JDBC_URL}/&quot;jdbc:mysql:\/\/&#39;</span><span class="nv">$YOUR_HOST_NAME</span><span class="s1">&#39;:3306\/&#39;</span><span class="nv">$YOUR_DB_NAME</span><span class="s1">&#39;?createDatabaseIfNotExist=true&quot;/g&#39;</span> values.yaml 
+sed -i <span class="s1">&#39;&#39;</span> -e <span class="s1">&#39;s/{RDS_USERNAME}/&#39;</span><span class="nv">$YOUR_USER_NAME</span><span class="s1">&#39;/g&#39;</span> values.yaml 
+sed -i <span class="s1">&#39;&#39;</span> -e <span class="s1">&#39;s/{RDS_PASSWORD}/&#39;</span><span class="nv">$YOUR_PASSWORD</span><span class="s1">&#39;/g&#39;</span> values.yaml
+sed -i <span class="s1">&#39;&#39;</span> -e <span class="s1">&#39;s/{S3BUCKET}/s3:\/\/&#39;</span><span class="nv">$YOUR_S3BUCKET</span><span class="s1">&#39;/g&#39;</span> values.yaml
+
+helm repo add hive-metastore https://aws-samples.github.io/hive-metastore-chart 
+helm install hive hive-metastore/hive-metastore -f values.yaml --namespace<span class="o">=</span>emr --debug
+</code></pre></div>
+
+<p><strong>hivethrift_eks.py</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;warehouse_location&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;hive.metastore.uris&quot;</span><span class="p">,</span><span class="s2">&quot;thrift://&quot;</span><span class="o">+</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HIVE_METASTORE_SERVICE_HOST&#39;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;:9083&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE IF NOT EXISTS `demo`&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP TABLE IF EXISTS demo.amazonreview3&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE IF NOT EXISTS `demo`.`amazonreview3`( `marketplace` string,`customer_id`string,`review_id` string,`product_id` string,`product_parent` string,`product_title` string,`star_rating` integer,`helpful_votes` integer,`total_votes` integer,`vine` string,`verified_purchase` string,`review_headline` string,`review_body` string,`review_date` date,`year` integer) STORED AS PARQUET LOCATION &#39;&quot;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;/app_code/data/toy/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT coount(*) FROM demo.amazonreview3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p>An environment variable <code>HIVE_METASTORE_SERVICE_HOST</code> appears in your Spark application pods automatically, once the standalone HMS is up running in EKS. You can directly set the <code>hive.metastore.uris</code> to <code>thrift://"+environ['HIVE_METASTORE_SERVICE_HOST']+":9083"</code>.</p>
+<p>Can set the <code>spark.sql.warehouse.dir</code> property to a S3 location as your hive warehouse storage. The s3 location can be dynamic, which is based on an argument passed in or an environment variable.</p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+aws emr-containers start-job-run <span class="se">\</span>
+--virtual-cluster-id <span class="nv">$VIRTUAL_CLUSTER_ID</span> <span class="se">\</span>
+--name spark-hive-via-thrift <span class="se">\</span>
+--execution-role-arn <span class="nv">$EMR_ROLE_ARN</span> <span class="se">\</span>
+--release-label emr-6.2.0-latest <span class="se">\</span>
+--job-driver <span class="s1">&#39;{</span>
+<span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s1">      &quot;entryPoint&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/app_code/job/hivethrift_eks.py&quot;,</span>
+<span class="s1">      &quot;entryPointArguments&quot;:[&quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;&quot;],</span>
+<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=1 --conf spark.executor.memory=4G --conf spark.driver.memory=1G --conf spark.executor.cores=2&quot;}}&#39;</span> <span class="se">\</span>
+--configuration-overrides <span class="s1">&#39;{</span>
+<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/elasticmapreduce/emr-containers&quot;}}}&#39;</span>
+</code></pre></div>
+
+<h3 id="4-run-thrift-service-as-a-sidecar-in-spark-drivers-pod"><strong>4-Run thrift service as a sidecar in Spark Driver's pod</strong><a class="headerlink" href="#4-run-thrift-service-as-a-sidecar-in-spark-drivers-pod" title="Permanent link">&para;</a></h3>
+<p>This advanced solution runs the standalone HMS thrift service inside a Spark driver as a sidecar. It means each Spark job will have its dedicated thrift server. The benefit of the design is HMS is no long a single point of failure, since each Spark application has its own HMS. Also it is no long a long running service, i.e. it spins up when your Spark job starts, then terminates when your job is done. The sidecar follows the security best practice via leveraging Secrets Manager to extract JDBC crednetials. However, the maintenance of the sidecar increases because you now need to manage the hms sidecar, custom configmaps and sidecar pod templates. Also this solution requires combination skills of analytics and k8s. </p>
+<p>The CDK/CFN template is available to simplify the installation against a new EKS cluster. If you have an existing EKS cluster, the prerequisite details can be found in the <a href="https://github.com/aws-samples/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod">github repository</a></p>
+<p><strong>sidecar_hivethrift_eks.py:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;warehouse_location&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE DATABASE IF NOT EXISTS `demo`&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;DROP TABLE IF EXISTS demo.amazonreview4&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;CREATE EXTERNAL TABLE `demo`.`amazonreview4`( `marketplace` string,`customer_id`string,`review_id` string,`product_id` string,`product_parent` string,`product_title` string,`star_rating` integer,`helpful_votes` integer,`total_votes` integer,`vine` string,`verified_purchase` string,`review_headline` string,`review_body` string,`review_date` date,`year` integer) STORED AS PARQUET LOCATION &#39;&quot;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;/app_code/data/toy/&#39;&quot;</span><span class="p">)</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;SELECT coount(*) FROM demo.amazonreview4&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
+
+<p><strong>Request:</strong></p>
+<p>Now that the HMS is running inside your Spark driver, it share common attributes such as the network config, the <code>spark.hive.metastore.uris</code> can set to "thrift://localhost:9083". Don't forget to assign the sidecar pod template to the Spark Driver like this <code>"spark.kubernetes.driver.podTemplateFile": "s3://'$S3BUCKET'/app_code/job/sidecar_hms_pod_template.yaml"</code> </p>
+<p>For more details, check out the <a href="https://github.com/aws-samples/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod">github repo</a></p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># test HMS sidecar on EKS</span>
+aws emr-containers start-job-run <span class="se">\</span>
+--virtual-cluster-id <span class="nv">$VIRTUAL_CLUSTER_ID</span> <span class="se">\</span>
+--name sidecar-hms <span class="se">\</span>
+--execution-role-arn <span class="nv">$EMR_ROLE_ARN</span> <span class="se">\</span>
+--release-label emr-6.3.0-latest <span class="se">\</span>
+--job-driver <span class="s1">&#39;{</span>
+<span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s1">      &quot;entryPoint&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/app_code/job/sidecar_hivethrift_eks.py&quot;,</span>
+<span class="s1">      &quot;entryPointArguments&quot;:[&quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;&quot;],</span>
+<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=1 --conf spark.executor.memory=4G --conf spark.driver.memory=1G --conf spark.executor.cores=2&quot;}}&#39;</span> <span class="se">\</span>
+--configuration-overrides <span class="s1">&#39;{</span>
+<span class="s1">    &quot;applicationConfiguration&quot;: [</span>
+<span class="s1">      {</span>
+<span class="s1">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="s1">        &quot;properties&quot;: {</span>
+<span class="s1">          &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/app_code/job/sidecar_hms_pod_template.yaml&quot;,</span>
+<span class="s1">          &quot;spark.hive.metastore.uris&quot;: &quot;thrift://localhost:9083&quot;</span>
+<span class="s1">        }</span>
+<span class="s1">      }</span>
+<span class="s1">    ], </span>
+<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/elasticmapreduce/emr-containers&quot;}}}&#39;</span>
+</code></pre></div>
+
+<h3 id="5-hudi-remote-hive-metastore-integration"><strong>5-Hudi + Remote Hive metastore integration</strong><a class="headerlink" href="#5-hudi-remote-hive-metastore-integration" title="Permanent link">&para;</a></h3>
+<p>Starting from Hudi 0.9.0, we can synchronize Hudi table's latest schema to Hive metastore in HMS sync mode, with this setting <code>'hoodie.datasource.hive_sync.mode': 'hms'</code>. </p>
+<p>This example runs a Hudi job with EMR on EKS, and interact with a remote RDS hive metastore to create a Hudi table. As a serverless option, it can interact with AWS Glue catalog. check out the <a href="../aws-glue/">AWS Glue</a> section for more details.</p>
+<p><strong>HudiEMRonEKS.py</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.warehouse.dir&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;/warehouse/&quot;</span> <span class="p">)</span> \
+    <span class="o">.</span><span class="n">enableHiveSupport</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1"># Create a DataFrame</span>
+<span class="n">inputDF</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;100&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T13:51:39.340396Z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;101&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T12:14:58.597216Z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;102&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T13:51:40.417052Z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;103&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T13:51:40.519832Z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;104&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-02&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T12:15:00.512679Z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;105&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-02&quot;</span><span class="p">,</span> <span class="s2">&quot;2015-01-01T13:51:42.248818Z&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;creation_date&quot;</span><span class="p">,</span> <span class="s2">&quot;last_update_time&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Specify common DataSourceWriteOptions in the single hudiOptions variable</span>
+<span class="n">test_tableName</span> <span class="o">=</span> <span class="s2">&quot;hudi_tbl&quot;</span>
+<span class="n">hudiOptions</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s1">&#39;hoodie.table.name&#39;</span><span class="p">:</span> <span class="n">test_tableName</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.write.recordkey.field&#39;</span><span class="p">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.write.partitionpath.field&#39;</span><span class="p">:</span> <span class="s1">&#39;creation_date&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.write.precombine.field&#39;</span><span class="p">:</span> <span class="s1">&#39;last_update_time&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.enable&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.table&#39;</span><span class="p">:</span> <span class="n">test_tableName</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.database&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.write.hive_style_partitioning&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.partition_fields&#39;</span><span class="p">:</span> <span class="s1">&#39;creation_date&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.partition_extractor_class&#39;</span><span class="p">:</span> <span class="s1">&#39;org.apache.hudi.hive.MultiPartKeysValueExtractor&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hoodie.datasource.hive_sync.mode&#39;</span><span class="p">:</span> <span class="s1">&#39;hms&#39;</span>
+<span class="p">}</span>
+
+
+<span class="c1"># Write a DataFrame as a Hudi dataset</span>
+<span class="n">inputDF</span><span class="o">.</span><span class="n">write</span> \
+<span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;org.apache.hudi&#39;</span><span class="p">)</span> \
+<span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;hoodie.datasource.write.operation&#39;</span><span class="p">,</span> <span class="s1">&#39;bulk_insert&#39;</span><span class="p">)</span> \
+<span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">**</span><span class="n">hudiOptions</span><span class="p">)</span> \
+<span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s1">&#39;overwrite&#39;</span><span class="p">)</span> \
+<span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;/hudi_hive_insert&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">listTables</span><span class="p">()))</span>
+</code></pre></div>
+
+<p><strong>Request:</strong></p>
+<p>The latest Hudi-spark3-bundle library is needed to support the new HMS hive sync functionality. In the following sample script, it is downloaded from maven repository when submitting a job with EMR 6.3. Starting from EMR 6.5, you don't need the <code>--jars</code> setting anymore, because EMR 6.5+ includes the Hudi-spark3-bundle library. </p>
+<div class="codehilite"><pre><span></span><code>aws emr-containers start-job-run <span class="se">\</span>
+--virtual-cluster-id <span class="nv">$VIRTUAL_CLUSTER_ID</span> <span class="se">\</span>
+--name hudi-test1 <span class="se">\</span>
+--execution-role-arn <span class="nv">$EMR_ROLE_ARN</span> <span class="se">\</span>
+--release-label emr-6.3.0-latest <span class="se">\</span>
+--job-driver <span class="s1">&#39;{</span>
+<span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s1">      &quot;entryPoint&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/app_code/job/HudiEMRonEKS.py&quot;,</span>
+<span class="s1">      &quot;entryPointArguments&quot;:[&quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;&quot;],</span>
+<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--jars https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_2.12/0.9.0/hudi-spark3-bundle_2.12-0.9.0.jar --conf spark.executor.cores=1 --conf spark.executor.instances=2&quot;}}&#39;</span> <span class="se">\</span>
+--configuration-overrides <span class="s1">&#39;{</span>
+<span class="s1">    &quot;applicationConfiguration&quot;: [</span>
+<span class="s1">      {</span>
+<span class="s1">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="s1">        &quot;properties&quot;: {</span>
+<span class="s1">          &quot;spark.serializer&quot;: &quot;org.apache.spark.serializer.KryoSerializer&quot;,</span>
+<span class="s1">          &quot;spark.sql.hive.convertMetastoreParquet&quot;: &quot;false&quot;,</span>
+<span class="s1">          &quot;spark.hive.metastore.uris&quot;: &quot;thrift://localhost:9083&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/app_code/job/sidecar_hms_pod_template.yaml&quot;</span>
+<span class="s1">        }}</span>
+<span class="s1">    ], </span>
+<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
+<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/elasticmapreduce/emr-containers&quot;}}}&#39;</span>
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../../../storage/docs/spark/instance-store/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Instance Store" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Instance Store
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../aws-glue/" class="md-footer__link md-footer__link--next" aria-label="Next: AWS Glue" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              AWS Glue
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>

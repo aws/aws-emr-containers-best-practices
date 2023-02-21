@@ -1,0 +1,1332 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Instance Store - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#instance-store-volumes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Instance Store
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../security/docs/spark/encryption/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ebs/" class="md-tabs__link md-tabs__link--active">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+        Cost Optimization
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/encryption/" class="md-nav__link">
+        Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/secrets/" class="md-nav__link">
+        Secrets
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fsx-lustre/" class="md-nav__link">
+        FSx for Lustre
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Instance Store
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Instance Store
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mount-kubelet-pod-directory-on-nvme-disks" class="md-nav__link">
+    Mount kubelet pod directory on NVMe disks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mount-nvme-disks-as-data-volumes" class="md-nav__link">
+    Mount NVMe disks as data volumes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        Hive Metastore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+        Connect to Spark UI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/self-hosted-shs/" class="md-nav__link">
+        Self Hosted SHS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
+        Troubleshooting EMR on EKS Issues
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Cost Optimization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cost Optimization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        Cost Optimization using EC2 Spot Instances
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        Node Decommission
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mount-kubelet-pod-directory-on-nvme-disks" class="md-nav__link">
+    Mount kubelet pod directory on NVMe disks
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mount-nvme-disks-as-data-volumes" class="md-nav__link">
+    Mount NVMe disks as data volumes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/storage/docs/spark/instance-store.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="instance-store-volumes"><strong>Instance Store Volumes</strong><a class="headerlink" href="#instance-store-volumes" title="Permanent link">&para;</a></h1>
+<p>When working with Spark workloads, it might be useful to use instances powered by <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html">SSD instance store volumes</a> to improve the performance of your jobs. This storage is located on disks that are physically attached to the host computer and can provide better performance compared to traditional EBS volumes. In the context of Spark, this might be beneficial for wide transformations (e.g. JOIN, GROUP BY) that generate a significant amount of shuffle data that Spark persists on the local filesystem of the instances where the executors are running.</p>
+<p>In this document, we highlight two approaches to leverage NVMe disks in your workloads when using EMR on EKS. For a list of instances supporting NVMe disks, see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html#instance-store-volumes">Instance store volumes</a> in the Amazon EC2 documentation.</p>
+<h2 id="mount-kubelet-pod-directory-on-nvme-disks"><strong>Mount kubelet pod directory on NVMe disks</strong><a class="headerlink" href="#mount-kubelet-pod-directory-on-nvme-disks" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/">kublet</a> service manages the lifecycle of pod containers that are created using Kubernetes. When a pod is launched on an instance, an ephemeral volume is automatically created for the pod, and this volume is mapped in a sub-directory within the path <code>/var/lib/kubelet</code> of the host node. This volume folder exists for the lifetime of K8s pod, and it will be automatically deleted once the pod ceases to exists.</p>
+<p>In order to leverage NVMe disk attached to an EC2 node in our Spark application, we should perform the following actions during node bootstrap:</p>
+<ul>
+<li>Prepare the NVMe disks attached to the instance (format disks and create a partition)</li>
+<li>Mount the <code>/var/lib/kubelet/pods</code> path on the NVMe</li>
+</ul>
+<p>By doing this, all local files generated by your Spark job (blockmanager data, shuffle data, etc.) will be automatically written to NVMe disks. This way, you don't have to configure Spark volume path when launching the pod (driver or executor). This approach is easier to adopt because it doesn’t require any additional configuration in your job. Besides, once the job is completed, all the data stored in ephemeral volumes will be automatically deleted when the EC2 instance is deleted.</p>
+<p>However, if you have multiple NVMe disks attached to the instance, you need to create RAID0 configuration of all the disks before mounting the <code>/var/lib/kubelet/pods</code> directory on the RAID partition. Without a RAID setup, it will not be possible to leverage all the disks capacity available on the node.</p>
+<p>The following example shows how to create a node group in your cluster using this approach. In order to prepare our NVMe disks, we can use the <a href="https://eksctl.io/">eksctl</a> <strong>preBootstrapCommands</strong> definition while creating the node group. The script will perform the following actions:</p>
+<ul>
+<li>For instances with a single NVMe disk, format the filesystem, create a Linux partition (e.g. ext4, xfs, etc.)</li>
+<li>For instances with multiple NVMe disks, create a RAID 0 configuration across all available volumes</li>
+</ul>
+<p>Once the disks are formatted and ready to use, we will mount the folder <strong>/var/lib/kubelet/pods</strong> using the filesystem and setup correct permissions. Below, you can find an example of an eksctl configuration to create a managed node group using this approach.</p>
+<p><strong>Example</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">eksctl</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1alpha5</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">ClusterConfig</span><span class="w"></span>
+
+<span class="n">metadata</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_CLUSTER_NAME</span><span class="w"></span>
+<span class="w">  </span><span class="n">region</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_REGION</span><span class="w"></span>
+
+<span class="n">managedNodeGroups</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">ng</span><span class="o">-</span><span class="n">c5d</span><span class="o">-</span><span class="mi">9</span><span class="n">xlarge</span><span class="w"></span>
+<span class="w">    </span><span class="n">instanceType</span><span class="o">:</span><span class="w"> </span><span class="n">c5d</span><span class="o">.</span><span class="mi">9</span><span class="n">xlarge</span><span class="w"></span>
+<span class="w">    </span><span class="n">desiredCapacity</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">    </span><span class="n">privateNetworking</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="w">    </span><span class="n">subnets</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">YOUR_NG_SUBNET</span><span class="w"></span>
+<span class="w">    </span><span class="n">preBootstrapCommands</span><span class="o">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">commands</span><span class="w"> </span><span class="n">executed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">root</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="n">mdadm</span><span class="w"> </span><span class="n">nvme</span><span class="o">-</span><span class="n">cli</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">nvme_disks</span><span class="o">=(</span><span class="n">$</span><span class="o">(</span><span class="n">nvme</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="s2">&quot;Amazon EC2 NVMe Instance Storage&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">awk</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="s1">&#39;[[:space:]][[:space:]]+&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="err">#</span><span class="n">nvme_disks</span><span class="o">[</span><span class="err">@</span><span class="o">]}</span><span class="w"> </span><span class="o">-</span><span class="n">eq</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mkfs</span><span class="o">.</span><span class="na">ext4</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="n">nvme_disks</span><span class="o">[*]}</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mkdir</span><span class="w"> </span><span class="o">-</span><span class="n">p</span><span class="w"> </span><span class="sr">/var/lib/kubelet/pods &amp;&amp; mount ${nvme_disks[*]} /var/lib/kubelet/pods &amp;&amp; chmod 750 /var/lib/</span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">docker</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">nvme_disks</span><span class="o">=(</span><span class="n">$</span><span class="o">(</span><span class="n">nvme</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="s2">&quot;Amazon EC2 NVMe Instance Storage&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">awk</span><span class="w"> </span><span class="o">-</span><span class="n">F</span><span class="s1">&#39;[[:space:]][[:space:]]+&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="err">#</span><span class="n">nvme_disks</span><span class="o">[</span><span class="err">@</span><span class="o">]}</span><span class="w"> </span><span class="o">-</span><span class="n">ge</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mdadm</span><span class="w"> </span><span class="o">--</span><span class="n">create</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="sr">/dev/md0 --level=0 --raid-devices=${#nvme_disks[@]} ${nvme_disks[*]} &amp;&amp; mkfs.ext4 -F /dev/md0 &amp;&amp; systemctl stop docker &amp;&amp; mkdir -p /var/lib/kubelet/pods &amp;&amp; mount /dev/md0 /var/lib/kubelet/pods &amp;&amp; chmod 750 /var/lib/</span><span class="n">docker</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">docker</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>Benefits</strong></p>
+<ul>
+<li>No need to mount the disk using Spark configurations or pod templates</li>
+<li>Data generated by the application, will immediately be deleted at the pod termination. Data will be also purged in case of pod failures.</li>
+<li>One time configuration for the node group</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>If multiple jobs are allocated on the same EC2 instance, contention of disk resources will occur because it is not possible to allocate instance store volume resources across jobs</li>
+</ul>
+<h2 id="mount-nvme-disks-as-data-volumes"><strong>Mount NVMe disks as data volumes</strong><a class="headerlink" href="#mount-nvme-disks-as-data-volumes" title="Permanent link">&para;</a></h2>
+<p>In this section, we’re going to explicitly mount instance store volumes as the mount path in Spark configuration for drivers and executors</p>
+<p>As in the previous example, this script will automatically format the instance store volumes and create an <strong>xfs</strong> partition. The disks are then mounted in local folders called <strong>/spark_data_IDX</strong> where IDX is an integer that corresponds to the disk mounted.</p>
+<p><strong>Example</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">eksctl</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">v1alpha5</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">ClusterConfig</span><span class="w"></span>
+
+<span class="n">metadata</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_CLUSTER_NAME</span><span class="w"></span>
+<span class="w">  </span><span class="n">region</span><span class="o">:</span><span class="w"> </span><span class="n">YOUR_REGION</span><span class="w"></span>
+
+<span class="n">managedNodeGroups</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">ng</span><span class="o">-</span><span class="n">m5d</span><span class="o">-</span><span class="mi">4</span><span class="n">xlarge</span><span class="w"></span>
+<span class="w">    </span><span class="n">instanceType</span><span class="o">:</span><span class="w"> </span><span class="n">m5d</span><span class="o">.</span><span class="mi">4</span><span class="n">xlarge</span><span class="w"></span>
+<span class="w">    </span><span class="n">desiredCapacity</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">    </span><span class="n">privateNetworking</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="w">    </span><span class="n">subnets</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">YOUR_NG_SUBNET</span><span class="w"></span>
+<span class="w">    </span><span class="n">preBootstrapCommands</span><span class="o">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">commands</span><span class="w"> </span><span class="n">executed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">root</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;IDX=1;for DEV in /dev/nvme[1-9]n1;do mkfs.xfs ${DEV}; mkdir -p /spark_data_${IDX}; echo ${DEV} /spark_data_${IDX} xfs defaults,noatime 1 2 &gt;&gt; /etc/fstab; IDX=$((${IDX} + 1)); done&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;mount -a&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;chown 999:1000 /spark_data_*&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<p>In order to successfully use ephemeral volumes within Spark, you need to specify additional configurations. In addition to spark configuration, the mounted volume name should start with <code>spark-local-dir-</code>.</p>
+<p>Below an example configuration provided during the EMR on EKS job submission, that shows how to configure Spark to use 2 volumes as local storage for the job.</p>
+<p><strong>Spark Configurations</strong></p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;name&quot;: ....,
+  &quot;virtualClusterId&quot;: ....,
+  &quot;executionRoleArn&quot;: ....,
+  &quot;releaseLabel&quot;: ....,
+  &quot;jobDriver&quot;: ....,
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;,
+        &quot;properties&quot;: {
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.mount.path&quot;: &quot;/spark_data_1&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.mount.readOnly&quot;: &quot;false&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-1.options.path&quot;: &quot;/spark_data_1&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.mount.path&quot;: &quot;/spark_data_2&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.mount.readOnly&quot;: &quot;false&quot;,
+          &quot;spark.kubernetes.executor.volumes.hostPath.spark-local-dir-2.options.path&quot;: &quot;/spark_data_2&quot;
+        }
+      }
+    ]
+  }
+}
+</code></pre></div>
+
+<p>Please note that for this approach it is required to specify the following configurations for each volume that you want to use. (IDX is a label to identify the volume mounted)</p>
+<div class="codehilite"><pre><span></span><code># Mount path on the host node
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.options.path
+
+# Mount path on the k8s pod
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.mount.path
+
+# (boolean) Should be defined as false to allow Spark to write in the path
+spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.mount.readOnly
+</code></pre></div>
+
+<p><strong>Benefits</strong></p>
+<ul>
+<li>You can allocate dedicated resources of instance store volumes across your Spark jobs (For example, lets take a scenario where an EC2 instance has two instance store volumes. If you run two spark jobs on this node, you can dedicate one volume per Spark job)</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Additional configurations are required for Spark jobs to use instance store volumes. This approach can be error prone if you don’t control the instance types being used (for example, multiple node groups with different instance types). You can mitigate this issue by using k8s node selectors and specify instance type in your spark configuraiton: <strong><a href="http://spark.kubernetes.node.selector.node.kubernetes.io/instance-type">spark.kubernetes.node.selector.node.kubernetes.io/instance-type</a></strong></li>
+<li>Data created on the volumes is automatically deleted once the job is completed and instance is terminated. However, you need to extra measures to delete the data on instance store volumes if EC2 instance is re-used or is not terminated.</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../fsx-lustre/" class="md-footer__link md-footer__link--prev" aria-label="Previous: FSx for Lustre" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              FSx for Lustre
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-footer__link md-footer__link--next" aria-label="Next: Hive Metastore" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Hive Metastore
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "search": "../../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>

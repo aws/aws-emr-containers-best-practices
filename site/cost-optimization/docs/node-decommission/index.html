@@ -1,0 +1,1289 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Node Decommission - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#node-decommission" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Node Decommission
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cost-optimization/" class="md-tabs__link md-tabs__link--active">
+        Cost Optimization
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        Secrets
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        FSx for Lustre
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        Instance Store
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        Hive Metastore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+        Connect to Spark UI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../debugging/docs/self-hosted-shs/" class="md-nav__link">
+        Self Hosted SHS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
+        Troubleshooting EMR on EKS Issues
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Cost Optimization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cost Optimization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cost-optimization/" class="md-nav__link">
+        Cost Optimization using EC2 Spot Instances
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Node Decommission
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Node Decommission
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/cost-optimization/docs/node-decommission.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="node-decommission"><strong>Node Decommission</strong><a class="headerlink" href="#node-decommission" title="Permanent link">&para;</a></h1>
+<p>This section shows how to use a <a href="https://issues.apache.org/jira/browse/SPARK-20629">Apache Spark feature</a> that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. </p>
+<p>This feature is supported for releases EMR 6.3.0+.</p>
+<h3 id="how-does-it-work">How does it work?<a class="headerlink" href="#how-does-it-work" title="Permanent link">&para;</a></h3>
+<p>When <code>spark.decommission.enabled</code> is true, Spark will try its best to shutdown the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.decommission.enabled</td>
+<td>Whether to enable decommissioning</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.enabled</td>
+<td>Whether to decommission the block manager when decommissioning executor</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.rddBlocks.enabled</td>
+<td>Whether to transfer RDD blocks during block manager decommissioning.</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.shuffleBlocks.enabled</td>
+<td>Whether to transfer shuffle blocks during block manager decommissioning. Requires a migratable shuffle resolver (like sort based shuffle)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.maxReplicationFailuresPerBlock</td>
+<td>Maximum number of failures which can be handled for migrating shuffle blocks when block manager is decommissioning and trying to move its existing blocks.</td>
+<td>3</td>
+</tr>
+<tr>
+<td>spark.storage.decommission.shuffleBlocks.maxThreads</td>
+<td>Maximum number of threads to use in migrating shuffle files.</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>This feature can currently be enabled through a temporary workaround on EMR 6.3.0+ releases. To enable it, Spark’s decom.sh file permission must be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html">custom image</a>. Once the code is fixed, the page will be updated.</p>
+<p><strong>Dockerfile for custom image:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">FROM</span><span class="w"> </span><span class="o">&lt;</span><span class="k">release</span><span class="w"> </span><span class="n">account</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;</span><span class="p">.</span><span class="n">dkr</span><span class="p">.</span><span class="n">ecr</span><span class="p">.</span><span class="o">&lt;</span><span class="n">aws</span><span class="w"> </span><span class="n">region</span><span class="o">&gt;</span><span class="p">.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">spark</span><span class="o">/&lt;</span><span class="k">release</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">USER</span><span class="w"> </span><span class="n">root</span><span class="w"></span>
+<span class="n">WORKDIR</span><span class="w"> </span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="w"></span>
+<span class="n">RUN</span><span class="w"> </span><span class="n">chown</span><span class="w"> </span><span class="nl">hadoop:</span><span class="n">hadoop</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">decom</span><span class="p">.</span><span class="n">sh</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>Setting decommission timeout:</strong></p>
+<p>Each executor has to be decommissioned within a certain time limit controlled by the pod’s terminationGracePeriodSeconds configuration.  The default value is 30 secs but can be modified using a <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/pod-templates.html">custom pod template</a>. The pod template for this modification would look like </p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span><span class="w"></span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span><span class="w"></span>
+<span class="n">spec</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">terminationGracePeriodSeconds</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">seconds</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>Note: terminationGracePeriodSeconds timeout should be lesser than spot instance timeout with around 5 seconds buffer kept aside for triggering the node termination</strong></p>
+<p><strong>Request:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">decommissioning</span><span class="p">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;my-job-run-with-node-decommissioning&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;virtualClusterId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;executionRoleArn&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">   </span><span class="s">&quot;releaseLabel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;emr-6.3.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">   </span><span class="s">&quot;jobDriver&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;sparkSubmitJobDriver&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;entryPoint&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="s">&quot;sparkSubmitParameters&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">   </span><span class="p">},</span><span class="w"> </span>
+<span class="w">   </span><span class="s">&quot;configurationOverrides&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;applicationConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;classification&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;spark.kubernetes.container.image&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com/&lt;custom_image_repo&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">       </span><span class="s">&quot;spark.executor.instances&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;5&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.decommission.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.rddBlocks.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.shuffleBlocks.enabled&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;spark.storage.decommission.enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"></span>
+<span class="w">       </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s">&quot;monitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;logGroupName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;log group&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;logStreamNamePrefix&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;log-group-prefix&gt;&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s">&quot;s3MonitoringConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;logUri&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;S3 URI&gt;&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>Observed Behavior:</strong></p>
+<p>When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines <code>Updating map output for &lt;shuffle_id&gt; to BlockManagerId(&lt;executor_id&gt;, &lt;ip_address&gt;, &lt;port&gt;, &lt;topology_info&gt;)</code> denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation as of yet.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../cost-optimization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Cost Optimization using EC2 Spot Instances" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Cost Optimization using EC2 Spot Instances
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>

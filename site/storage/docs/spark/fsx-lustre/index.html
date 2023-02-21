@@ -1,0 +1,1654 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>FSx for Lustre - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#emr-containers-integration-with-fsx-for-lustre" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FSx for Lustre
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../security/docs/spark/encryption/" class="md-tabs__link">
+        Security
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+        Submit applications
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ebs/" class="md-tabs__link md-tabs__link--active">
+        Storage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+        Metastore Integration
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-tabs__link">
+        Debugging
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+        Node Placement
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../performance/docs/dra/" class="md-tabs__link">
+        Performance
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+        Cost Optimization
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        EMR on EKS(AWS Outposts)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/encryption/" class="md-nav__link">
+        Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        Data Encryption
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/secrets/" class="md-nav__link">
+        Secrets
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Submit applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Submit applications" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Submit applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        Pyspark
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Storage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Storage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ebs/" class="md-nav__link">
+        EBS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          FSx for Lustre
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        FSx for Lustre
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fsx-for-lustre-posix-permissions" class="md-nav__link">
+    FSx for Lustre POSIX permissions
+  </a>
+  
+    <nav class="md-nav" aria-label="FSx for Lustre POSIX permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-metadata-to-s3-object" class="md-nav__link">
+    Tag Metadata to S3 object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning" class="md-nav__link">
+    Static Provisioning
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provision-a-fsx-for-lustre-cluster" class="md-nav__link">
+    Provision a FSx for Lustre cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks" class="md-nav__link">
+    EKS admin tasks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks" class="md-nav__link">
+    Spark Developer Tasks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-provisioning" class="md-nav__link">
+    Dynamic Provisioning
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks_1" class="md-nav__link">
+    EKS Admin Tasks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks_1" class="md-nav__link">
+    Spark Developer Tasks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instance-store/" class="md-nav__link">
+        Instance Store
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Metastore Integration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Metastore Integration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Metastore Integration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        Hive Metastore
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        AWS Glue
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Debugging
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Debugging
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/change-log-level/" class="md-nav__link">
+        Change Log Level
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/connect-spark-ui/" class="md-nav__link">
+        Connect to Spark UI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../debugging/docs/self-hosted-shs/" class="md-nav__link">
+        Self Hosted SHS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
+        Troubleshooting EMR on EKS Issues
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Performance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Performance" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Performance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../performance/docs/dra/" class="md-nav__link">
+        Dynamic Resource Allocation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        EKS Best Practices
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Cost Optimization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cost Optimization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        Cost Optimization using EC2 Spot Instances
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        Node Decommission
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fsx-for-lustre-posix-permissions" class="md-nav__link">
+    FSx for Lustre POSIX permissions
+  </a>
+  
+    <nav class="md-nav" aria-label="FSx for Lustre POSIX permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-metadata-to-s3-object" class="md-nav__link">
+    Tag Metadata to S3 object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-provisioning" class="md-nav__link">
+    Static Provisioning
+  </a>
+  
+    <nav class="md-nav" aria-label="Static Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provision-a-fsx-for-lustre-cluster" class="md-nav__link">
+    Provision a FSx for Lustre cluster
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks" class="md-nav__link">
+    EKS admin tasks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks" class="md-nav__link">
+    Spark Developer Tasks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-provisioning" class="md-nav__link">
+    Dynamic Provisioning
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eks-admin-tasks_1" class="md-nav__link">
+    EKS Admin Tasks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spark-developer-tasks_1" class="md-nav__link">
+    Spark Developer Tasks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/aws/aws-emr-containers-best-practices/edit/master/docs/storage/docs/spark/fsx-lustre.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="emr-containers-integration-with-fsx-for-lustre"><strong>EMR Containers integration with FSx for Lustre</strong><a class="headerlink" href="#emr-containers-integration-with-fsx-for-lustre" title="Permanent link">&para;</a></h1>
+<p><a href="https://aws.amazon.com/eks/">Amazon EKS</a> clusters provide the compute and ephemeral storage for Spark workloads. Ephemeral storage provided by EKS is allocated from the EKS worker node's disk storage and the lifecycle of the storage is bound by the lifecycle of the driver and executor pod.</p>
+<p><strong>Need for durable storage:</strong><br />
+When multiple spark applications are executed as part of a data pipeline, there are scenarios where data from one spark application is passed to subsequent spark applications - in this case data can be persisted in S3. Alternatively, this data can also be persisted in <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre</a>. FSx for Lustre provides a fully managed, scalable, POSIX compliant native filesystem interface for the data in s3. With FSx, your torage is decoupled from your compute and has its own lifecycle. </p>
+<p>FSx for Lustre Volumes can be mounted on spark driver and executor pods through <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#static">static</a> and <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#dynamic">dynamic</a> provisioning.</p>
+<p>Data used in the below example is from <a href="https://registry.opendata.aws/nyc-tlc-trip-records-pds/">AWS Open data Registry</a></p>
+<h3 id="fsx-for-lustre-posix-permissions"><strong>FSx for Lustre POSIX permissions</strong><a class="headerlink" href="#fsx-for-lustre-posix-permissions" title="Permanent link">&para;</a></h3>
+<p>When a Lustre filesystem is mounted to driver and executor pods, and if the S3 objects does not have required metadata, the mounted volume defaults 
+ownership of the file system to <code>root</code>. EMR on EKS executes the driver and executor pods with UID(999), GID (1000) and groups(1000 and 65534).
+In this scenario, the spark application has read only access to the mounted Lustre file system. Below are a few approaches that can be considered:</p>
+<h4 id="tag-metadata-to-s3-object">Tag Metadata to S3 object<a class="headerlink" href="#tag-metadata-to-s3-object" title="Permanent link">&para;</a></h4>
+<p>Applications writing to S3 can tag the S3 objects with the metadata that FSx for Lustre requires.  </p>
+<p><a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/attach-s3-posix-permissions.html">Walkthrough: Attaching POSIX permissions when uploading objects into an S3 bucket</a> provides a guided tutorial.
+FSx for Lustre will convert this tagged metadata to corresponding POSIX permissions when mounting Lustre file system to the driver and executor pods.       </p>
+<p>EMR on EKS spawns the driver and executor pods as non-root user(<code>UID -999, GID - 1000, groups - 1000, 65534</code>).
+To enable the spark application to write to the mounted file system, (UID - <code>999</code>) can be made as the <code>file-owner</code> and supplemental group <code>65534</code> be made as the <code>file-group</code>.</p>
+<p>For S3 objects that already exists with no metadata tagging, there can be a process that recursively tags all the S3 objects with the required metadata.
+Below is an example:  <br />
+1. Create FSx for Lustre file system to the S3 prefix.  <br />
+2. <a href="#Provision a FSx for Lustre cluster">Create Persistent Volume and Persistent Volume claim for the created FSx for Lustre file system</a>  <br />
+3. Run a pod as root user with FSx for Lustre mounted with the PVC created in Step 2.    </p>
+<div class="codehilite"><pre><span></span><code>```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: chmod-fsx-pod
+  namespace: test-demo
+spec:
+  containers:
+  - name: ownership-change
+    image: amazonlinux:2
+    command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -hR +999:+65534 /data&quot;]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: fsx-static-root-claim
+```
+</code></pre></div>
+
+<p>Run a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/export-data-repo-task.html">data repository task</a> with import path and export path pointing to the same S3 prefix. This will export the POSIX permission from FSx for Lustre file system as metadata, that is tagged on S3 objects.</p>
+<p>Now that the S3 objects are tagged with metadata, the spark application with FSx for Lustre filesystem mounted will have write access.</p>
+<h3 id="static-provisioning"><strong>Static Provisioning</strong><a class="headerlink" href="#static-provisioning" title="Permanent link">&para;</a></h3>
+<h4 id="provision-a-fsx-for-lustre-cluster">Provision a FSx for Lustre cluster<a class="headerlink" href="#provision-a-fsx-for-lustre-cluster" title="Permanent link">&para;</a></h4>
+<p>FSx for Luster can also be provisioned through <a href="https://docs.aws.amazon.com/cli/latest/reference/fsx/create-file-system.html">aws cli</a></p>
+<p><a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/LustreGuide.pdf">How to decide what type of FSx for Lustre file system you need ?</a><br />
+<a name="security_group_fsx"></a>
+<strong>Create a Security Group to attach to FSx for Lustre file system as below</strong>
+<img alt="" src="../../../resources/FSx_Lustre_SG.png" /><br />
+<strong>Points to Note:</strong><br />
+Security group attached to the EKS worker nodes is given access on port number 988, 1021-1023 in inbound rules.
+Security group specified when creating the FSx for Lustre filesystem is given access on port number 988, 1021-1023 in inbound rules.</p>
+<p>Fsx for Lustre Provisioning through aws cli </p>
+<div class="codehilite"><pre><span></span><code>cat fsxLustreConfig.json &lt;&lt; EOF 
+{
+    &quot;ClientRequestToken&quot;: &quot;EMRContainers-fsxLustre-demo&quot;, 
+    &quot;FileSystemType&quot;: &quot;LUSTRE&quot;,
+    &quot;StorageCapacity&quot;: 1200, 
+    &quot;StorageType&quot;: &quot;SSD&quot;, 
+    &quot;SubnetIds&quot;: [
+        &quot;&lt;subnet-id&gt;&quot;
+    ], 
+    &quot;SecurityGroupIds&quot;: [
+        &quot;&lt;securitygroup-id&gt;&quot;
+    ], 
+    &quot;LustreConfiguration&quot;: {
+        &quot;ImportPath&quot;: &quot;s3://&lt;s3 prefix&gt;/&quot;, 
+        &quot;ExportPath&quot;: &quot;s3://&lt;s3 prefix&gt;/&quot;, 
+        &quot;DeploymentType&quot;: &quot;PERSISTENT_1&quot;, 
+        &quot;AutoImportPolicy&quot;: &quot;NEW_CHANGED&quot;,
+        &quot;PerUnitStorageThroughput&quot;: 200
+    }
+}
+EOF
+</code></pre></div>
+
+<p>Run the aws-cli command to create the FSx for Lustre filesystem as below.</p>
+<div class="codehilite"><pre><span></span><code>aws fsx create-file-system --cli-input-json file:///fsxLustreConfig.json
+</code></pre></div>
+
+<p>Response is as below</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;FileSystem&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;VpcId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;vpc id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;Tags&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;StorageType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;SSD&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;SubnetIds&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;&lt;subnet-id&gt;&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">],</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;FileSystemType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;LUSTRE&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;CreationTime&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1603752401.183</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;ResourceARN&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;fsx resource arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;StorageCapacity&quot;</span><span class="o">:</span><span class="w"> </span><span class="mh">1200</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;LustreConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="s">&quot;CopyTagsToBackups&quot;</span><span class="o">:</span><span class="w"> </span><span class="n">false</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="s">&quot;WeeklyMaintenanceStartTime&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;7:11:30&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="s">&quot;DataRepositoryConfiguration&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="s">&quot;ImportPath&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://&lt;s3 prefix&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="s">&quot;AutoImportPolicy&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;NEW_CHANGED&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="s">&quot;ImportedFileChunkSize&quot;</span><span class="o">:</span><span class="w"> </span><span class="mh">1024</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="s">&quot;Lifecycle&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;CREATING&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                </span><span class="s">&quot;ExportPath&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;s3://&lt;s3 prefix&gt;/&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">},</span><span class="w"> </span>
+<span class="w">            </span><span class="s">&quot;DeploymentType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;PERSISTENT_1&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="s">&quot;PerUnitStorageThroughput&quot;</span><span class="o">:</span><span class="w"> </span><span class="mh">200</span><span class="p">,</span><span class="w"> </span>
+<span class="w">            </span><span class="s">&quot;MountName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;mvmxtbmv&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;FileSystemId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;filesystem id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;DNSName&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;filesystem id&gt;.fsx.&lt;region&gt;.amazonaws.com&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;KmsKeyId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;arn:aws:kms:&lt;region&gt;:&lt;account&gt;:key/&lt;key id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;OwnerId&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&lt;account&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;Lifecycle&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;CREATING&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+
+<h4 id="eks-admin-tasks">EKS admin tasks<a class="headerlink" href="#eks-admin-tasks" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Mount FSx for Lustre on EKS</a> and <a href="#security_group_fsx">Create a Security Group for FSx for Lustre</a></li>
+<li>Install the <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">FSx CSI Driver in EKS </a></li>
+<li>Configure <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Storage Class for FSx for Lustre</a></li>
+<li>Configure Persistent Volume and Persistent Volume Claim for FSx for Lustre</li>
+</ol>
+<p>FSx for Lustre file system is created as described above -<a href="#Provision a FSx for Lustre cluster">Provision a FSx for Lustre cluster</a><br />
+Once provisioned, a persistent volume - as specified below is created with a direct (hard-coded) reference to the created lustre file system. A Persistent Volume claim for this persistent volume will always use the same file system.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="n">fsxLustre</span><span class="o">-</span><span class="n">static</span><span class="o">-</span><span class="n">pv</span><span class="p">.</span><span class="n">yaml</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">EOF</span><span class="w"></span>
+<span class="nl">apiVersion:</span><span class="w"> </span><span class="n">v1</span><span class="w"></span>
+<span class="nl">kind:</span><span class="w"> </span><span class="n">PersistentVolume</span><span class="w"></span>
+<span class="nl">metadata:</span><span class="w"></span>
+<span class="w">  </span><span class="nl">name:</span><span class="w"> </span><span class="n">fsx</span><span class="o">-</span><span class="n">pv</span><span class="w"></span>
+<span class="nl">spec:</span><span class="w"></span>
+<span class="w">  </span><span class="nl">capacity:</span><span class="w"></span>
+<span class="w">    </span><span class="nl">storage:</span><span class="w"> </span><span class="mh">1200</span><span class="n">Gi</span><span class="w"></span>
+<span class="w">  </span><span class="nl">volumeMode:</span><span class="w"> </span><span class="n">Filesystem</span><span class="w"></span>
+<span class="w">  </span><span class="nl">accessModes:</span><span class="w"></span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">ReadWriteMany</span><span class="w"></span>
+<span class="w">  </span><span class="nl">mountOptions:</span><span class="w"></span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">flock</span><span class="w"></span>
+<span class="w">  </span><span class="nl">persistentVolumeReclaimPolicy:</span><span class="w"> </span><span class="n">Recycle</span><span class="w"></span>
+<span class="w">  </span><span class="nl">csi:</span><span class="w"></span>
+<span class="w">    </span><span class="nl">driver:</span><span class="w"> </span><span class="n">fsx</span><span class="p">.</span><span class="n">csi</span><span class="p">.</span><span class="n">aws</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
+<span class="w">    </span><span class="nl">volumeHandle:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">filesystem</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="nl">volumeAttributes:</span><span class="w"></span>
+<span class="w">      </span><span class="nl">dnsname:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">filesystem</span><span class="w"> </span><span class="n">id</span><span class="o">&gt;</span><span class="p">.</span><span class="n">fsx</span><span class="p">.</span><span class="o">&lt;</span><span class="n">region</span><span class="o">&gt;</span><span class="p">.</span><span class="n">amazonaws</span><span class="p">.</span><span class="n">com</span><span class="w"></span>
+<span class="w">      </span><span class="nl">mountname:</span><span class="w"> </span><span class="n">mvmxtbmv</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>kubectl apply -f fsxLustre-static-pv.yaml
+</code></pre></div>
+
+<p>Now, a Persistent Volume Claim (PVC) needs to be created that references PV created above.</p>
+<div class="codehilite"><pre><span></span><code>cat &gt;fsxLustre-static-pvc.yaml &lt;&lt;EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fsx-claim
+  namespace: ns1
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: &quot;&quot;
+  resources:
+    requests:
+      storage: 1200Gi
+  volumeName: fsx-pv
+EOF
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">kubectl</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">fsxLustre</span><span class="o">-</span><span class="n">static</span><span class="o">-</span><span class="n">pvc</span><span class="p">.</span><span class="n">yaml</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">namespace</span><span class="w"> </span><span class="n">registered</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">EMR</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">EKS</span><span class="w"> </span><span class="n">Virtual</span><span class="w"> </span><span class="n">Cluster</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
+
+<h4 id="spark-developer-tasks">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks" title="Permanent link">&para;</a></h4>
+<p>Now spark applications can use <code>fsx-claim</code> in their spark application config to mount the FSx for Lustre filesystem to driver and executor container volumes. </p>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">fsx</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-fsx&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/trip-count-repartition-fsx.py&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="w"></span>
+<span class="w">         </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-fsx.json
+</code></pre></div>
+
+<p><strong>Expected Behavior:</strong><br />
+All spark jobs that are run with persistent volume claims as <code>fsx-claim</code> will mount to the statically created FSx for Lustre file system. </p>
+<p><strong>Use case:</strong></p>
+<ol>
+<li>A data pipeline consisting of 10 spark applications can all be mounted to the statically created FSx for Lustre file system and can write the intermediate output to a particular folder. The next spark job in the data pipeline that is dependent on this data can read from FSx for Lustre. Data that needs to be persisted beyond the scope of the data pipeline can be exported to S3 by creating <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/data-repository-tasks.html">data repository tasks</a></li>
+<li>Data that is used often by multiple spark applications can also be stored in FSx for Lustre for improved performance.</li>
+</ol>
+<h3 id="dynamic-provisioning"><strong>Dynamic Provisioning</strong><a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h3>
+<p>A FSx for Lustre file system can be provisioned on-demand. A Storage-class resource is created and that provisions FSx for Lustre file system dynamically. A PVC is created and refers to the storage class resource that was created. Whenever a pod refers to the PVC, the storage class invokes the FSx for Lustre Container Storage Interface (CSI) to provision a Lustre file system on the fly dynamically. In this model,  FSx for Lustre of type <code>Scratch File Systems</code> is  provisioned.  </p>
+<h4 id="eks-admin-tasks_1">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Attach IAM policy to EKS worker node IAM role to enable access to FSx for Lustre - <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Mount FSx for Lustre on EKS</a> and <a href="#security_group_fsx">Create a Security Group for FSx for Lustre</a></li>
+<li>Install the <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">FSx CSI Driver in EKS</a></li>
+<li>Configure <a href="https://aws.amazon.com/blogs/opensource/using-fsx-lustre-csi-driver-amazon-eks/">Storage Class for FSx for Lustre</a></li>
+<li>Configure Persistent Volume Claim(<code>fsx-dynamic-claim</code>) for FSx for Lustre.</li>
+</ol>
+<p>Create PVC for dynamic provisioning with <code>fsx-sc</code> storage class.  </p>
+<div class="codehilite"><pre><span></span><code>cat &gt;fsx-dynamic-claim.yaml &lt;&lt;EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fsx-dynamic-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: fsx-sc
+  resources:
+    requests:
+      storage: 3600Gi
+EOF 
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">kubectl</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"> </span><span class="n">fsx</span><span class="o">-</span><span class="n">dynamic</span><span class="o">-</span><span class="n">pvc</span><span class="p">.</span><span class="n">yaml</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">namespace</span><span class="w"> </span><span class="n">registered</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">EMR</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">EKS</span><span class="w"> </span><span class="n">Virtual</span><span class="w"> </span><span class="n">Cluster</span><span class="o">&gt;</span><span class="w"></span>
+</code></pre></div>
+
+<h4 id="spark-developer-tasks_1">Spark Developer Tasks<a class="headerlink" href="#spark-developer-tasks_1" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="n">spark</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">fsx</span><span class="o">-</span><span class="n">dynamic</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">EOF</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-fsx-dynamic&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/trip-count-repartition-fsx.py&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--conf spark.driver.cores=5  --conf spark.kubernetes.pyspark.pythonVersion=3 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 --conf spark.sql.shuffle.partitions=1000&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.local.dir&quot;</span><span class="p">:</span><span class="s2">&quot;/var/spark/spill/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-spill.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-dynamic-claim&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-spill.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/spark/spill/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-spill.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="w"></span>
+<span class="w">         </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span>
+<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="n">EOF</span><span class="w"></span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-fsx-dynamic.json
+</code></pre></div>
+
+<p><strong>Expected Result:</strong><br />
+Statically provisioned FSx for Lustre is mounted to <code>/var/data/</code> as before for the driver pod.<br />
+For all the executors a <code>SCRATCH 1</code> deployment type FSx for Lustre is provisioned on the fly dynamically by the Storage class that was created. There will be a latency before the first executor can start running - because the Lustre has to be created. Once it is created the same Lustre file system is mounted to all the executors.<br />
+Also note - <code>"spark.local.dir":"/var/spark/spill/"</code> is used to force executor to use this folder mounted to Lustre for all spill and shuffle data. Once the spark job is completed, the Lustre file system is deleted or retained based on the PVC configuration.<br />
+This dynamically created Lustre file system is mapped to a S3 path like the statically created filesystem.<br />
+<a href="https://docs.aws.amazon.com/eks/latest/userguide/fsx-csi.html">FSx-csi user guide</a></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../ebs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: EBS" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              EBS
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../instance-store/" class="md-footer__link md-footer__link--next" aria-label="Next: Instance Store" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Instance Store
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "search": "../../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>
