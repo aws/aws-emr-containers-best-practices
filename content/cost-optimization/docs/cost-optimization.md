@@ -90,7 +90,7 @@ Node decommission begins when a Spark executor node receives a Spot Interruption
 
 The key advantage of this process is that it enables block and shuffle data of a Spark executor that receives EC2 Spot Interruption signal to be migrated, reducing the re-computation of the Spark tasks. The reduction in the re-computation for the interrupted Spark tasks improves the resiliency of the system and reduces overall execution time. We recommend to enable node decommissioning feature because it would help to reduce the overall compute cycles when there is a Spot interruption.
 
-This feature is available on Amazon EMR version 6.3 and above. To setup this feature, add this configuration to the Spark job under the executor section:
+This feature is available on Amazon EMR version 6.3 and above. To set up this feature, add this configuration to the Spark job under the executor section:
 
 ```bash
 "spark.decommission.enabled": "true"
@@ -147,7 +147,7 @@ If a Spark executor is killed due to EC2 Spot interruption or any other failure 
   <img src="../resources/images/pvc_reuse.gif " width="640" height="400"/>
 </p>
 
-This feature is available on Amazon EMR version 6.8 and above. To setup this feature, you can add these lines to the executor configuration:
+This feature is available on Amazon EMR version 6.8 and above. To set up this feature, you can add these lines to the executor configuration:
 
 ```bash
 "spark.kubernetes.driver.ownPersistentVolumeClaim": "true"
@@ -191,7 +191,7 @@ Karpenter is an open-source, flexible, high-performance auto-scaler built for Ku
   <img src="../resources/images/karpenter.png" />
 </p>
 
-The Provisioner CRD’s configuration flexibility is very useful in adopting Spot best practices of diversification. It can include as many Spot Instance types as possible as we do not restrict specific instance types in the configuration. This approach is also future proof when AWS launches new instance types. It also manages Spot instance lifecycle management through Spot interruptions. We recommend to use Karpenter with Spot Instances as it has faster node scheduling with early pod binding and binpacking to optimize the resource utilization. An example of a Karpenter provisioner with Spot instances below.
+The Provisioner CRD’s configuration flexibility is very useful in adopting Spot best practices of diversification. It can include as many Spot Instance types as possible as we do not restrict specific instance types in the configuration. This approach is also future-proof when AWS launches new instance types. It also manages Spot instance lifecycle management through Spot interruptions. We recommend to use Karpenter with Spot Instances as it has faster node scheduling with early pod binding and binpacking to optimize the resource utilization. An example of a Karpenter provisioner with Spot instances below.
 
 ```YAML
 apiVersion: karpenter.sh/v1alpha5

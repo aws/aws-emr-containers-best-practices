@@ -6,7 +6,7 @@ In this document, we highlight two approaches to leverage NVMe disks in your wor
 
 ## **Mount kubelet pod directory on NVMe disks**
 
-The [kublet](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/) service manages the lifecycle of pod containers that are created using Kubernetes. When a pod is launched on an instance, an ephemeral volume is automatically created for the pod, and this volume is mapped in a sub-directory within the path `/var/lib/kubelet` of the host node. This volume folder exists for the lifetime of K8s pod, and it will be automatically deleted once the pod ceases to exists.
+The [kublet](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/) service manages the lifecycle of pod containers that are created using Kubernetes. When a pod is launched on an instance, an ephemeral volume is automatically created for the pod, and this volume is mapped in a subdirectory within the path `/var/lib/kubelet` of the host node. This volume folder exists for the lifetime of K8s pod, and it will be automatically deleted once the pod ceases to exist.
 
 In order to leverage NVMe disk attached to an EC2 node in our Spark application, we should perform the following actions during node bootstrap:
 
@@ -141,5 +141,5 @@ spark.kubernetes.executor.volumes.hostPath.spark-local-dir-IDX.mount.readOnly
 
 **Cons**
 
-* Additional configurations are required for Spark jobs to use instance store volumes. This approach can be error prone if you don’t control the instance types being used (for example, multiple node groups with different instance types). You can mitigate this issue by using k8s node selectors and specify instance type in your spark configuraiton: **[spark.kubernetes.node.selector.node.kubernetes.io/instance-type](http://spark.kubernetes.node.selector.node.kubernetes.io/instance-type)**
+* Additional configurations are required for Spark jobs to use instance store volumes. This approach can be error-prone if you don’t control the instance types being used (for example, multiple node groups with different instance types). You can mitigate this issue by using k8s node selectors and specify instance type in your spark configuraiton: **[spark.kubernetes.node.selector.node.kubernetes.io/instance-type](http://spark.kubernetes.node.selector.node.kubernetes.io/instance-type)**
 * Data created on the volumes is automatically deleted once the job is completed and instance is terminated. However, you need to extra measures to delete the data on instance store volumes if EC2 instance is re-used or is not terminated.

@@ -37,7 +37,7 @@ kubectl apply -f https://raw.githubusercontent.com/aws/secrets-store-csi-driver-
 
 ### Define the `SecretProviderClass`
 
-The `SecretProviderClass` is how you present present your secret in Kubernetes, below you find a definition of a `SecretProviderClass`. 
+The `SecretProviderClass` is how you present your secret in Kubernetes, below you find a definition of a `SecretProviderClass`. 
 There are few parameters that are important:
 
 - The `provider` must be set to `aws`.
@@ -69,7 +69,7 @@ The `kubectl` command must include the namespace where your job will be executed
 
 ### Pod Template
 
-In the executor podtemplate you should define it as follow to mount the secret. The example below show how you can define it.
+In the executor podtemplate you should define it as follows to mount the secret. The example below show how you can define it.
 There are few points that are important to mount the secret:
 
 - `secretProviderClass`: this should have the same name as the one define above. In this case it is `mysql-spark-secret`.
@@ -142,7 +142,7 @@ jdbcDF.show()
 
 The command below can be used to run a job.
 
-**Note**: The supplied execution role **MUST** have access an IAM policy that allow it access to the secret defined in `SecretProviderClass` above. 
+**Note**: The supplied execution role **MUST** have access an IAM policy that allow it to access to the secret defined in `SecretProviderClass` above. 
 The IAM policy below shows the IAM actions that are needed.
 
 ```
