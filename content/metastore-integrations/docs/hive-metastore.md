@@ -248,7 +248,7 @@ spark.stop()
 
 **Request:**
 
-Now that the HMS is running inside your Spark driver, it share common attributes such as the network config, the `spark.hive.metastore.uris` can set to "thrift://localhost:9083". Don't forget to assign the sidecar pod template to the Spark Driver like this `"spark.kubernetes.driver.podTemplateFile": "s3://'$S3BUCKET'/app_code/job/sidecar_hms_pod_template.yaml"` 
+Now that the HMS is running inside your Spark driver, it shares common attributes such as the network config, the `spark.hive.metastore.uris` can set to "thrift://localhost:9083". Don't forget to assign the sidecar pod template to the Spark Driver like this `"spark.kubernetes.driver.podTemplateFile": "s3://'$S3BUCKET'/app_code/job/sidecar_hms_pod_template.yaml"` 
 
 For more details, check out the [github repo](https://github.com/aws-samples/hive-emr-on-eks#41-run-the-thrift-service-as-a-sidecar-in-spark-drivers-pod)
 

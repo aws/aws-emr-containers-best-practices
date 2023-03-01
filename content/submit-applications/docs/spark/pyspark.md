@@ -4,7 +4,7 @@ Python interpreter is bundled in the EMR containers spark image that is used to 
 
 ### Python code self contained in a single .py file
 
-To start with, in the most simplest scenario - the example below shows how to submit a pi.py file that is self contained and doesn't need any other dependencies.    
+To start with, in the simplest scenario - the example below shows how to submit a pi.py file that is self-contained and doesn't need any other dependencies.    
 
 ####Python file from S3
 
@@ -107,7 +107,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-Fsx.js
 
 ####**List of .py files**
 
-This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.  
+This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.  
 
 
 
@@ -720,9 +720,9 @@ kafka integration example
 
 ####**List of .jar files**
 
-This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.
+This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.
 
-How to find all of the .jar files which belongs to given package?
+How to find all the .jar files which belongs to given package?
 
  1. Go to [Maven Repository](https://mvnrepository.com/)
  2. Search for the package name
@@ -766,9 +766,9 @@ See the basics in the [official documentation](https://docs.aws.amazon.com/emr/l
 
 **Approach 1: List of .jar files**  
 
-This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.
+This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.
 
-How to find all of the .jar files which belongs to given package?
+How to find all the .jar files which belongs to given package?
 
  1. Go to [Maven Repository](https://mvnrepository.com/)
  2. Search for the package name

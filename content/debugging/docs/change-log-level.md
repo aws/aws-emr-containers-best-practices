@@ -123,7 +123,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-deb
 ```
 
 **Configurations of interest:**   
-Below configuration enables spark driver and executor to pickup the log4j configuration file from ``/var/data/`` folder mounted to the driver and executor containers. For guide to mount FSx for Lustre to driver and executor containers - refer to [EMR Containers integration with FSx for Lustre](../../storage/docs/spark/fsx-lustre.md)
+Below configuration enables spark driver and executor to pick up the log4j configuration file from ``/var/data/`` folder mounted to the driver and executor containers. For guide to mount FSx for Lustre to driver and executor containers - refer to [EMR Containers integration with FSx for Lustre](../../storage/docs/spark/fsx-lustre.md)
 
 ```
 "spark.driver.extraJavaOptions":"-Dlog4j.configuration=file:///var/data/log4j-debug.properties",

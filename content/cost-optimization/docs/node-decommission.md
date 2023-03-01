@@ -1,12 +1,12 @@
 # **Node Decommission**
 
-This section shows how to use a [Apache Spark feature](https://issues.apache.org/jira/browse/SPARK-20629) that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. 
+This section shows how to use an [Apache Spark feature](https://issues.apache.org/jira/browse/SPARK-20629) that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. 
 
 This feature is supported for releases EMR 6.3.0+.
 
 ### How does it work?
 
-When <code>spark.decommission.enabled</code> is true, Spark will try its best to shutdown the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are
+When <code>spark.decommission.enabled</code> is true, Spark will try its best to shut down the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are
 
 |Configuration|Description|Default Value|
 |-----|-----|-----|
@@ -86,4 +86,4 @@ EOF
   
 **Observed Behavior:**
   
-When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines `Updating map output for <shuffle_id> to BlockManagerId(<executor_id>, <ip_address>, <port>, <topology_info>)` denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation as of yet.
+When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines `Updating map output for <shuffle_id> to BlockManagerId(<executor_id>, <ip_address>, <port>, <topology_info>)` denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation yet.

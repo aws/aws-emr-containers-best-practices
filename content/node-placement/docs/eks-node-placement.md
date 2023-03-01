@@ -55,7 +55,7 @@ When the job starts the driver pod and executor pods are scheduled only on those
 --conf spark.kubernetes.node.selector.zone='<availability zone>'
 ```
 
-`zone` is a built in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - `topology.kubernetes.io/zone: <availability zone>`.  
+`zone` is a built-in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - `topology.kubernetes.io/zone: <availability zone>`.  
 However, [user defined labels](https://eksctl.io/usage/eks-managed-nodes/#managing-labels) can also be assigned to EKS worker nodes and used as node selector.
 
 Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  

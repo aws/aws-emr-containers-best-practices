@@ -113,7 +113,8 @@ Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports S
 
 **Driver Pod Template**
 
-```apiVersion: v1
+```
+apiVersion: v1
 kind: Pod
 spec:
   volumes:
@@ -125,11 +126,11 @@ spec:
     <ec2-instance-node-label-key>: <ec2-instance-node-label-value>
   containers:
   - name: spark-kubernetes-driver # This will be interpreted as Spark driver container
-  ```
+```
 
-  Store the pod template file onto a S3 location:
-  
-  ``` aws s3 cp /driver-pod-template.yaml s3://<your-bucket-name>/driver-pod-template.yaml```
+Store the pod template file onto a S3 location:
+
+``` aws s3 cp /driver-pod-template.yaml s3://<your-bucket-name>/driver-pod-template.yaml```
 
 
 **Request**
