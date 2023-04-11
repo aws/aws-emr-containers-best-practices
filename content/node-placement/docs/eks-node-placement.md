@@ -111,3 +111,106 @@ Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be pa
 `spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.`
 
 
+
+## **Job submitter pod placement**
+
+Similar to driver and executor pods, you can configure the job submitter pod's node selectors as well using the `emr-job-submitter` classification. 
+Using this classification, you can place the job submitter pod in a single AZ or using any Kubernetes labels that are applied to the nodes.
+
+**Note: The job submitter pod is also referred as the job-runner pod**
+
+StartJobRun request with Single AZ node placement for job submitter pod:
+
+```
+cat >spark-python-in-s3-job-submitter-nodeselector.json << EOF
+{
+  "name": "spark-python-in-s3-nodeselector", 
+  "virtualClusterId": "<virtual-cluster-id>", 
+  "executionRoleArn": "<execution-role-arn>", 
+  "releaseLabel": "emr-6.2.0-latest", 
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/trip-count.py", 
+       "sparkSubmitParameters": "--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6"
+    }
+  }, 
+  "configurationOverrides": {
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.dynamicAllocation.enabled":"false"
+         }
+      },
+      {
+        "classification": "emr-job-submitter",
+        "properties": {
+            "jobsubmitter.node.selector.topology.kubernetes.io/zone": "<availability zone>"
+        }
+      }
+    ], 
+    "monitoringConfiguration": {
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs", 
+        "logStreamNamePrefix": "demo"
+      }, 
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+    }
+  }
+}
+EOF
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+```
+
+StartJobRun request with single AZ and ec2 instance type placement for job submitter pod:
+
+
+```
+{
+  "name": "spark-python-in-s3-nodeselector", 
+  "virtualClusterId": "<virtual-cluster-id>", 
+  "executionRoleArn": "<execution-role-arn>", 
+  "releaseLabel": "emr-6.2.0-latest", 
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/trip-count.py", 
+       "sparkSubmitParameters": "--conf spark.driver.cores=5  --conf spark.kubernetes.pyspark.pythonVersion=3 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 --conf spark.sql.shuffle.partitions=1000"
+    }
+  }, 
+  "configurationOverrides": {
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.dynamicAllocation.enabled":"false",
+         }
+      },
+      {
+        "classification": "emr-job-submitter",
+        "properties": {
+            "jobsubmitter.node.selector.topology.kubernetes.io/zone": "<availability zone>",
+            "jobsubmitter.node.selector.node.kubernetes.io/instance-type":"m5.4xlarge"
+        }
+      }
+    ], 
+    "monitoringConfiguration": {
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs", 
+        "logStreamNamePrefix": "demo"
+      }, 
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+      }
+      }
+    }
+  }
+}
+```
+
+Configurations of interest:
+
+`jobsubmitter.node.selector.[labelKey]`: Adds to the node selector of the job submitter pod, with key `labelKey` and the value as the configuration's value. For example, setting `jobsubmitter.node.selector.identifier` to `myIdentifier` will result in the job-runner pod having a node selector with key identifier and value `myIdentifier`. Multiple node selector keys can be added by setting multiple configurations with this prefix.
+
