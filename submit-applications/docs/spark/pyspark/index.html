@@ -15,7 +15,7 @@
         <link rel="next" href="../../../../storage/docs/spark/ebs/">
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6b71719e.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
@@ -135,7 +135,7 @@
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
@@ -1391,7 +1391,7 @@
 <h1 id="pyspark-job-submission"><strong>Pyspark Job submission</strong><a class="headerlink" href="#pyspark-job-submission" title="Permanent link">&para;</a></h1>
 <p>Python interpreter is bundled in the EMR containers spark image that is used to run the spark job.Python code and dependencies can be provided with the below options.</p>
 <h3 id="python-code-self-contained-in-a-single-py-file">Python code self contained in a single .py file<a class="headerlink" href="#python-code-self-contained-in-a-single-py-file" title="Permanent link">&para;</a></h3>
-<p>To start with, in the most simplest scenario - the example below shows how to submit a pi.py file that is self contained and doesn't need any other dependencies.    </p>
+<p>To start with, in the simplest scenario - the example below shows how to submit a pi.py file that is self-contained and doesn't need any other dependencies.    </p>
 <h4 id="python-file-from-s3">Python file from S3<a class="headerlink" href="#python-file-from-s3" title="Permanent link">&para;</a></h4>
 <p><strong>Request</strong>  <br />
 pi.py used in the below request payload is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a></p>
@@ -1484,7 +1484,7 @@ aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3.jso
 or with '<a href="#custom-docker-image">Custom docker image</a>'</p>
 </div>
 <h4 id="list-of-py-files"><strong>List of .py files</strong><a class="headerlink" href="#list-of-py-files" title="Permanent link">&para;</a></h4>
-<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.  </p>
+<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.  </p>
 <div class="codehilite"><pre><span></span><code><span class="n">cat</span> <span class="o">&gt;</span> <span class="n">py</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="n">pi</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
@@ -2017,8 +2017,8 @@ In this implementation for YARN - the dependencies will be installed from the re
 </code></pre></div>
 
 <h4 id="list-of-jar-files"><strong>List of .jar files</strong><a class="headerlink" href="#list-of-jar-files" title="Permanent link">&para;</a></h4>
-<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.</p>
-<p>How to find all of the .jar files which belongs to given package?</p>
+<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.</p>
+<p>How to find all the .jar files which belongs to given package?</p>
 <ol>
 <li>Go to <a href="https://mvnrepository.com/">Maven Repository</a></li>
 <li>Search for the package name</li>
@@ -2059,8 +2059,8 @@ aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<s
 <h4 id="custom-docker-image_1">Custom docker image<a class="headerlink" href="#custom-docker-image_1" title="Permanent link">&para;</a></h4>
 <p>See the basics in the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html">official documentation</a>.  </p>
 <p><strong>Approach 1: List of .jar files</strong>  </p>
-<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all of the transitive dependencies.</p>
-<p>How to find all of the .jar files which belongs to given package?</p>
+<p>This is not a scalable approach as the number of dependent files can grow to a large number, and also need to manually specify all the transitive dependencies.</p>
+<p>How to find all the .jar files which belongs to given package?</p>
 <ol>
 <li>Go to <a href="https://mvnrepository.com/">Maven Repository</a></li>
 <li>Search for the package name</li>
@@ -2247,7 +2247,7 @@ Dynamic modules(.pyd, .so) can also be imported by bundling within  <a href="# B
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "search": "../../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.ba449ae6.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>

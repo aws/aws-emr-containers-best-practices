@@ -15,7 +15,7 @@
         <link rel="next" href="../../../performance/docs/dra/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6b71719e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
@@ -135,7 +135,7 @@
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
@@ -1296,18 +1296,20 @@ When the job starts, the driver pod schedules on an EC2 instance. EKS picks an i
 <h3 id="3-define-a-nodeselector-in-pod-templates">3- Define a NodeSelector in Pod Templates<a class="headerlink" href="#3-define-a-nodeselector-in-pod-templates" title="Permanent link">&para;</a></h3>
 <p>Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example Spark configurations do not support defining individual node selectors for the driver pod and the executor pods. Define a node selector <strong>only</strong> for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.</p>
 <p><strong>Driver Pod Template</strong></p>
-<p><code>apiVersion: v1
-kind: Pod
-spec:
-  volumes:
-    - name: source-data-volume
-      emptyDir: {}
-    - name: metrics-files-volume
-      emptyDir: {}
-  nodeSelector:
-    &lt;ec2-instance-node-label-key&gt;: &lt;ec2-instance-node-label-value&gt;
-  containers:
-  - name: spark-kubernetes-driver # This will be interpreted as Spark driver container</code></p>
+<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span>
+<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span>
+<span class="n">spec</span><span class="o">:</span>
+<span class="w">  </span><span class="n">volumes</span><span class="o">:</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">source</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">volume</span>
+<span class="w">      </span><span class="n">emptyDir</span><span class="o">:</span><span class="w"> </span><span class="o">{}</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">metrics</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="n">volume</span>
+<span class="w">      </span><span class="n">emptyDir</span><span class="o">:</span><span class="w"> </span><span class="o">{}</span>
+<span class="w">  </span><span class="n">nodeSelector</span><span class="o">:</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">ec2</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">label</span><span class="o">-</span><span class="n">key</span><span class="o">&gt;:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">ec2</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">label</span><span class="o">-</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="n">containers</span><span class="o">:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span><span class="o">-</span><span class="n">kubernetes</span><span class="o">-</span><span class="n">driver</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">interpreted</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="n">container</span>
+</code></pre></div>
+
 <p>Store the pod template file onto a S3 location:</p>
 <p><code>aws s3 cp /driver-pod-template.yaml s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml</code></p>
 <p><strong>Request</strong></p>
@@ -1390,7 +1392,7 @@ The driver pod schedules on an EC2 instance with enough capacity and matching la
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.ba449ae6.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>

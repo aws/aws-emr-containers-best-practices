@@ -15,7 +15,7 @@
         <link rel="next" href="../../cost-optimization/docs/cost-optimization/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.6b71719e.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
@@ -135,7 +135,7 @@
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
@@ -1527,7 +1527,7 @@
 </code></pre></div>
 
 <h4 id="configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs"><strong>Configure overprovisioning with Cluster Autoscaler for higher priority jobs</strong><a class="headerlink" href="#configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs" title="Permanent link">&para;</a></h4>
-<p>If the required resources is not available in the cluster, pods go into pending state. Cluster Autoscaler uses this metric to scale out the cluster and this activity can be time consuming (several minutes) for higher priority jobs. In order to minimize time required for scaling, we recommend <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-can-i-configure-overprovisioning-with-cluster-autoscaler">overprovisioning</a> resources. You can launch pause pods(dummy workloads which sleeps until it receives SIGINT or SIGTERM) with negative priority to reserve EC2 capacity. Once the higher priority jobs are scheduled, these pause pods are preempted to make room for high priority pods which in turn scales out additional capacity as a buffer. You need to be aware that this is a trade-off as it adds slightly higher cost while minimizing scheduling latency. You can read more about over provisioning best practice <a href="https://aws.github.io/aws-eks-best-practices/cluster-autoscaling/#overprovisioning">here</a>.</p>
+<p>If the required resources is not available in the cluster, pods go into pending state. Cluster Autoscaler uses this metric to scale out the cluster and this activity can be time-consuming (several minutes) for higher priority jobs. In order to minimize time required for scaling, we recommend <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-can-i-configure-overprovisioning-with-cluster-autoscaler">overprovisioning</a> resources. You can launch pause pods(dummy workloads which sleeps until it receives SIGINT or SIGTERM) with negative priority to reserve EC2 capacity. Once the higher priority jobs are scheduled, these pause pods are preempted to make room for high priority pods which in turn scales out additional capacity as a buffer. You need to be aware that this is a trade-off as it adds slightly higher cost while minimizing scheduling latency. You can read more about over provisioning best practice <a href="https://aws.github.io/aws-eks-best-practices/cluster-autoscaling/#overprovisioning">here</a>.</p>
 <h2 id="eks-control-plane-best-practices">EKS Control Plane Best practices<a class="headerlink" href="#eks-control-plane-best-practices" title="Permanent link">&para;</a></h2>
 <h4 id="api-server-overwhelmed"><strong>API server overwhelmed</strong><a class="headerlink" href="#api-server-overwhelmed" title="Permanent link">&para;</a></h4>
 <p>System pods, workload pods, and external systems can make many calls to the Kubernetes API server. This can decrease performance and also increase EMR on EKS job failures. There are multiple ways to avoid API server availability issues including but not limited to:</p>
@@ -1644,7 +1644,7 @@
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.ba449ae6.min.js"></script>
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>

@@ -15,7 +15,7 @@
         <link rel="next" href="../fargate-node-placement/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -23,7 +23,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6b71719e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
@@ -135,7 +135,7 @@
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
@@ -928,6 +928,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#job-submitter-pod-placement" class="md-nav__link">
+    Job submitter pod placement
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1123,6 +1130,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#job-submitter-pod-placement" class="md-nav__link">
+    Job submitter pod placement
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1190,7 +1204,7 @@ When the job starts the driver pod and executor pods are scheduled only on those
 <div class="codehilite"><pre><span></span><code>--conf spark.kubernetes.node.selector.zone=&#39;&lt;availability zone&gt;&#39;
 </code></pre></div>
 
-<p><code>zone</code> is a built in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
+<p><code>zone</code> is a built-in label that EKS assigns to every EKS worker Node. The above config will ensure to schedule the driver and executor pod on those EKS worker nodes labeled - <code>topology.kubernetes.io/zone: &lt;availability zone&gt;</code>.<br />
 However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">user defined labels</a> can also be assigned to EKS worker nodes and used as node selector.</p>
 <p>Other common use cases are using node labels to force the job to run on on demand/spot, machine type, etc.  </p>
 <h2 id="single-az-and-ec2-instance-type-placement"><strong>Single AZ and ec2 instance type placement</strong><a class="headerlink" href="#single-az-and-ec2-instance-type-placement" title="Permanent link">&para;</a></h2>
@@ -1235,6 +1249,98 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
 
 <p><strong><a href="http://spark.apache.org/docs/latest/running-on-kubernetes.html">Configuration of interest</a></strong>  </p>
 <p><code>spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.</code></p>
+<h2 id="job-submitter-pod-placement"><strong>Job submitter pod placement</strong><a class="headerlink" href="#job-submitter-pod-placement" title="Permanent link">&para;</a></h2>
+<p>Similar to driver and executor pods, you can configure the job submitter pod's node selectors as well using the <code>emr-job-submitter</code> classification. 
+Using this classification, you can place the job submitter pod in a single AZ or using any Kubernetes labels that are applied to the nodes.</p>
+<p><strong>Note: The job submitter pod is also referred as the job-runner pod</strong></p>
+<p>StartJobRun request with Single AZ node placement for job submitter pod:</p>
+<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-job-submitter-nodeselector.json &lt;&lt; EOF
+{
+  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, 
+  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
+  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
+  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
+  &quot;jobDriver&quot;: {
+    &quot;sparkSubmitJobDriver&quot;: {
+      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
+       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;
+    }
+  }, 
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;, 
+        &quot;properties&quot;: {
+          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
+         }
+      },
+      {
+        &quot;classification&quot;: &quot;emr-job-submitter&quot;,
+        &quot;properties&quot;: {
+            &quot;jobsubmitter.node.selector.topology.kubernetes.io/zone&quot;: &quot;&lt;availability zone&gt;&quot;
+        }
+      }
+    ], 
+    &quot;monitoringConfiguration&quot;: {
+      &quot;cloudWatchMonitoringConfiguration&quot;: {
+        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
+        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
+      }, 
+      &quot;s3MonitoringConfiguration&quot;: {
+        &quot;logUri&quot;: &quot;s3://joblogs&quot;
+      }
+    }
+  }
+}
+EOF
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+</code></pre></div>
+
+<p>StartJobRun request with single AZ and ec2 instance type placement for job submitter pod:</p>
+<div class="codehilite"><pre><span></span><code>{
+  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, 
+  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
+  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
+  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
+  &quot;jobDriver&quot;: {
+    &quot;sparkSubmitJobDriver&quot;: {
+      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
+       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.kubernetes.pyspark.pythonVersion=3 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6 --conf spark.sql.shuffle.partitions=1000&quot;
+    }
+  }, 
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;, 
+        &quot;properties&quot;: {
+          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;,
+         }
+      },
+      {
+        &quot;classification&quot;: &quot;emr-job-submitter&quot;,
+        &quot;properties&quot;: {
+            &quot;jobsubmitter.node.selector.topology.kubernetes.io/zone&quot;: &quot;&lt;availability zone&gt;&quot;,
+            &quot;jobsubmitter.node.selector.node.kubernetes.io/instance-type&quot;:&quot;m5.4xlarge&quot;
+        }
+      }
+    ], 
+    &quot;monitoringConfiguration&quot;: {
+      &quot;cloudWatchMonitoringConfiguration&quot;: {
+        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
+        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
+      }, 
+      &quot;s3MonitoringConfiguration&quot;: {
+        &quot;logUri&quot;: &quot;s3://joblogs&quot;
+      }
+      }
+      }
+    }
+  }
+}
+</code></pre></div>
+
+<p>Configurations of interest:</p>
+<p><code>jobsubmitter.node.selector.[labelKey]</code>: Adds to the node selector of the job submitter pod, with key <code>labelKey</code> and the value as the configuration's value. For example, setting <code>jobsubmitter.node.selector.identifier</code> to <code>myIdentifier</code> will result in the job-runner pod having a node selector with key identifier and value <code>myIdentifier</code>. Multiple node selector keys can be added by setting multiple configurations with this prefix.</p>
 
 
 
@@ -1275,7 +1381,7 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.ba449ae6.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>

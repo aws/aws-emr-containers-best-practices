@@ -13,7 +13,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6b71719e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
@@ -133,7 +133,7 @@
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
@@ -1127,10 +1127,10 @@
 
 
 <h1 id="node-decommission"><strong>Node Decommission</strong><a class="headerlink" href="#node-decommission" title="Permanent link">&para;</a></h1>
-<p>This section shows how to use a <a href="https://issues.apache.org/jira/browse/SPARK-20629">Apache Spark feature</a> that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. </p>
+<p>This section shows how to use an <a href="https://issues.apache.org/jira/browse/SPARK-20629">Apache Spark feature</a> that allows you to store the shuffle data and cached RDD blocks present on the terminating executors to peer executors before a Spot node gets decommissioned. Consequently, your job does not need to recalculate the shuffle and RDD blocks of the terminating executor that would otherwise be lost, thus allowing the job to have minimal delay in completion. </p>
 <p>This feature is supported for releases EMR 6.3.0+.</p>
 <h3 id="how-does-it-work">How does it work?<a class="headerlink" href="#how-does-it-work" title="Permanent link">&para;</a></h3>
-<p>When <code>spark.decommission.enabled</code> is true, Spark will try its best to shutdown the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are</p>
+<p>When <code>spark.decommission.enabled</code> is true, Spark will try its best to shut down the executor gracefully. <code>spark.storage.decommission.enabled</code> will enable migrating data stored on the executor. Spark will try to migrate all the cached RDD blocks (controlled by <code>spark.storage.decommission.rddBlocks.enabled</code>) and shuffle blocks (<code>controlled by spark.storage.decommission.shuffleBlocks.enabled</code>) from the decommissioning executor to all remote executors when spark decommission is enabled. Relevant Spark configurations for using node decommissioning in the jobs are</p>
 <table>
 <thead>
 <tr>
@@ -1231,7 +1231,7 @@
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong></p>
-<p>When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines <code>Updating map output for &lt;shuffle_id&gt; to BlockManagerId(&lt;executor_id&gt;, &lt;ip_address&gt;, &lt;port&gt;, &lt;topology_info&gt;)</code> denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation as of yet.</p>
+<p>When executors begin decommissioning, its shuffle data gets migrated to peer executors instead of recalculating the shuffle blocks again. If sending shuffle blocks to an executor fails, <code>spark.storage.decommission.maxReplicationFailuresPerBlock</code> will give the number of retries for migration. The driver log’s stderr will see log lines <code>Updating map output for &lt;shuffle_id&gt; to BlockManagerId(&lt;executor_id&gt;, &lt;ip_address&gt;, &lt;port&gt;, &lt;topology_info&gt;)</code> denoting details about shuffle block <shuffle_id>‘s migration. This feature does not emit any other metrics for validation yet.</p>
 
 
 
@@ -1272,7 +1272,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.ba449ae6.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>
