@@ -60,7 +60,6 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dra
 **Observed Behavior:**
 When the job gets started, the driver pod gets created and 10 executors are initially created. (`"spark.dynamicAllocation.initialExecutors":"10"`) Then the number of executors can scale up to a maximum of 100 (`"spark.dynamicAllocation.maxExecutors":"100"`).   
 **Configurations to note:**   
- **Please note that this feature is marked as Experimental as of Spark 3.0.0**
 
 `spark.dynamicAllocation.shuffleTracking.enabled` - `**`Experimental`**`. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.
 

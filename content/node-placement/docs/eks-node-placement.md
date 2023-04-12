@@ -115,14 +115,60 @@ Multiple key value pairs for spark.kubernetes.node.selector.[labelKey] can be pa
 ## **Job submitter pod placement**
 
 Similar to driver and executor pods, you can configure the job submitter pod's node selectors as well using the `emr-job-submitter` classification. 
-Using this classification, you can place the job submitter pod in a single AZ or using any Kubernetes labels that are applied to the nodes.
+It is recommended for job submitter pods to have node placement on `ON_DEMAND` nodes and not `SPOT` nodes as the job will fail if the job submitter pod gets Spot instance interruptions.
+You can also place the job submitter pod in a single AZ or use any Kubernetes labels that are applied to the nodes.
 
 **Note: The job submitter pod is also referred as the job-runner pod**
+
+StartJobRun request with ON_DEMAND node placement for job submitter pod
+
+```
+cat >spark-python-in-s3-nodeselector-job-submitter.json << EOF
+{
+  "name": "spark-python-in-s3-nodeselector", 
+  "virtualClusterId": "<virtual-cluster-id>", 
+  "executionRoleArn": "<execution-role-arn>", 
+  "releaseLabel": "emr-6.2.0-latest", 
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/trip-count.py", 
+       "sparkSubmitParameters": "--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6"
+    }
+  }, 
+  "configurationOverrides": {
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.dynamicAllocation.enabled":"false"
+         }
+      },
+      {
+        "classification": "emr-job-submitter",
+        "properties": {
+            "jobsubmitter.node.selector.eks.amazonaws.com/capacityType": "ON_DEMAND"
+        }
+      }
+    ], 
+    "monitoringConfiguration": {
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs", 
+        "logStreamNamePrefix": "demo"
+      }, 
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+    }
+  }
+}
+EOF
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector-job-submitter.json
+```
 
 StartJobRun request with Single AZ node placement for job submitter pod:
 
 ```
-cat >spark-python-in-s3-job-submitter-nodeselector.json << EOF
+cat >spark-python-in-s3-nodeselector-job-submitter-az.json << EOF
 {
   "name": "spark-python-in-s3-nodeselector", 
   "virtualClusterId": "<virtual-cluster-id>", 
@@ -161,7 +207,7 @@ cat >spark-python-in-s3-job-submitter-nodeselector.json << EOF
   }
 }
 EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector-job-submitter-az.json
 ```
 
 StartJobRun request with single AZ and ec2 instance type placement for job submitter pod:
