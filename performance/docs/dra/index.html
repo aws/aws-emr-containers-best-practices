@@ -1134,8 +1134,7 @@ EOF
 
 <p><strong>Observed Behavior:</strong>
 When the job gets started, the driver pod gets created and 10 executors are initially created. (<code>"spark.dynamicAllocation.initialExecutors":"10"</code>) Then the number of executors can scale up to a maximum of 100 (<code>"spark.dynamicAllocation.maxExecutors":"100"</code>). <br />
-<strong>Configurations to note:</strong> <br />
-<strong>Please note that this feature is marked as Experimental as of Spark 3.0.0</strong></p>
+<strong>Configurations to note:</strong>   </p>
 <p><code>spark.dynamicAllocation.shuffleTracking.enabled</code> - <code>**</code>Experimental<code>**</code>. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.</p>
 <p><code>spark.dynamicAllocation.shuffleTracking.timeout</code> - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.</p>
 

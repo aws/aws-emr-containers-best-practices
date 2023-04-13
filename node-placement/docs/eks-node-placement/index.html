@@ -1251,10 +1251,54 @@ However, <a href="https://eksctl.io/usage/eks-managed-nodes/#managing-labels">us
 <p><code>spark.kubernetes.node.selector.[labelKey] - Adds to the node selector of the driver pod and executor pods, with key labelKey and the value as the configuration's value. For example, setting spark.kubernetes.node.selector.identifier to myIdentifier will result in the driver pod and executors having a node selector with key identifier and value myIdentifier. Multiple node selector keys can be added by setting multiple configurations with this prefix.</code></p>
 <h2 id="job-submitter-pod-placement"><strong>Job submitter pod placement</strong><a class="headerlink" href="#job-submitter-pod-placement" title="Permanent link">&para;</a></h2>
 <p>Similar to driver and executor pods, you can configure the job submitter pod's node selectors as well using the <code>emr-job-submitter</code> classification. 
-Using this classification, you can place the job submitter pod in a single AZ or using any Kubernetes labels that are applied to the nodes.</p>
+It is recommended for job submitter pods to have node placement on <code>ON_DEMAND</code> nodes and not <code>SPOT</code> nodes as the job will fail if the job submitter pod gets Spot instance interruptions.
+You can also place the job submitter pod in a single AZ or use any Kubernetes labels that are applied to the nodes.</p>
 <p><strong>Note: The job submitter pod is also referred as the job-runner pod</strong></p>
+<p>StartJobRun request with ON_DEMAND node placement for job submitter pod</p>
+<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector-job-submitter.json &lt;&lt; EOF
+{
+  &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, 
+  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
+  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
+  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
+  &quot;jobDriver&quot;: {
+    &quot;sparkSubmitJobDriver&quot;: {
+      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
+       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;
+    }
+  }, 
+  &quot;configurationOverrides&quot;: {
+    &quot;applicationConfiguration&quot;: [
+      {
+        &quot;classification&quot;: &quot;spark-defaults&quot;, 
+        &quot;properties&quot;: {
+          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
+         }
+      },
+      {
+        &quot;classification&quot;: &quot;emr-job-submitter&quot;,
+        &quot;properties&quot;: {
+            &quot;jobsubmitter.node.selector.eks.amazonaws.com/capacityType&quot;: &quot;ON_DEMAND&quot;
+        }
+      }
+    ], 
+    &quot;monitoringConfiguration&quot;: {
+      &quot;cloudWatchMonitoringConfiguration&quot;: {
+        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
+        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
+      }, 
+      &quot;s3MonitoringConfiguration&quot;: {
+        &quot;logUri&quot;: &quot;s3://joblogs&quot;
+      }
+    }
+  }
+}
+EOF
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector-job-submitter.json
+</code></pre></div>
+
 <p>StartJobRun request with Single AZ node placement for job submitter pod:</p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-job-submitter-nodeselector.json &lt;&lt; EOF
+<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector-job-submitter-az.json &lt;&lt; EOF
 {
   &quot;name&quot;: &quot;spark-python-in-s3-nodeselector&quot;, 
   &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
@@ -1293,7 +1337,7 @@ Using this classification, you can place the job submitter pod in a single AZ or
   }
 }
 EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector-job-submitter-az.json
 </code></pre></div>
 
 <p>StartJobRun request with single AZ and ec2 instance type placement for job submitter pod:</p>
