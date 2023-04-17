@@ -200,6 +200,9 @@ cat >spark-python-in-s3-ebs-dynamic-localdir.json << EOF
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.options.claimName":"ebs-demo-gp2-claim",
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.path":"/var/spark/spill/",
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.readOnly":"false",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.options.claimName":"ebs-demo-gp2-claim",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.path":"/var/spark/spillexec/",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-sparkspill.mount.readOnly":"false"
          }
       }
     ], 
@@ -219,7 +222,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-ebs
 ```
 
 **Observed Behavior:**
-When the job gets started an EBS volume is provisioned dynamically by the EBS CSI driver and mounted to the driver pod. You can exec into the driver container to verify that the EBS volume is mounted. Also, you can verify the mount from driver pod spec.  
+When the job gets started an EBS volume is provisioned dynamically by the EBS CSI driver and mounted to the driver and executor pods. You can exec into the driver / executor container to verify that the EBS volume is mounted. Also, you can verify the mount from driver / executor pod spec.  
 
 
 ```
