@@ -1,0 +1,51 @@
+kube-state-metrics:
+  image:
+    registry: public.ecr.aws
+    repository: public.ecr.aws/bitnami/kube-state-metrics
+    tag: "2.8.1"
+    sha: ""
+    pullPolicy: Always
+  extraArgs:
+  - --custom-resource-state-config
+  - |
+    spec:
+      resources:
+        - groupVersionKind:
+            group: autoscaling.k8s.io
+            kind: "VerticalPodAutoscaler"
+            version: "v1"
+          labelsFromPath:
+            verticalpodautoscaler: [metadata, name]
+            namespace: [metadata, namespace]
+            signature: [metadata, labels, "emr-containers.amazonaws.com/dynamic.sizing.signature"]
+          metrics:
+            - name: vpa_spark_rec_memory_lower
+              help: "VPA recommended memory - lower bound"
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, recommendation, containerRecommendations, "[containerName=spark-kubernetes-executor]", lowerBound]
+                  valueFrom: [memory]
+            - name: vpa_spark_rec_memory_upper
+              help: "VPA recommended memory - upper bound"
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, recommendation, containerRecommendations, "[containerName=spark-kubernetes-executor]", upperBound]
+                  valueFrom: [memory]
+            - name: vpa_spark_rec_memory_target
+              help: "VPA recommended memory - target"
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, recommendation, containerRecommendations, "[containerName=spark-kubernetes-executor]", target]
+                  valueFrom: [memory]
+  rbac:
+    create: true
+    useClusterRole: true
+    extraRules:
+    - apiGroups: ["autoscaling.k8s.io"]
+      resources: ["verticalpodautoscalers"]
+      verbs: ["list", "watch"]
+  metricLabelsAllowlist:
+    - "pods=[emr-containers.amazonaws.com/dynamic.sizing.signature]"
