@@ -24,12 +24,12 @@ nav:
   - Metastore Integration:
       - Hive Metastore: 'metastore-integrations/docs/hive-metastore.md'
       - AWS Glue: 'metastore-integrations/docs/aws-glue.md'
-  - Debugging:
-      - Change Log Level: 'debugging/docs/change-log-level.md'
-      - Connect to Spark UI: 'debugging/docs/connect-spark-ui.md'
-      - Self Hosted SHS: 'debugging/docs/self-hosted-shs.md'
   - Troubleshooting:
-      - Troubleshooting EMR on EKS Issues: 'troubleshoot/docs/troubleshooting.md'
+      - Spark Log Location in S3 and CloudWatch: 'troubleshooting/docs/where-to-look-for-spark-logs.md'
+      - Change Log Level: 'troubleshooting/docs/change-log-level.md'
+      - Connect to Spark UI: 'troubleshooting/docs/connect-spark-ui.md'
+      - Self Hosted SHS: 'troubleshooting/docs/self-hosted-shs.md'
+      - RBAC Permissions error: 'troubleshooting/docs/rbac-permissions-errors.md'
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
