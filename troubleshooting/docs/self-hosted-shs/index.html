@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../../../metastore-integrations/docs/aws-glue/">
+        <link rel="prev" href="../connect-spark-ui/">
       
       
-        <link rel="next" href="../connect-spark-ui/">
+        <link rel="next" href="../rbac-permissions-errors/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>Change Log Level - EMR Containers Best Practices Guides</title>
+        <title>Self Hosted SHS - EMR Containers Best Practices Guides</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#change-log-level-for-spark-application-on-emr-on-eks" class="md-skip">
+        <a href="#self-hosted-spark-history-server" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Change Log Level
+              Self Hosted SHS
             
           </span>
         </div>
@@ -260,23 +260,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
-        Debugging
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+      <a href="../where-to-look-for-spark-logs/" class="md-tabs__link md-tabs__link--active">
         Troubleshooting
       </a>
     </li>
@@ -738,14 +722,14 @@
       
       
         <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
-          Debugging
+          Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Debugging
+          Troubleshooting
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -753,72 +737,25 @@
               
   
   
-    
+  
+    <li class="md-nav__item">
+      <a href="../where-to-look-for-spark-logs/" class="md-nav__link">
+        Spark Log Location in S3 and CloudWatch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
   
   
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Change Log Level
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+  
+    <li class="md-nav__item">
+      <a href="../change-log-level/" class="md-nav__link">
         Change Log Level
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#change-log-level-to-debug" class="md-nav__link">
-    Change log level to DEBUG
-  </a>
-  
-    <nav class="md-nav" aria-label="Change log level to DEBUG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-emr-classification" class="md-nav__link">
-    Using EMR classification
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-log4j-properties" class="md-nav__link">
-    Custom log4j properties
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -842,10 +779,34 @@
               
   
   
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Self Hosted SHS
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
   
     <li class="md-nav__item">
-      <a href="../self-hosted-shs/" class="md-nav__link">
-        Self Hosted SHS
+      <a href="../rbac-permissions-errors/" class="md-nav__link">
+        RBAC Permissions error
       </a>
     </li>
   
@@ -876,61 +837,12 @@
       
       
         <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
-          Troubleshooting
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          Troubleshooting
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
-        Troubleshooting EMR on EKS Issues
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
           Node Placement
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Node Placement
         </label>
@@ -983,17 +895,17 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
       
       
       
-        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
           Performance
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Performance" data-md-level="1">
-        <label class="md-nav__title" for="__nav_9">
+        <label class="md-nav__title" for="__nav_8">
           <span class="md-nav__icon md-icon"></span>
           Performance
         </label>
@@ -1046,17 +958,17 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
       
       
       
-        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
           Cost Optimization
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
-        <label class="md-nav__title" for="__nav_10">
+        <label class="md-nav__title" for="__nav_9">
           <span class="md-nav__icon md-icon"></span>
           Cost Optimization
         </label>
@@ -1116,41 +1028,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#change-log-level-to-debug" class="md-nav__link">
-    Change log level to DEBUG
-  </a>
-  
-    <nav class="md-nav" aria-label="Change log level to DEBUG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-emr-classification" class="md-nav__link">
-    Using EMR classification
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-log4j-properties" class="md-nav__link">
-    Custom log4j properties
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1168,121 +1045,31 @@
 
 
 
-<h1 id="change-log-level-for-spark-application-on-emr-on-eks"><strong>Change Log level for Spark application on EMR on EKS</strong><a class="headerlink" href="#change-log-level-for-spark-application-on-emr-on-eks" title="Permanent link">&para;</a></h1>
-<p>To obtain more detail about their application or job submission, Spark application developers can change the log level of their job to different levels depending on their requirements. Spark uses apache log4j for logging.</p>
-<h3 id="change-log-level-to-debug">Change log level to DEBUG<a class="headerlink" href="#change-log-level-to-debug" title="Permanent link">&para;</a></h3>
-<h4 id="using-emr-classification"><strong>Using EMR classification</strong><a class="headerlink" href="#using-emr-classification" title="Permanent link">&para;</a></h4>
-<p>Log level of spark applications can be changed using the <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-configure.html">EMR spark-log4j configuration classification.</a></p>
-<p><strong>Request</strong><br />
-The <code>pi.py</code> application script is from the <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a>. EMR on EKS has included the example located at<code>/usr/lib/spark/examples/src/main</code> for you to try.</p>
-<p><code>spark-log4j</code> classification can be used to configure values in <a href="https://github.com/apache/spark/blob/branch-3.2/conf/log4j.properties.template">log4j.properties</a> for EMR releases 6.7.0 or lower , and <a href="https://github.com/apache/spark/blob/master/conf/log4j2.properties.template">log4j2.properties</a> for EMR releases 6.8.0+ .</p>
-<div class="codehilite"><pre><span></span><code>cat &gt; Spark-Python-in-s3-debug-log.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-debug-log-classification&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;local:///usr/lib/spark/examples/src/main/python/pi.py&quot;,
-      &quot;entryPointArguments&quot;: [ &quot;200&quot; ],
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.memory=2G --conf spark.executor.cores=2 --conf spark.driver.memory=2G --conf spark.executor.instances=2&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-          &quot;spark.dynamicAllocation.enabled&quot;:&quot;false&quot;
-          }
-      },
-      {
-        &quot;classification&quot;: &quot;spark-log4j&quot;, 
-        &quot;properties&quot;: {
-          &quot;log4j.rootCategory&quot;:&quot;DEBUG, console&quot;
-          }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-
-aws emr-containers start-job-run --cli-input-json file:///Spark-Python-in-s3-debug-log.json
+<h1 id="self-hosted-spark-history-server"><strong>Self Hosted Spark History Server</strong><a class="headerlink" href="#self-hosted-spark-history-server" title="Permanent link">&para;</a></h1>
+<p>In this section, you will learn how to self host Spark History Server instead of using the Persistent App UI on the AWS Console.</p>
+<ol>
+<li>
+<p>In your StartJobRun call for EMR on EKS, set the following conf. to point to an S3 bucket where you would like your event logs to go : <code>spark.eventLog.dir</code> and <code>spark.eventLog.enabled</code> as such:</p>
+<div class="codehilite"><pre><span></span><code>&quot;configurationOverrides&quot;: {
+  &quot;applicationConfiguration&quot;: [{
+    &quot;classification&quot;: &quot;spark-defaults&quot;,
+    &quot;properties&quot;: {
+      &quot;spark.eventLog.enabled&quot;: &quot;true&quot;,
+      &quot;spark.eventLog.dir&quot;: &quot;s3://your-bucket-here/some-directory&quot;
+...
 </code></pre></div>
 
-<p>The above request will print DEBUG logs in the spark driver and executor containers. The generated logs will be pushed to S3 and AWS Cloudwatch logs as configured in the request.</p>
-<p>Starting from the version 3.3.0, Spark has been <a href="https://issues.apache.org/jira/browse/SPARK-37814">migrated from log4j1 to log4j2</a>. EMR on EKS allows you still write the log4j properties to the same <code>"classification": "spark-log4j"</code>, however it now needs to be log4j2.properties, such as </p>
-<div class="codehilite"><pre><span></span><code>      {
-        &quot;classification&quot;: &quot;spark-log4j&quot;,
-        &quot;properties&quot;: {
-          &quot;rootLogger.level&quot; : &quot;DEBUG&quot;
-          }
-      }
-</code></pre></div>
-
-<h4 id="custom-log4j-properties"><strong>Custom log4j properties</strong><a class="headerlink" href="#custom-log4j-properties" title="Permanent link">&para;</a></h4>
-<p>Download log4j properties from <a href="https://github.com/apache/spark/blob/master/conf/log4j.properties.template">here</a>. Edit log4j.properties with log level as required. Save the edited log4j.properties in a mounted volume. In this example log4j.properties is placed in a s3 bucket that is mapped to a <a href="https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html">FSx for Lustre filesystem</a>. </p>
-<p><strong>Request</strong><br />
-pi.py used in the below request payload is from <a href="https://github.com/apache/spark/blob/master/examples/src/main/python/pi.py">spark examples</a></p>
-<div class="codehilite"><pre><span></span><code><span class="n">cat</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="nb">log</span><span class="o">.</span><span class="n">json</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">EOF</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-debug-log&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="s2">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="s2">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="s2">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;emr-6.2.0-latest&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="s2">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;sparkSubmitJobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://&lt;s3 prefix&gt;/pi.py&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">       </span><span class="s2">&quot;sparkSubmitParameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;--conf spark.driver.cores=2 --conf spark.executor.memory=2G --conf spark.driver.memory=2G --conf spark.executor.cores=2&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span><span class="w"> </span>
-<span class="w">  </span><span class="s2">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">        </span><span class="s2">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;spark.driver.extraJavaOptions&quot;</span><span class="p">:</span><span class="s2">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.executor.extraJavaOptions&quot;</span><span class="p">:</span><span class="s2">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.driver.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.options.claimName&quot;</span><span class="p">:</span><span class="s2">&quot;fsx-claim&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/data/&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.sparkdata.mount.readOnly&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span>
-<span class="w">         </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span><span class="w"> </span>
-<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/emr-containers/jobs&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">        </span><span class="s2">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo&quot;</span>
-<span class="w">      </span><span class="p">},</span><span class="w"> </span>
-<span class="w">      </span><span class="s2">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://joblogs&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-<span class="n">EOF</span>
-
-<span class="n">aws</span><span class="w"> </span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w"> </span><span class="n">start</span><span class="o">-</span><span class="n">job</span><span class="o">-</span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">cli</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">json</span><span class="w"> </span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">Spark</span><span class="o">-</span><span class="n">Python</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">s3</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="nb">log</span><span class="o">.</span><span class="n">json</span>
-</code></pre></div>
-
-<p><strong>Configurations of interest:</strong> <br />
-Below configuration enables spark driver and executor to pick up the log4j configuration file from <code>/var/data/</code> folder mounted to the driver and executor containers. For guide to mount FSx for Lustre to driver and executor containers - refer to <a href="../../../storage/docs/spark/fsx-lustre/">EMR Containers integration with FSx for Lustre</a></p>
-<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.driver.extraJavaOptions&quot;</span><span class="p">:</span><span class="s2">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-<span class="s2">&quot;spark.executor.extraJavaOptions&quot;</span><span class="p">:</span><span class="s2">&quot;-Dlog4j.configuration=file:///var/data/log4j-debug.properties&quot;</span><span class="p">,</span>
-</code></pre></div>
+</li>
+<li>
+<p>Take note of the S3 bucket specified in #1, and use it in the instructions on step #3 wherever you are asked for <code>path_to_eventlog</code> and make sure it is prepended with <code>s3a://</code>, not <code>s3://</code>. An example is <code>-Dspark.history.fs.logDirectory=s3a://path_to_eventlog</code>.</p>
+</li>
+<li>
+<p>Follow instructions <a href="https://docs.aws.amazon.com/glue/latest/dg/monitor-spark-ui-history.html#monitor-spark-ui-history-local">here</a> to launch Spark History Server using a Docker image.</p>
+</li>
+<li>
+<p>After following the above steps, event logs should flow to the specified S3 bucket and the docker container should spin up Spark History Server (which will be available at <code>127.0.0.1:18080</code>). This instance of Spark History Server will pick up and parse event logs from the S3 bucket specified.</p>
+</li>
+</ol>
 
 
 

@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../connect-spark-ui/">
+        <link rel="prev" href="../../../metastore-integrations/docs/aws-glue/">
       
       
-        <link rel="next" href="../../../troubleshoot/docs/troubleshooting/">
+        <link rel="next" href="../change-log-level/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>Self Hosted SHS - EMR Containers Best Practices Guides</title>
+        <title>Spark Log Location in S3 and CloudWatch - EMR Containers Best Practices Guides</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#self-hosted-spark-history-server" class="md-skip">
+        <a href="#spark-driver-and-executor-logs" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Self Hosted SHS
+              Spark Log Location in S3 and CloudWatch
             
           </span>
         </div>
@@ -260,23 +260,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../change-log-level/" class="md-tabs__link md-tabs__link--active">
-        Debugging
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-tabs__link">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Troubleshooting
       </a>
     </li>
@@ -738,16 +722,132 @@
       
       
         <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
-          Debugging
+          Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Debugging" data-md-level="1">
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Debugging
+          Troubleshooting
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Spark Log Location in S3 and CloudWatch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Spark Log Location in S3 and CloudWatch
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#send-spark-logs-to-s3" class="md-nav__link">
+    Send Spark Logs to S3
+  </a>
+  
+    <nav class="md-nav" aria-label="Send Spark Logs to S3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-iam-role-with-s3-write-access" class="md-nav__link">
+    Update the IAM role with S3 write access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-startjobrun-api-with-s3-buckets" class="md-nav__link">
+    Configure the StartJobRun API with S3 buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-location-of-jobrunner-driver-executor-in-s3" class="md-nav__link">
+    Log location of JobRunner, Driver, Executor in S3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#send-spark-logs-to-cloudwatch" class="md-nav__link">
+    Send Spark Logs to CloudWatch
+  </a>
+  
+    <nav class="md-nav" aria-label="Send Spark Logs to CloudWatch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-iam-role-with-cloudwatch-access" class="md-nav__link">
+    Update the IAM role with CloudWatch access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-startjobrun-api-with-cloudwatch" class="md-nav__link">
+    Configure StartJobRun API with CloudWatch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-location-of-jobrunner-driver-executor" class="md-nav__link">
+    Log location of JobRunner, Driver, Executor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
           
             
               
@@ -781,21 +881,25 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../self-hosted-shs/" class="md-nav__link">
         Self Hosted SHS
       </a>
-      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rbac-permissions-errors/" class="md-nav__link">
+        RBAC Permissions error
+      </a>
     </li>
   
 
@@ -825,61 +929,12 @@
       
       
         <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
-          Troubleshooting
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          Troubleshooting
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../troubleshoot/docs/troubleshooting/" class="md-nav__link">
-        Troubleshooting EMR on EKS Issues
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
           Node Placement
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Node Placement
         </label>
@@ -932,17 +987,17 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
       
       
       
-        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
           Performance
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Performance" data-md-level="1">
-        <label class="md-nav__title" for="__nav_9">
+        <label class="md-nav__title" for="__nav_8">
           <span class="md-nav__icon md-icon"></span>
           Performance
         </label>
@@ -995,17 +1050,17 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
       
       
       
-        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
           Cost Optimization
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Cost Optimization" data-md-level="1">
-        <label class="md-nav__title" for="__nav_10">
+        <label class="md-nav__title" for="__nav_9">
           <span class="md-nav__icon md-icon"></span>
           Cost Optimization
         </label>
@@ -1065,6 +1120,82 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#send-spark-logs-to-s3" class="md-nav__link">
+    Send Spark Logs to S3
+  </a>
+  
+    <nav class="md-nav" aria-label="Send Spark Logs to S3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-iam-role-with-s3-write-access" class="md-nav__link">
+    Update the IAM role with S3 write access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-startjobrun-api-with-s3-buckets" class="md-nav__link">
+    Configure the StartJobRun API with S3 buckets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-location-of-jobrunner-driver-executor-in-s3" class="md-nav__link">
+    Log location of JobRunner, Driver, Executor in S3
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#send-spark-logs-to-cloudwatch" class="md-nav__link">
+    Send Spark Logs to CloudWatch
+  </a>
+  
+    <nav class="md-nav" aria-label="Send Spark Logs to CloudWatch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-the-iam-role-with-cloudwatch-access" class="md-nav__link">
+    Update the IAM role with CloudWatch access
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-startjobrun-api-with-cloudwatch" class="md-nav__link">
+    Configure StartJobRun API with CloudWatch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-location-of-jobrunner-driver-executor" class="md-nav__link">
+    Log location of JobRunner, Driver, Executor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1082,31 +1213,121 @@
 
 
 
-<h1 id="self-hosted-spark-history-server"><strong>Self Hosted Spark History Server</strong><a class="headerlink" href="#self-hosted-spark-history-server" title="Permanent link">&para;</a></h1>
-<p>In this section, you will learn how to self host Spark History Server instead of using the Persistent App UI on the AWS Console.</p>
-<ol>
-<li>
-<p>In your StartJobRun call for EMR on EKS, set the following conf. to point to an S3 bucket where you would like your event logs to go : <code>spark.eventLog.dir</code> and <code>spark.eventLog.enabled</code> as such:</p>
-<div class="codehilite"><pre><span></span><code>&quot;configurationOverrides&quot;: {
-  &quot;applicationConfiguration&quot;: [{
-    &quot;classification&quot;: &quot;spark-defaults&quot;,
-    &quot;properties&quot;: {
-      &quot;spark.eventLog.enabled&quot;: &quot;true&quot;,
-      &quot;spark.eventLog.dir&quot;: &quot;s3://your-bucket-here/some-directory&quot;
-...
+<h1 id="spark-driver-and-executor-logs"><strong>Spark Driver and Executor Logs</strong><a class="headerlink" href="#spark-driver-and-executor-logs" title="Permanent link">&para;</a></h1>
+<p>The status of the spark jobs can be monitored via <a href="https://docs.aws.amazon.com/cli/latest/reference/emr-containers/describe-job-run.html">EMR on EKS describe-job-run API</a>.</p>
+<p>To be able to monitor the job progress and to troubleshoot failures, you must configure your jobs to send log information to Amazon S3, Amazon CloudWatch Logs, or both</p>
+<h3 id="send-spark-logs-to-s3">Send Spark Logs to S3<a class="headerlink" href="#send-spark-logs-to-s3" title="Permanent link">&para;</a></h3>
+<h4 id="update-the-iam-role-with-s3-write-access"><strong>Update the IAM role with S3 write access</strong><a class="headerlink" href="#update-the-iam-role-with-s3-write-access" title="Permanent link">&para;</a></h4>
+<p>Configure the IAM Role passed in StartJobRun input <code>executionRoleArn</code> with access to S3 buckets.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;arn:aws:s3:::my_s3_log_location&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;arn:aws:s3:::my_s3_log_location/*&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
 
-</li>
-<li>
-<p>Take note of the S3 bucket specified in #1, and use it in the instructions on step #3 wherever you are asked for <code>path_to_eventlog</code> and make sure it is prepended with <code>s3a://</code>, not <code>s3://</code>. An example is <code>-Dspark.history.fs.logDirectory=s3a://path_to_eventlog</code>.</p>
-</li>
-<li>
-<p>Follow instructions <a href="https://docs.aws.amazon.com/glue/latest/dg/monitor-spark-ui-history.html#monitor-spark-ui-history-local">here</a> to launch Spark History Server using a Docker image.</p>
-</li>
-<li>
-<p>After following the above steps, event logs should flow to the specified S3 bucket and the docker container should spin up Spark History Server (which will be available at <code>127.0.0.1:18080</code>). This instance of Spark History Server will pick up and parse event logs from the S3 bucket specified.</p>
-</li>
-</ol>
+<h4 id="configure-the-startjobrun-api-with-s3-buckets"><strong>Configure the StartJobRun API with S3 buckets</strong><a class="headerlink" href="#configure-the-startjobrun-api-with-s3-buckets" title="Permanent link">&para;</a></h4>
+<p>Configure the <code>monitoringConfiguration</code> with <code>s3MonitoringConfiguration</code>, and configure the S3 location where the logs would be synced.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;job_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;vc_id&gt;&quot;</span><span class="p">,</span><span class="w">  </span>
+<span class="w">  </span><span class="nt">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;iam_role_name_for_job_execution&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;emr_release_label&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;persistentAppUI&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;s3MonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;logUri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3://my_s3_log_location&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="log-location-of-jobrunner-driver-executor-in-s3"><strong>Log location of JobRunner, Driver, Executor in S3</strong><a class="headerlink" href="#log-location-of-jobrunner-driver-executor-in-s3" title="Permanent link">&para;</a></h4>
+<p>The JobRunner (pod that does spark-submit), Spark Driver, and Spark Executor logs would be found in the following S3 locations.</p>
+<div class="codehilite"><pre><span></span><code>JobRunner/Spark-Submit/Controller Logs - s3://my_s3_log_location/${virtual-cluster-id}/jobs/${job-id}/containers/${job-runner-pod-id}/(stderr.gz/stdout.gz)
+
+Driver Logs - s3://my_s3_log_location/${virtual-cluster-id}/jobs/${job-id}/containers/${spark-application-id}/${spark-job-id-driver-pod-name}/(stderr.gz/stdout.gz)
+
+Executor Logs - s3://my_s3_log_location/${virtual-cluster-id}/jobs/${job-id}/containers/${spark-application-id}/${spark-job-id-driver-executor-id}/(stderr.gz/stdout.gz)
+</code></pre></div>
+
+<h3 id="send-spark-logs-to-cloudwatch">Send Spark Logs to CloudWatch<a class="headerlink" href="#send-spark-logs-to-cloudwatch" title="Permanent link">&para;</a></h3>
+<h4 id="update-the-iam-role-with-cloudwatch-access"><strong>Update the IAM role with CloudWatch access</strong><a class="headerlink" href="#update-the-iam-role-with-cloudwatch-access" title="Permanent link">&para;</a></h4>
+<p>Configure the IAM Role passed in StartJobRun input <code>executionRoleArn</code> with access to CloudWatch Streams.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;logs:CreateLogStream&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;logs:DescribeLogGroups&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;logs:DescribeLogStreams&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:logs:*:*:*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;logs:PutLogEvents&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;arn:aws:logs:*:*:log-group:my_log_group_name:log-stream:my_log_stream_prefix/*&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="configure-startjobrun-api-with-cloudwatch"><strong>Configure StartJobRun API with CloudWatch</strong><a class="headerlink" href="#configure-startjobrun-api-with-cloudwatch" title="Permanent link">&para;</a></h4>
+<p>Configure the <code>monitoringConfiguration</code> with <code>cloudWatchMonitoringConfiguration</code>, and configure the CloudWatch <code>logGroupName</code> and <code>logStreamNamePrefix</code> where the logs should be pushed.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;job_name&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;virtualClusterId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;vc_id&gt;&quot;</span><span class="p">,</span><span class="w">  </span>
+<span class="w">  </span><span class="nt">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;iam_role_name_for_job_execution&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;releaseLabel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;emr_release_label&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;jobDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="p">},</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">&quot;configurationOverrides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;monitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;persistentAppUI&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;cloudWatchMonitoringConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;logGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_log_group_name&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;logStreamNamePrefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_log_stream_prefix&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="log-location-of-jobrunner-driver-executor"><strong>Log location of JobRunner, Driver, Executor</strong><a class="headerlink" href="#log-location-of-jobrunner-driver-executor" title="Permanent link">&para;</a></h4>
+<p>The JobRunner (pod that does spark-submit), Spark Driver, and Spark Executor logs would be found in the following AWS CloudWatch locations.</p>
+<div class="codehilite"><pre><span></span><code>JobRunner/Spark-Submit/Controller Logs - ${my_log_group_name}/${my_log_stream_prefix}/${virtual-cluster-id}/jobs/${job-id}/containers/${job-runner-pod-id}/(stderr.gz/stdout.gz)
+
+Driver Logs - ${my_log_group_name}/${my_log_stream_prefix}/${virtual-cluster-id}/jobs/${job-id}/containers/${spark-application-id}/${spark-job-id-driver-pod-name}/(stderr.gz/stdout.gz)
+
+Executor Logs - ${my_log_group_name}/${my_log_stream_prefix}/${virtual-cluster-id}/jobs/${job-id}/containers/${spark-application-id}/${spark-job-id-driver-executor-id}/(stderr.gz/stdout.gz)
+</code></pre></div>
 
 
 
