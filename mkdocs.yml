@@ -30,6 +30,8 @@ nav:
       - Connect to Spark UI: 'troubleshooting/docs/connect-spark-ui.md'
       - Self Hosted SHS: 'troubleshooting/docs/self-hosted-shs.md'
       - RBAC Permissions error: 'troubleshooting/docs/rbac-permissions-errors.md'
+      - EKS Cluster AutoScaler: 'troubleshooting/docs/eks-cluster-auto-scaler.md'
+      - EKS Karpenter: 'troubleshooting/docs/karpenter.md'
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
