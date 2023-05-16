@@ -12,7 +12,7 @@
         <link rel="prev" href="../self-hosted-shs/">
       
       
-        <link rel="next" href="../../../node-placement/docs/eks-node-placement/">
+        <link rel="next" href="../eks-cluster-auto-scaler/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
@@ -833,32 +833,40 @@
     PersistentVolumeClaims is forbidden
   </a>
   
-    <nav class="md-nav" aria-label="PersistentVolumeClaims is forbidden">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#error" class="md-nav__link">
-    Error
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    Solution:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eks-cluster-auto-scaler/" class="md-nav__link">
+        EKS Cluster AutoScaler
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../karpenter/" class="md-nav__link">
+        EKS Karpenter
+      </a>
     </li>
   
 
@@ -1090,26 +1098,6 @@
     PersistentVolumeClaims is forbidden
   </a>
   
-    <nav class="md-nav" aria-label="PersistentVolumeClaims is forbidden">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#error" class="md-nav__link">
-    Error
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#solution" class="md-nav__link">
-    Solution:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -1134,14 +1122,14 @@
 <h1 id="rbac-permission-errors"><strong>RBAC Permission Errors</strong><a class="headerlink" href="#rbac-permission-errors" title="Permanent link">&para;</a></h1>
 <p>The following sections provide solutions to common RBAC authorization errors.</p>
 <h3 id="persistentvolumeclaims-is-forbidden">PersistentVolumeClaims is forbidden<a class="headerlink" href="#persistentvolumeclaims-is-forbidden" title="Permanent link">&para;</a></h3>
-<h4 id="error"><strong>Error</strong><a class="headerlink" href="#error" title="Permanent link">&para;</a></h4>
-<p>Spark jobs that require creation, listing or deletion of Persistent Volume Claims (PVC) was not supported before EMR6.8. Jobs that require these permissions will fail with the exception “persistentvolumeclaims is forbidden". Looking into driver logs, you may see an error like this: </p>
+<p><strong>Error:</strong>
+Spark jobs that require creation, listing or deletion of Persistent Volume Claims (PVC) was not supported before EMR6.8. Jobs that require these permissions will fail with the exception “persistentvolumeclaims is forbidden". Looking into driver logs, you may see an error like this: </p>
 <div class="codehilite"><pre><span></span><code>persistentvolumeclaims is forbidden. User &quot;system:serviceaccount:emr:emr-containers-sa-spark-client-93ztm12rnjz163mt3rgdb3bjqxqfz1cgvqh1e9be6yr81&quot; cannot create resource &quot;persistentvolumeclaims&quot; in API group &quot;&quot; in namesapce &quot;emr&quot;.
 </code></pre></div>
 
 <p>You may encounter this error because the default Kubernetes role <code>emr-containers</code> is missing the required RBAC permissions. As a result, the <code>emr-containers</code> primary role can’t dynamically create necessary permissions for additional roles such as Spark driver, Spark executor or Spark client when you submit a job. </p>
-<h4 id="solution"><strong>Solution:</strong><a class="headerlink" href="#solution" title="Permanent link">&para;</a></h4>
-<p>Add the required permissions to <code>emr-containers</code>. </p>
+<p><strong>Solution:</strong>
+Add the required permissions to <code>emr-containers</code>. </p>
 <p>Here are the complete RBAC permissions for EMR on EKS: </p>
 <ul>
 <li><a href="https://github.com/aws/aws-emr-containers-best-practices/blob/main/tools/k8s-rbac-policies/emr-containers.yaml">emr-containers.yaml</a></li>

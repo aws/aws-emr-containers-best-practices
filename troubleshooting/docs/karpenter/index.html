@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../eks-node-placement/">
+        <link rel="prev" href="../eks-cluster-auto-scaler/">
       
       
-        <link rel="next" href="../../../performance/docs/dra/">
+        <link rel="next" href="../../../node-placement/docs/eks-node-placement/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>EKS Fargate Node placement - EMR Containers Best Practices Guides</title>
+        <title>EKS Karpenter - EMR Containers Best Practices Guides</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#eks-fargate-node-placement" class="md-skip">
+        <a href="#karpenter" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              EKS Fargate Node placement
+              EKS Karpenter
             
           </span>
         </div>
@@ -252,13 +252,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+      <a href="../where-to-look-for-spark-logs/" class="md-tabs__link md-tabs__link--active">
         Troubleshooting
       </a>
     </li>
@@ -268,15 +270,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../eks-node-placement/" class="md-tabs__link md-tabs__link--active">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
         Node Placement
       </a>
     </li>
@@ -708,18 +708,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
           Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -737,7 +739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+      <a href="../where-to-look-for-spark-logs/" class="md-nav__link">
         Spark Log Location in S3 and CloudWatch
       </a>
     </li>
@@ -751,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+      <a href="../change-log-level/" class="md-nav__link">
         Change Log Level
       </a>
     </li>
@@ -765,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+      <a href="../connect-spark-ui/" class="md-nav__link">
         Connect to Spark UI
       </a>
     </li>
@@ -779,7 +781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+      <a href="../self-hosted-shs/" class="md-nav__link">
         Self Hosted SHS
       </a>
     </li>
@@ -793,7 +795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+      <a href="../rbac-permissions-errors/" class="md-nav__link">
         RBAC Permissions error
       </a>
     </li>
@@ -807,73 +809,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+      <a href="../eks-cluster-auto-scaler/" class="md-nav__link">
         EKS Cluster AutoScaler
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../troubleshooting/docs/karpenter/" class="md-nav__link">
-        EKS Karpenter
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
-      
-      
-      
-        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="true">
-          Node Placement
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          Node Placement
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../eks-node-placement/" class="md-nav__link">
-        EKS Node placement
       </a>
     </li>
   
@@ -896,12 +833,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          EKS Fargate Node placement
+          EKS Karpenter
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        EKS Fargate Node placement
+        EKS Karpenter
       </a>
       
         
@@ -920,43 +857,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fargate-node-placement" class="md-nav__link">
-    Fargate Node Placement
+  <a href="#logs-of-karpenter-controller" class="md-nav__link">
+    Logs of Karpenter Controller
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-fargate-profile" class="md-nav__link">
-    AWS Fargate profile
+  <a href="#error-while-decoding-json-json-unknown-field-iamidentitymappings" class="md-nav__link">
+    Error while decoding JSON: json: unknown field "iamIdentityMappings"
   </a>
-  
-    <nav class="md-nav" aria-label="AWS Fargate profile">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
-    1- Place entire job including driver pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
-    2- Place driver pod on EC2 and executor pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
-    3- Define a NodeSelector in Pod Templates
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -964,6 +874,69 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Node Placement
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Node Placement" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Node Placement
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        EKS Node placement
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        EKS Fargate Node placement
+      </a>
     </li>
   
 
@@ -1128,43 +1101,16 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fargate-node-placement" class="md-nav__link">
-    Fargate Node Placement
+  <a href="#logs-of-karpenter-controller" class="md-nav__link">
+    Logs of Karpenter Controller
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#aws-fargate-profile" class="md-nav__link">
-    AWS Fargate profile
+  <a href="#error-while-decoding-json-json-unknown-field-iamidentitymappings" class="md-nav__link">
+    Error while decoding JSON: json: unknown field "iamIdentityMappings"
   </a>
-  
-    <nav class="md-nav" aria-label="AWS Fargate profile">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-place-entire-job-including-driver-pod-on-fargate" class="md-nav__link">
-    1- Place entire job including driver pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" class="md-nav__link">
-    2- Place driver pod on EC2 and executor pod on Fargate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-define-a-nodeselector-in-pod-templates" class="md-nav__link">
-    3- Define a NodeSelector in Pod Templates
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1187,162 +1133,66 @@
 
 
 
-<h1 id="eks-fargate-node-placement"><strong>EKS Fargate Node Placement</strong><a class="headerlink" href="#eks-fargate-node-placement" title="Permanent link">&para;</a></h1>
-<h2 id="fargate-node-placement"><strong>Fargate Node Placement</strong><a class="headerlink" href="#fargate-node-placement" title="Permanent link">&para;</a></h2>
-<p>AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you don't have to provision, configure, or scale groups of EC2 instances on your own to run containers. You also don't need to choose server types, decide when to scale your node groups, or optimize cluster packing. Instead you can control which pods start on Fargate and how they run with Fargate profiles.</p>
-<h2 id="aws-fargate-profile">AWS Fargate profile<a class="headerlink" href="#aws-fargate-profile" title="Permanent link">&para;</a></h2>
-<p>Before you can schedule pods on Fargate in your cluster, you must define at least one Fargate profile that specifies which pods use Fargate when launched.  You must define a namespace for every selector. The Fargate profile allows an administrator to declare which pods run on Fargate. This declaration is done through the profile’s selectors. If a namespace selector is defined without any labels, Amazon EKS attempts to schedule all pods that run in that namespace onto Fargate using the profile.</p>
-<p><strong>Create Fargate Profile</strong>
-Create your Fargate profile with the following eksctl command, replacing the <code>&lt;variable text&gt;</code> (including &lt;&gt;) with your own values. You're required to specify a namespace. The <code>--labels</code> option is not required to create your Fargate profile, but will be required if you want to only run Spark executors on Fargate.</p>
-<div class="codehilite"><pre><span></span><code>eksctl create fargateprofile \
-    --cluster &lt;cluster_name&gt; \
-    --name &lt;fargate_profile_name&gt; \
-    --namespace &lt;virtual_cluster_mapped_namespace&gt; \
-    --labels spark-node-placement=fargate
+<h1 id="karpenter"><strong>Karpenter</strong><a class="headerlink" href="#karpenter" title="Permanent link">&para;</a></h1>
+<p>Karpenter is an open-source cluster autoscaler for kubernetes (EKS) that automatically provisions new nodes in response to unschedulable pods. Until Karpenter was introduced, EKS would use its implementation of "CAS" Cluster Autoscaler, which creates Managed-NodeGroups to provision nodes.</p>
+<p>The challenge with Managed-NodeGroups is that, it can only create nodes with a single instance-type. In-order to provision nodes with different instance-types for different workloads, multiple nodegroups have to be created. Karpenter on the other hand can provision nodes of different types by working with EC2-Fleet-API. 
+The best practices to configure the Provisioners are documented at https://aws.github.io/aws-eks-best-practices/karpenter/</p>
+<p>This guide helps the user troubleshoot common problems with Karpenter.</p>
+<h3 id="logs-of-karpenter-controller">Logs of Karpenter Controller<a class="headerlink" href="#logs-of-karpenter-controller" title="Permanent link">&para;</a></h3>
+<p>Karpenter is a Custom Kubernetes Controller, and the following steps would help find Karpenter Logs.</p>
+<p>Step 1: Identify the namespace where Karpenter is running. In most cases, <code>helm</code> would be used to deploy Karpenter packages. The <code>helm ls</code> command would list the namespace where karpenter would be installed.</p>
+<div class="codehilite"><pre><span></span><code>#<span class="w"> </span><span class="n">Example</span>
+
+<span class="c">% helm ls --all-namespaces</span>
+<span class="n">NAME</span><span class="w">        </span><span class="s">NAMESPACE</span><span class="w">   </span><span class="s">REVISION</span><span class="w">    </span><span class="s">UPDATED</span><span class="w">                                 </span><span class="s">STATUS</span><span class="w">      </span><span class="s">CHART</span><span class="w">               </span><span class="s">APP</span><span class="w"> </span><span class="s">VERSION</span>
+<span class="n">karpenter</span><span class="w">   </span><span class="s">karpenter</span><span class="w">   </span><span class="s">1</span><span class="w">           </span><span class="s">2023-05-15</span><span class="w"> </span><span class="s">14:16:03.726908</span><span class="w"> </span><span class="o">-</span><span class="mi">0500</span><span class="w"> </span><span class="n">CDT</span><span class="w">    </span><span class="n">deployed</span><span class="w">    </span><span class="n">karpenter</span><span class="o">-</span><span class="n">v0</span><span class="p">.</span><span class="mf">27.3</span><span class="w">   </span><span class="mf">0.27</span><span class="p">.</span><span class="mi">3</span>
 </code></pre></div>
 
-<h3 id="1-place-entire-job-including-driver-pod-on-fargate">1- Place entire job including driver pod on Fargate<a class="headerlink" href="#1-place-entire-job-including-driver-pod-on-fargate" title="Permanent link">&para;</a></h3>
-<p>When both Driver and Executors use the same labels as the Fargate Selector, the entire job including the driver pod will run on Fargate.</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=4  --conf spark.executor.memory=20G --conf spark.driver.memory=20G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.driver.label.spark-node-placement&quot;: &quot;fargate&quot;,
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<p>Step 2: Setup kubectl</p>
+<div class="codehilite"><pre><span></span><code><span class="n">brew</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">kubectl</span>
+
+<span class="n">aws</span><span class="w"> </span><span class="o">--</span><span class="n">region</span><span class="w"> </span><span class="o">&lt;</span><span class="n">region</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="n">update</span><span class="o">-</span><span class="n">kubeconfig</span><span class="w"> </span><span class="o">--</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;</span><span class="n">eks</span><span class="o">-</span><span class="n">cluster</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-When the job starts, the driver pod and executor pods are scheduled only on Fargate since both are labeled with the <code>spark-node-placement: fargate</code>. This is useful when we want to run the entire job on Fargate nodes. The maximum vCPU available for the driver pod is 4vCPU. </p>
-<h3 id="2-place-driver-pod-on-ec2-and-executor-pod-on-fargate">2- Place driver pod on EC2 and executor pod on Fargate<a class="headerlink" href="#2-place-driver-pod-on-ec2-and-executor-pod-on-fargate" title="Permanent link">&para;</a></h3>
-<p>Remove the label from the driver pod to schedule the driver pod on EC2 instances. This is especially helpful when driver pod needs more resources (i.e. &gt; 4 vCPU).</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=6 --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<p>Step 3: Check the status of the pods of Karpenter</p>
+<div class="codehilite"><pre><span></span><code>#<span class="w"> </span><span class="n">kubectl</span><span class="w"> </span><span class="nb">get</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
+
+<span class="c">% kubectl get pods -n karpenter</span>
+<span class="n">NAME</span><span class="w">                         </span><span class="s">READY</span><span class="w">   </span><span class="s">STATUS</span><span class="w">    </span><span class="s">RESTARTS</span><span class="w">   </span><span class="s">AGE</span>
+<span class="n">karpenter</span><span class="o">-</span>7<span class="n">b455dccb8</span><span class="o">-</span><span class="n">prrzx</span><span class="w">   </span><span class="mi">1</span><span class="o">/</span><span class="mi">1</span><span class="w">     </span><span class="n">Running</span><span class="w">   </span><span class="mi">0</span><span class="w">          </span>7<span class="n">m18s</span>
+<span class="n">karpenter</span><span class="o">-</span>7<span class="n">b455dccb8</span><span class="o">-</span><span class="n">x8zv8</span><span class="w">   </span><span class="mi">1</span><span class="o">/</span><span class="mi">1</span><span class="w">     </span><span class="n">Running</span><span class="w">   </span><span class="mi">0</span><span class="w">          </span>7<span class="n">m18s</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-When the job starts, the driver pod schedules on an EC2 instance. EKS picks an instance from the first Node Group that has the matching resources available to the driver pod.</p>
-<h3 id="3-define-a-nodeselector-in-pod-templates">3- Define a NodeSelector in Pod Templates<a class="headerlink" href="#3-define-a-nodeselector-in-pod-templates" title="Permanent link">&para;</a></h3>
-<p>Beginning with Amazon EMR versions 5.33.0 or 6.3.0, Amazon EMR on EKS supports Spark’s pod template feature. Pod templates are specifications that determine how to run each pod. You can use pod template files to define the driver or executor pod’s configurations that Spark configurations do not support. For example Spark configurations do not support defining individual node selectors for the driver pod and the executor pods. Define a node selector <strong>only</strong> for the driver pod when you want to choose on which pool of EC2 instance it should schedule. Let the Fargate Profile schedule the executor pods.</p>
-<p><strong>Driver Pod Template</strong></p>
-<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span>
-<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span>
-<span class="n">spec</span><span class="o">:</span>
-<span class="w">  </span><span class="n">volumes</span><span class="o">:</span>
-<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">source</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">volume</span>
-<span class="w">      </span><span class="n">emptyDir</span><span class="o">:</span><span class="w"> </span><span class="o">{}</span>
-<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">metrics</span><span class="o">-</span><span class="n">files</span><span class="o">-</span><span class="n">volume</span>
-<span class="w">      </span><span class="n">emptyDir</span><span class="o">:</span><span class="w"> </span><span class="o">{}</span>
-<span class="w">  </span><span class="n">nodeSelector</span><span class="o">:</span>
-<span class="w">    </span><span class="o">&lt;</span><span class="n">ec2</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">label</span><span class="o">-</span><span class="n">key</span><span class="o">&gt;:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">ec2</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="n">label</span><span class="o">-</span><span class="n">value</span><span class="o">&gt;</span>
-<span class="w">  </span><span class="n">containers</span><span class="o">:</span>
-<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span><span class="o">-</span><span class="n">kubernetes</span><span class="o">-</span><span class="n">driver</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">interpreted</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="n">container</span>
+<p>Step 4: The <code>kubectl logs</code> command would help read the Karpenter logs. The below example, karpenter pod logs depict that an <code>t3a.large</code> instance was launched.</p>
+<div class="codehilite"><pre><span></span><code>#<span class="w"> </span><span class="n">kubectl</span><span class="w"> </span><span class="n">logs</span><span class="w"> </span><span class="o">&lt;</span><span class="n">karpenter</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">namespace</span><span class="o">&gt;</span>
+
+<span class="c">% kubectl logs karpenter-7b455dccb8-prrzx -n karpenter</span>
+<span class="p">..</span>
+<span class="p">..</span>
+
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T19</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">.</span>546<span class="n">Z</span><span class="w">    </span><span class="n">DEBUG</span><span class="w">   </span><span class="n">controller</span><span class="w">  </span><span class="n">discovered</span><span class="w"> </span><span class="n">region</span><span class="w">   </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;***-dirty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-west-2&quot;</span><span class="p">}</span>
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T19</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">.</span>666<span class="n">Z</span><span class="w">    </span><span class="n">DEBUG</span><span class="w">   </span><span class="n">controller</span><span class="w">  </span><span class="n">discovered</span><span class="w"> </span><span class="n">cluster</span><span class="w"> </span><span class="n">endpoint</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**-dirty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cluster-endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://******.**.us-west-2.eks.amazonaws.com&quot;</span><span class="p">}</span>
+<span class="p">..</span>
+<span class="p">..</span>
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T19</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">.</span>786<span class="n">Z</span><span class="w">    </span><span class="n">INFO</span><span class="w">    </span><span class="n">controller</span><span class="p">.</span><span class="n">provisioner</span><span class="w">  </span><span class="n">starting</span><span class="w"> </span><span class="n">controller</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**-dirty&quot;</span><span class="p">}</span>
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T19</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">.</span>787<span class="n">Z</span><span class="w">    </span><span class="n">INFO</span><span class="w">    </span><span class="n">controller</span><span class="p">.</span><span class="n">deprovisioning</span><span class="w">   </span><span class="n">starting</span><span class="w"> </span><span class="n">controller</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**-dirty&quot;</span><span class="p">}</span>
+<span class="p">..</span>
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T19</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">.</span>788<span class="n">Z</span><span class="w">    </span><span class="n">INFO</span><span class="w">    </span><span class="n">controller</span><span class="w">  </span><span class="n">Starting</span><span class="w"> </span><span class="n">EventSource</span><span class="w">    </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**-dirty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;controller&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;controllerGroup&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;controllerKind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kind source: *v1.Pod&quot;</span><span class="p">}</span>
+<span class="p">..</span>
+<span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span>15<span class="n">T20</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">56</span><span class="p">.</span>718<span class="n">Z</span><span class="w">    </span><span class="n">INFO</span><span class="w">    </span><span class="n">controller</span><span class="p">.</span><span class="n">provisioner</span><span class="p">.</span><span class="n">cloudprovider</span><span class="w">    </span><span class="n">launched</span><span class="w"> </span><span class="n">instance</span><span class="w">   </span><span class="p">{</span><span class="s">&quot;commit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;d7e22b1-dirty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;provisioner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;i-03146cd4d4152a935&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ip-*-*-*-*.us-west-2.compute.internal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;instance-type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;t3a.large&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;zone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-west-2d&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;capacity-type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;on-demand&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;capacity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;cpu&quot;</span><span class="p">:</span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="s">&quot;ephemeral-storage&quot;</span><span class="p">:</span><span class="s">&quot;20Gi&quot;</span><span class="p">,</span><span class="s">&quot;memory&quot;</span><span class="p">:</span><span class="s">&quot;7577Mi&quot;</span><span class="p">,</span><span class="s">&quot;pods&quot;</span><span class="p">:</span><span class="s">&quot;35&quot;</span><span class="p">}}</span>
 </code></pre></div>
 
-<p>Store the pod template file onto a S3 location:</p>
-<p><code>aws s3 cp /driver-pod-template.yaml s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml</code></p>
-<p><strong>Request</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-nodeselector.json &lt;&lt; EOF
-{
-  &quot;name&quot;: &quot;spark-python-in-s3-fargate-nodeselector&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.3.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5  --conf spark.executor.memory=20G --conf spark.driver.memory=30G --conf spark.executor.cores=4&quot;
-    }
-  }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
-      {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-            &quot;spark.kubernetes.executor.label.spark-node-placement&quot;: &quot;fargate&quot;,
-            &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&lt;your-bucket-name&gt;/driver-pod-template.yaml&quot;
-         }
-      }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
-  }
-}
-EOF
-aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-nodeselector.json
+<h3 id="error-while-decoding-json-json-unknown-field-iamidentitymappings">Error while decoding JSON: json: unknown field "iamIdentityMappings"<a class="headerlink" href="#error-while-decoding-json-json-unknown-field-iamidentitymappings" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>
+The Create-Cluster command https://karpenter.sh/v0.27.3/getting-started/getting-started-with-karpenter/#3-create-a-cluster throws an error</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Error</span><span class="p">:</span><span class="w"> </span><span class="n">loading</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="s2">&quot;karpenter.yaml&quot;</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">unmarshaling</span><span class="w"> </span><span class="n">JSON</span><span class="p">:</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="n">decoding</span><span class="w"> </span><span class="n">JSON</span><span class="p">:</span><span class="w"> </span><span class="n">json</span><span class="p">:</span><span class="w"> </span><span class="n">unknown</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="s2">&quot;iamIdentityMappings&quot;</span>
 </code></pre></div>
 
-<p><strong>Observed Behavior:</strong><br />
-The driver pod schedules on an EC2 instance with enough capacity and matching label key / value with the node selector.</p>
+<p><strong>Solution</strong>
+The <code>eksctl</code> cli was not able to understand the kind <code>iamIdentityMappings</code>. This is because, the <code>eksctl</code> version is old, and its schema doesn't support this kind. </p>
+<p>The solution is to upgrade the <code>eksctl</code> cli, and re-run the cluster creation commands</p>
+<div class="codehilite"><pre><span></span><code>brew<span class="w"> </span>upgrade<span class="w"> </span>eksctl
+</code></pre></div>
 
 
 

@@ -9,20 +9,24 @@
       
       
       
+        <link rel="prev" href="../rbac-permissions-errors/">
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+      
+        <link rel="next" href="../karpenter/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>Sparkr - EMR Containers Best Practices Guides</title>
+        <title>EKS Cluster AutoScaler - EMR Containers Best Practices Guides</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.558e4712.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
       
       
 
@@ -38,7 +42,7 @@
       
     
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -62,6 +66,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#eks-cluster-auto-scaler" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -72,7 +81,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -91,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sparkr
+              EKS Cluster AutoScaler
             
           </span>
         </div>
@@ -169,7 +178,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         Guides
       </a>
     </li>
@@ -185,7 +194,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../security/docs/spark/encryption/" class="md-tabs__link">
+      <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
         Security
       </a>
     </li>
@@ -201,7 +210,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../pyspark/" class="md-tabs__link">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
         Submit applications
       </a>
     </li>
@@ -217,7 +226,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../storage/docs/spark/ebs/" class="md-tabs__link">
+      <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
         Storage
       </a>
     </li>
@@ -233,7 +242,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
         Metastore Integration
       </a>
     </li>
@@ -243,13 +252,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+      <a href="../where-to-look-for-spark-logs/" class="md-tabs__link md-tabs__link--active">
         Troubleshooting
       </a>
     </li>
@@ -265,7 +276,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
         Node Placement
       </a>
     </li>
@@ -281,7 +292,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../performance/docs/dra/" class="md-tabs__link">
+      <a href="../../../performance/docs/dra/" class="md-tabs__link">
         Performance
       </a>
     </li>
@@ -297,7 +308,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
         Cost Optimization
       </a>
     </li>
@@ -325,7 +336,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -383,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -397,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
         EMR on EKS(AWS Outposts)
       </a>
     </li>
@@ -446,7 +457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../security/docs/spark/encryption/" class="md-nav__link">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
         Encryption
       </a>
     </li>
@@ -460,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
         Data Encryption
       </a>
     </li>
@@ -474,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
         Network Security
       </a>
     </li>
@@ -488,7 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../security/docs/spark/secrets/" class="md-nav__link">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
         Secrets
       </a>
     </li>
@@ -537,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pyspark/" class="md-nav__link">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
         Pyspark
       </a>
     </li>
@@ -586,7 +597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/ebs/" class="md-nav__link">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
         EBS
       </a>
     </li>
@@ -600,7 +611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
         FSx for Lustre
       </a>
     </li>
@@ -614,7 +625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../storage/docs/spark/instance-store/" class="md-nav__link">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
         Instance Store
       </a>
     </li>
@@ -663,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
         Hive Metastore
       </a>
     </li>
@@ -677,7 +688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
         AWS Glue
       </a>
     </li>
@@ -697,18 +708,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
           Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -726,7 +739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+      <a href="../where-to-look-for-spark-logs/" class="md-nav__link">
         Spark Log Location in S3 and CloudWatch
       </a>
     </li>
@@ -740,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+      <a href="../change-log-level/" class="md-nav__link">
         Change Log Level
       </a>
     </li>
@@ -754,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+      <a href="../connect-spark-ui/" class="md-nav__link">
         Connect to Spark UI
       </a>
     </li>
@@ -768,7 +781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+      <a href="../self-hosted-shs/" class="md-nav__link">
         Self Hosted SHS
       </a>
     </li>
@@ -782,7 +795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+      <a href="../rbac-permissions-errors/" class="md-nav__link">
         RBAC Permissions error
       </a>
     </li>
@@ -794,11 +807,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          EKS Cluster AutoScaler
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         EKS Cluster AutoScaler
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#logs-of-eks-cluster-auto-scaler" class="md-nav__link">
+    Logs of EKS Cluster Auto-scaler.
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -810,7 +864,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../troubleshooting/docs/karpenter/" class="md-nav__link">
+      <a href="../karpenter/" class="md-nav__link">
         EKS Karpenter
       </a>
     </li>
@@ -859,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
         EKS Node placement
       </a>
     </li>
@@ -873,7 +927,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
         EKS Fargate Node placement
       </a>
     </li>
@@ -922,7 +976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../performance/docs/dra/" class="md-nav__link">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
         Dynamic Resource Allocation
       </a>
     </li>
@@ -936,7 +990,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
         EKS Best Practices
       </a>
     </li>
@@ -985,7 +1039,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
         Cost Optimization using EC2 Spot Instances
       </a>
     </li>
@@ -999,7 +1053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+      <a href="../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
         Node Decommission
       </a>
     </li>
@@ -1030,6 +1084,23 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#logs-of-eks-cluster-auto-scaler" class="md-nav__link">
+    Logs of EKS Cluster Auto-scaler.
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1048,7 +1119,46 @@
 
 
 
+<h1 id="eks-cluster-auto-scaler"><strong>EKS Cluster Auto-Scaler</strong><a class="headerlink" href="#eks-cluster-auto-scaler" title="Permanent link">&para;</a></h1>
+<p>Kubernetes provisions nodes using CAS (Cluster Autoscaler). AWS EKS has its own implementation of K8 CAS, and EKS uses Managed-Nodegroups to spuns of Nodes.  </p>
+<h3 id="logs-of-eks-cluster-auto-scaler">Logs of EKS Cluster Auto-scaler.<a class="headerlink" href="#logs-of-eks-cluster-auto-scaler" title="Permanent link">&para;</a></h3>
+<p>On AWS, Cluster Autoscaler utilizes Amazon EC2 Auto Scaling Groups to provision nodes. This section will help you identify the error message when a AutoScaler fails to provision nodes.   </p>
+<p>An example scenario, where the NodeGroup would fail due to non-supported nodes in certain AZs.  </p>
+<div class="codehilite"><pre><span></span><code>Could not launch On-Demand Instances. Unsupported - Your requested instance type (g4dn.xlarge) is not supported in your requested Availability Zone (ca-central-1d). Please retry your request by not specifying an Availability Zone or choosing ca-central-1a, ca-central-1b. Launching EC2 instance failed.
+</code></pre></div>
 
+<p>The steps to find the logs for AutoScalingGroups are, </p>
+<p>Step 1: Login to AWS Console, and select <code>Elastic Kubernetes Service</code></p>
+<p>Step 2: Select <code>Compute</code> tab, and select the <code>NodeGroup</code> that fails.</p>
+<p>Step 3: Select the <code>Autoscaling group name</code> from the NodeGroup's section, which will direct you to <code>EC2 --&gt; AutoScaling Group</code> page.</p>
+<p>Step 4: Click the Tab <code>Activity</code> of the <code>AutoScaling Group</code>, and the <code>Activity History</code> would give provide the details of the error. </p>
+<div class="codehilite"><pre><span></span><code><span class="o">-</span><span class="w"> </span><span class="nv">Status</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Description</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Cause</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Start</span><span class="w"> </span><span class="nv">Time</span>
+<span class="o">-</span><span class="w"> </span><span class="k">End</span><span class="w"> </span><span class="nv">Time</span>
+</code></pre></div>
+
+<p>Alternatively, the activities/logs can be found via CLI as well </p>
+<div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>autoscaling<span class="w"> </span>describe-scaling-activities<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>&lt;NodeGroup-AutoScaling-Group&gt;
+</code></pre></div>
+
+<p>In the above error scenario, the <code>ca-central-1d</code> availability zone doesn't support <code>g4dn.xlarge</code>.  The solution is</p>
+<p>Step 1: Identify the Subnets of the Availability zones that supports the GPU node type. The NodeGroup Section would list all the subnets, and you can click each subnet to see which AZ it is deployed to.</p>
+<p>Step 2: Create a NodeGroup only in the Subnets identified in the above step</p>
+<div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>eks<span class="w"> </span>create-nodegroup<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--region<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\ </span>
+<span class="w">    </span>--cluster-name<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--nodegroup-name<span class="w"> </span>&lt;nodegroup-name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--scaling-config<span class="w"> </span><span class="nv">minSize</span><span class="o">=</span><span class="m">10</span>,maxSize<span class="o">=</span><span class="m">10</span>,desiredSize<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ami-type<span class="w"> </span>AL2_x86_64_GPU<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--node-role<span class="w"> </span>&lt;NodeGroupRole&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--subnets<span class="w"> </span>&lt;subnet-1-that-supports-gpu&gt;<span class="w"> </span>&lt;subnet-2-that-supports-gpu&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--instance-types<span class="w"> </span>g4dn.xlarge<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--disk-size<span class="w"> </span>&lt;disk<span class="w"> </span>size&gt;
+</code></pre></div>
 
 
 
@@ -1086,10 +1196,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs"], "search": "../../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
       
     
   </body>
