@@ -76,3 +76,6 @@ Forwarding from [::1]:28015 -> 27017
 You should be able to connect to the Spark UI:
 
 ![](../resources/screen-shot-spark-ui-driver.png)
+### Consideration
+
+In some cases like long-running Spark jobs, such as Spark streaming or large Spark SQL queries can generate large event logs. With large events logs, it might happen quickly use up storage space on running pods and sometimes encounter to experience blank UI or even OutOfMemory errors when you load Persistent UIs. To avoid these issues, we recommend that you follow either by turn on the Spark event log [rolling and compaction feature](https://docs.aws.amazon.com/emr/latest/ManagementGuide/app-history-spark-UI.html#app-history-spark-UI-large-event-logs) (default emr-container-event-log-dir - /var/log/spark/apps) or use S3 location to parse the log using [self hosted of Spark history server](https://aws.github.io/aws-emr-containers-best-practices/troubleshooting/docs/self-hosted-shs/). 
