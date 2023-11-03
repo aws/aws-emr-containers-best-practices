@@ -1,7 +1,7 @@
 kube-state-metrics:
   image:
     registry: public.ecr.aws
-    repository: public.ecr.aws/bitnami/kube-state-metrics
+    repository: bitnami/kube-state-metrics
     tag: "2.8.1"
     sha: ""
     pullPolicy: Always
