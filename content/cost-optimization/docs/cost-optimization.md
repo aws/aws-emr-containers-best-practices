@@ -220,21 +220,24 @@ spec:
 
 ### EMR on EKS and EC2 Spot Instances: Best Practices
 
-To summarize here are our recommendations 
+In summary, our recommendations are:
+
 - Use EC2 Spot instances for Spark executors and On-Demand instances for drivers.
-  - Diversify the instances types (Instance family and size) used in a cluster. 
-- Use a single AZ to launch a cluster to save Inter-AZ data transfer cost.
-- Use Karpenter for capacity provisioning and scaling when running EMR on EKS jobs
-- If using EKS nodegroups use EKS Managed Nodegroups with Cluster Autoscaler.
-- If using EKS self-managed nodegroups use Capacity Optimized Allocation strategy with the nodegroup and AWS Node Termination Handler.
-- Use Node decommission/PVC Reuse features, they help to reduce the time taken to complete EMR on EKS jobs running on EC2 Spot.
-- Use Dynamic Resource Allocation, this feature is particularly useful if multiple applications share resources in your Spark cluster, and Spot helps to improve the throughput at a low cost. 
-- Decouple Compute and Storage (S3 for Input/Output data). It allows independent scaling of processing and storage. There is low chance of losing data in case of a Spot interruption too. 
+    - Diversify the instances types (Instance family and size) used in a cluster. 
+- Use a single AZ to launch a cluster to save Inter-AZ data transfer cost and improve job performance.
+- Use Karpenter for capacity provisioning and scaling when running EMR on EKS jobs.
+- If use Cluster Autoscaler not Karpenter, use EKS Managed Nodegroups.
+- If using EKS self-managed nodegroups, enuse the Capacity Optimized Allocation strategy and AWS Node Termination Handler are in place.
+- Utilizing Node decommissioning and PVC Reuse techniques can help reduce the time taken to complete EMR on EKS job when EC2 Spot interruptions occur. However, they do not guarantee 100% avoidance of data loss during shuffling interruptions.
+- Implementing a Remote Shuffle Service (RSS) solution can enhance job stability and availability if Node decommissioning and PVC Reuse features do not fully meet your requirements.
+- Spark's Dynamic Resource Allocation (DRA) feature is particularly useful for reducing job costs, as it releases idle resources if not needed. The cost of EMR on EKS is determined by resource consumption at various stages of a job and is not calculated by the EMR unit price * job run time.
+- DRA implementation on EKS is different from Spark on YARN. Check out the details [here](https://aws.github.io/aws-emr-containers-best-practices/performance/docs/dra/). 
+- Decouple Compute and Storage. For example use S3 to store Input/Output data or use RSS to store shuffle data. It allows independent scaling of processing and storage. There is low chance of losing data in case of a Spot interruption too. 
 - Reduce Spark’s Shuffle Size and Blast Radius. This allows to select more Spot instances for diversification and also reduces the time taken to recompute/move the shuffle files in case of an interruption.
-- Automate Spot Interruption handling using existing tools and services.
+- Automate Spot Interruption handling via existing tools and services.
  
 ### Conclusion
 
-In this document, we covered best practices to cost effectively run EMR on EKS workloads using EC2 Spot Instances. We covered three key aspects of Provisioning, Interruption Handling and Scaling and the best practices under each of them. We hope this document provides prescriptive guidance on running EMR workload on EKS with significant cost savings by utilizing Spot instances.
+In this document, we covered best practices to cost effectively run EMR on EKS workloads using EC2 Spot Instances. We have outlined three key areas: Provisioning, Interruption Handling, and Scaling, along with the corresponding best practices for each. We aim for this document to offer prescriptive guidance on running EMR on EKS workloads with substantial cost savings through the utilization of Spot instances.
 
 
