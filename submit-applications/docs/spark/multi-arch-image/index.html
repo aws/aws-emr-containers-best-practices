@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../data-encryption/">
+        <link rel="prev" href="../pyspark/">
       
       
-        <link rel="next" href="../secrets/">
+        <link rel="next" href="../../../../storage/docs/spark/ebs/">
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Network Security - EMR Containers Best Practices Guides</title>
+        <title>Build Multi-arch Docker Image - EMR Containers Best Practices Guides</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#managing-vpc-for-emr-on-eks" class="md-skip">
+        <a href="#build-a-multi-architecture-docker-image-supporting-arm64-amd64" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Network Security
+              Build Multi-arch Docker Image
             
           </span>
         </div>
@@ -193,13 +193,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../encryption/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../../security/docs/spark/encryption/" class="md-tabs__link">
           
   
   Security
@@ -213,11 +211,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../pyspark/" class="md-tabs__link">
           
   
   Submit applications
@@ -472,28 +472,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -504,7 +499,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Security
@@ -518,7 +513,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../encryption/" class="md-nav__link">
+      <a href="../../../../security/docs/spark/encryption/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -539,11 +534,124 @@
   
   
     <li class="md-nav__item">
-      <a href="../data-encryption/" class="md-nav__link">
+      <a href="../../../../security/docs/spark/data-encryption/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Data Encryption
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Network Security
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Secrets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Submit applications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Submit applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pyspark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pyspark
   </span>
   
 
@@ -573,7 +681,7 @@
           
   
   <span class="md-ellipsis">
-    Network Security
+    Build Multi-arch Docker Image
   </span>
   
 
@@ -584,7 +692,7 @@
         
   
   <span class="md-ellipsis">
-    Network Security
+    Build Multi-arch Docker Image
   </span>
   
 
@@ -606,29 +714,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#security-group" class="md-nav__link">
+  <a href="#pre-requisites" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Group
+      Pre-requisites
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security Group">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-eks-cluster-to-use-security-groups-for-pods" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-aws-cloud9" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure EKS Cluster to use Security Groups for Pods
+      Setup AWS Cloud9
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure EKS Cluster to use Security Groups for Pods">
+    <nav class="md-nav" aria-label="Setup AWS Cloud9">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#define-securitygrouppolicy" class="md-nav__link">
+  <a href="#1-create-a-cloud9-instance" class="md-nav__link">
     <span class="md-ellipsis">
-      Define SecurityGroupPolicy
+      1. Create a Cloud9 instance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-install-docker-and-buildx-if-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install Docker and Buildx if required
     </span>
   </a>
   
@@ -638,30 +754,57 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#define-pod-template-to-use-security-group-for-pod" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#build-a-docker-image-supporting-multi-arch" class="md-nav__link">
     <span class="md-ellipsis">
-      Define pod template to use Security Group for pod
+      Build a docker image supporting multi-arch
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#launch-a-job" class="md-nav__link">
-    <span class="md-ellipsis">
-      Launch a job
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Launch a job">
+    <nav class="md-nav" aria-label="Build a docker image supporting multi-arch">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#verify-a-security-group-attached-to-the-pod-eni" class="md-nav__link">
+  <a href="#1-download-the-source-code-from-the-github" class="md-nav__link">
     <span class="md-ellipsis">
-      Verify a security group attached to the Pod ENI
+      1. Download the source code from the Github:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-setup-required-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Setup required environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-build-oss-spark-base-image-if-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Build OSS Spark base image if required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-get-emr-spark-base-image-from-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Get EMR Spark base image from AWS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-build-the-benchmark-utility-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Build the Benchmark Utility image
     </span>
   </a>
   
@@ -671,9 +814,13 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark-application-based-on-the-docker-images-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark application based on the docker images built
+    </span>
+  </a>
   
 </li>
       
@@ -681,114 +828,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../secrets/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Secrets
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Submit applications
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Submit applications
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Pyspark
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Build Multi-arch Docker Image
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1476,29 +1515,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#security-group" class="md-nav__link">
+  <a href="#pre-requisites" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Group
+      Pre-requisites
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security Group">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-eks-cluster-to-use-security-groups-for-pods" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-aws-cloud9" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure EKS Cluster to use Security Groups for Pods
+      Setup AWS Cloud9
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure EKS Cluster to use Security Groups for Pods">
+    <nav class="md-nav" aria-label="Setup AWS Cloud9">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#define-securitygrouppolicy" class="md-nav__link">
+  <a href="#1-create-a-cloud9-instance" class="md-nav__link">
     <span class="md-ellipsis">
-      Define SecurityGroupPolicy
+      1. Create a Cloud9 instance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-install-docker-and-buildx-if-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Install Docker and Buildx if required
     </span>
   </a>
   
@@ -1508,30 +1555,57 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#define-pod-template-to-use-security-group-for-pod" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#build-a-docker-image-supporting-multi-arch" class="md-nav__link">
     <span class="md-ellipsis">
-      Define pod template to use Security Group for pod
+      Build a docker image supporting multi-arch
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#launch-a-job" class="md-nav__link">
-    <span class="md-ellipsis">
-      Launch a job
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Launch a job">
+    <nav class="md-nav" aria-label="Build a docker image supporting multi-arch">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#verify-a-security-group-attached-to-the-pod-eni" class="md-nav__link">
+  <a href="#1-download-the-source-code-from-the-github" class="md-nav__link">
     <span class="md-ellipsis">
-      Verify a security group attached to the Pod ENI
+      1. Download the source code from the Github:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-setup-required-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Setup required environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-build-oss-spark-base-image-if-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Build OSS Spark base image if required
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-get-emr-spark-base-image-from-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Get EMR Spark base image from AWS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-build-the-benchmark-utility-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Build the Benchmark Utility image
     </span>
   </a>
   
@@ -1541,9 +1615,13 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark-application-based-on-the-docker-images-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark application based on the docker images built
+    </span>
+  </a>
   
 </li>
       
@@ -1565,91 +1643,174 @@
   
 
 
-<h1 id="managing-vpc-for-emr-on-eks">** Managing VPC for EMR on EKS**<a class="headerlink" href="#managing-vpc-for-emr-on-eks" title="Permanent link">&para;</a></h1>
-<p>This section address network security at VPC level. If you want to read more on network security for Spark in EMR on EKS please refer to this <a href="https://aws.github.io/aws-emr-containers-best-practices/security/docs/spark/encryption/#amazon-emr-on-eks">section</a>.</p>
-<h2 id="security-group"><strong>Security Group</strong><a class="headerlink" href="#security-group" title="Permanent link">&para;</a></h2>
-<p>The applications running on your EMR on EKS cluster often would need access to services that are running outside the cluster, 
-for example, these can Amazon Redshift, Amazon Relational Database Service, a service self hosted on an EC2 instance. To access these resource you need to allow network traffic at the security group level. The default mechanism in EKS is using security groups at the node level, 
-this means all the pods running on the node will inherit the rules on the security group. 
-For security conscious customers, this is not a desired behavior and you would want to use security groups at the pod level.</p>
-<p>This section address how you can use Security Groups with EMR on EKS.</p>
-<h3 id="configure-eks-cluster-to-use-security-groups-for-pods">Configure EKS Cluster to use Security Groups for Pods<a class="headerlink" href="#configure-eks-cluster-to-use-security-groups-for-pods" title="Permanent link">&para;</a></h3>
-<p>In order to use Security Groups at the pod level, you need to configure the VPC CNI for EKS. The following <a href="https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html">link</a> guide through the prerequisites as well as configuring the EKS Cluster.</p>
-<h4 id="define-securitygrouppolicy">Define SecurityGroupPolicy<a class="headerlink" href="#define-securitygrouppolicy" title="Permanent link">&para;</a></h4>
-<p>Once you have configured the VPC CNI, you need to create a SecurityGroupPolicy object. 
-This object define which <strong>security group</strong> (up to 5) to use, <strong>podselector</strong> to define which pod to apply the security group to and 
-the <strong>namespace</strong> in which the Security Group should be evaluated. Below you find an example of <code>SecurityGroupPolicy</code>.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">vpcresources</span><span class="o">.</span><span class="na">k8s</span><span class="o">.</span><span class="na">aws</span><span class="o">/</span><span class="n">v1beta1</span>
-<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">SecurityGroupPolicy</span>
-<span class="n">metadata</span><span class="o">:</span>
-<span class="w">  </span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;&gt;</span>
-<span class="w">  </span><span class="kd">namespace</span><span class="o">:</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="n">VC</span><span class="o">&gt;</span>
-<span class="n">spec</span><span class="o">:</span>
-<span class="w">  </span><span class="n">podSelector</span><span class="o">:</span><span class="w"> </span>
-<span class="w">    </span><span class="n">matchLabels</span><span class="o">:</span>
-<span class="w">      </span><span class="n">role</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span>
-<span class="w">  </span><span class="n">securityGroups</span><span class="o">:</span>
-<span class="w">    </span><span class="n">groupIds</span><span class="o">:</span>
-<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="n">sg</span><span class="o">-</span><span class="n">xxxxx</span>
+<h1 id="build-a-multi-architecture-docker-image-supporting-arm64-amd64">Build a Multi-architecture Docker Image Supporting arm64 &amp; amd64<a class="headerlink" href="#build-a-multi-architecture-docker-image-supporting-arm64-amd64" title="Permanent link">&para;</a></h1>
+<h2 id="pre-requisites">Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h2>
+<p>We can complete all the steps either from a local desktop or using <a href="https://aws.amazon.com/cloud9/">AWS Cloud9</a>.  If you’re using AWS Cloud9, follow the instructions in the "Setup AWS Cloud9" to create and configure the environment first, otherwise skip to the next section.</p>
+<h2 id="setup-aws-cloud9">Setup AWS Cloud9<a class="headerlink" href="#setup-aws-cloud9" title="Permanent link">&para;</a></h2>
+<p>AWS Cloud9 is a cloud-based IDE that lets you write, run, and debug your code via just a browser. AWS Cloud9 comes preconfigured with some of AWS dependencies we require to build our application, such ash the AWS CLI tool.</p>
+<h3 id="1-create-a-cloud9-instance">1. Create a Cloud9 instance<a class="headerlink" href="#1-create-a-cloud9-instance" title="Permanent link">&para;</a></h3>
+<p><strong>Instance type</strong> - Create an AWS Cloud9 environment from the <a href="https://console.aws.amazon.com/cloud9">AWS Management Console</a> with an instance type of <code>t3.small or larger</code>. In our example, we used <code>m5.xlarge</code> for adequate memory and CPU to compile and build a large docker image. </p>
+<p><strong>VPC</strong> - Follow the launch wizard and provide the required name. To interact with an existing EKS cluster in the same region later on, recommend to use the same VPC to your EKS cluster in the Cloud9 environment. Leave the remaining default values as they are. </p>
+<p><strong>Storage size</strong> - You must increase the Cloud9's EBS volume size (pre-attached to your AWS Cloud9 instance) to 30+ GB, because the default disk space ( 10 GB with ~72% used) is not enough for building a container image. Refer to <a href="https://docs.aws.amazon.com/cloud9/latest/user-guide/move-environment.html#move-environment-resize">Resize an Amazon EBS volume used by an environment</a> document, download the script <code>resize.sh</code> to your cloud9 environment.</p>
+<div class="codehilite"><pre><span></span><code>touch<span class="w"> </span>reaize.sh
+<span class="c1"># Double click the file name in cloud9</span>
+<span class="c1"># Copy and paste the content from the official document to your file, save and close it</span>
 </code></pre></div>
 
-<h3 id="define-pod-template-to-use-security-group-for-pod">Define pod template to use Security Group for pod<a class="headerlink" href="#define-pod-template-to-use-security-group-for-pod" title="Permanent link">&para;</a></h3>
-<p>In order for the security group to be applied to the Spark driver and executors, you need to provide a podtemplate which add label(s) to the pods.
-The labels should match the one defined above in the <code>podSelector</code> in our example it is <code>role: spark</code>. 
-The snippet below define the pod template that you can upload in S3 and then reference when launching your job.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">apiVersion</span><span class="o">:</span><span class="w"> </span><span class="n">v1</span>
-<span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Pod</span>
-<span class="n">metadata</span><span class="o">:</span>
-<span class="w">  </span><span class="n">labels</span><span class="o">:</span>
-<span class="w">    </span><span class="n">role</span><span class="o">:</span><span class="w"> </span><span class="n">spark</span>
+<p>Validate the disk size is 10GB currently:</p>
+<div class="codehilite"><pre><span></span><code>admin:~/environment $ df -h
+Filesystem        Size  Used Avail Use% Mounted on
+devtmpfs          4.0M     0  4.0M   0% /dev
+tmpfs             951M     0  951M   0% /dev/shm
+tmpfs             381M  5.3M  376M   2% /run
+/dev/nvme0n1p1     10G  7.2G  2.9G  72% /
+tmpfs             951M   12K  951M   1% /tmp
+/dev/nvme0n1p128   10M  1.3M  8.7M  13% /boot/efi
+tmpfs             191M     0  191M   0% /run/user/1000
 </code></pre></div>
 
-<h3 id="launch-a-job">Launch a job<a class="headerlink" href="#launch-a-job" title="Permanent link">&para;</a></h3>
-<p>The command below can be used to run a job.</p>
-<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nv">aws</span><span class="w"> </span><span class="nv">emr</span><span class="o">-</span><span class="nv">containers</span><span class="w"> </span><span class="nv">start</span><span class="o">-</span><span class="nv">job</span><span class="o">-</span><span class="nv">run</span><span class="w"> </span><span class="o">--</span><span class="nv">virtual</span><span class="o">-</span><span class="nv">cluster</span><span class="o">-</span><span class="nv">id</span><span class="w"> </span><span class="o">&lt;</span><span class="nv">EMR</span><span class="o">-</span><span class="nv">VIRTUAL</span><span class="o">-</span><span class="nv">CLUSTER</span><span class="o">-</span><span class="nv">ID</span><span class="o">&gt;</span><span class="w"> </span><span class="o">--</span><span class="nv">name</span><span class="w"> </span><span class="nv">spark</span><span class="o">-</span><span class="nv">jdbc</span><span class="w"> </span><span class="o">--</span><span class="nv">execution</span><span class="o">-</span><span class="nv">role</span><span class="o">-</span><span class="nv">arn</span><span class="w"> </span><span class="o">&lt;</span><span class="nv">EXECUTION</span><span class="o">-</span><span class="nv">ROLE</span><span class="o">-</span><span class="nv">ARN</span><span class="o">&gt;</span><span class="w"> </span><span class="o">--</span><span class="nv">release</span><span class="o">-</span><span class="nv">label</span><span class="w"> </span><span class="nv">emr</span><span class="o">-</span><span class="mi">6</span>.<span class="mi">7</span>.<span class="mi">0</span><span class="o">-</span><span class="nv">latest</span><span class="w"> </span><span class="o">--</span><span class="nv">job</span><span class="o">-</span><span class="nv">driver</span><span class="w"> </span><span class="err">&#39;{</span>
-<span class="err">    &quot;sparkSubmitJobDriver&quot;: {</span>
-<span class="err">    &quot;entryPoint&quot;: &quot;&lt;S3-URI-FOR-PYSPARK-JOB-DEFINED-ABOVE&gt;&quot;,</span>
-<span class="err">    &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.executor.cores=2 --conf spark.driver.cores=1&quot;</span>
-<span class="err">    }</span>
-<span class="w">    </span>}<span class="s1">&#39; --configuration-overrides &#39;</span>{
-<span class="w">    </span><span class="s2">&quot;applicationConfiguration&quot;</span>:<span class="w"> </span>[
-<span class="w">    </span>{
-<span class="w">    </span><span class="s2">&quot;classification&quot;</span>:<span class="w"> </span><span class="s2">&quot;spark-defaults&quot;</span>,<span class="w"> </span>
-<span class="w">    </span><span class="s2">&quot;properties&quot;</span>:<span class="w"> </span>{
-<span class="w">    </span><span class="s2">&quot;spark.hadoop.hive.metastore.client.factory.class&quot;</span>:<span class="w"> </span><span class="s2">&quot;com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.sql.catalogImplementation&quot;</span>:<span class="w"> </span><span class="s2">&quot;hive&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span>:<span class="s2">&quot;true&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.minExecutors&quot;</span>:<span class="w"> </span><span class="s2">&quot;8&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.maxExecutors&quot;</span>:<span class="w"> </span><span class="s2">&quot;40&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.kubernetes.allocation.batch.size&quot;</span>:<span class="w"> </span><span class="s2">&quot;8&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.executorAllocationRatio&quot;</span>:<span class="w"> </span><span class="s2">&quot;1&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.shuffleTracking.enabled&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.dynamicAllocation.shuffleTracking.timeout&quot;</span>:<span class="w"> </span><span class="s2">&quot;300s&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.kubernetes.driver.podTemplateFile&quot;</span>:<span class="o">&lt;</span><span class="nv">S3</span><span class="o">-</span><span class="nv">URI</span><span class="o">-</span><span class="nv">TO</span><span class="o">-</span><span class="nv">DRIVER</span><span class="o">-</span><span class="nv">POD</span><span class="o">-</span><span class="nv">TEMPLATE</span><span class="o">&gt;</span>,
-<span class="w">    </span><span class="s2">&quot;spark.kubernetes.executor.podTemplateFile&quot;</span>:<span class="o">&lt;</span><span class="nv">S3</span><span class="o">-</span><span class="nv">URI</span><span class="o">-</span><span class="nv">TO</span><span class="o">-</span><span class="nv">EXECUTOR</span><span class="o">-</span><span class="nv">POD</span><span class="o">-</span><span class="nv">TEMPLATE</span><span class="o">&gt;</span>
-<span class="w">    </span>}
-<span class="w">    </span>}
-<span class="w">    </span>],
-<span class="w">    </span><span class="s2">&quot;monitoringConfiguration&quot;</span>:<span class="w"> </span>{
-<span class="w">        </span><span class="s2">&quot;persistentAppUI&quot;</span>:<span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span>,
-<span class="w">        </span><span class="s2">&quot;cloudWatchMonitoringConfiguration&quot;</span>:<span class="w"> </span>{
-<span class="w">            </span><span class="s2">&quot;logGroupName&quot;</span>:<span class="w"> </span><span class="s2">&quot;/aws/emr-containers/&quot;</span>,
-<span class="w">            </span><span class="s2">&quot;logStreamNamePrefix&quot;</span>:<span class="w"> </span><span class="s2">&quot;default&quot;</span>
-<span class="w">        </span>}
-<span class="w">    </span>}
-<span class="w">    </span>}<span class="err">&#39;</span>
+<p>Increase the disk size:</p>
+<div class="codehilite"><pre><span></span><code>bash<span class="w"> </span>resize.sh<span class="w"> </span><span class="m">30</span>
 </code></pre></div>
 
-<h4 id="verify-a-security-group-attached-to-the-pod-eni">Verify a security group attached to the Pod ENI<a class="headerlink" href="#verify-a-security-group-attached-to-the-pod-eni" title="Permanent link">&para;</a></h4>
-<p>To verify that spark driver and executor driver have the security group attached to, apply the first command to get the podname then the second one to see the annotation in pod with the ENI associated to the pod which has the secuity group defined in the <strong>SecurityGroupPolicy</strong>.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">POD_NAME</span><span class="o">=$</span><span class="p">(</span><span class="n">kubectl</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="o">&gt;</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"> </span><span class="n">role</span><span class="o">=</span><span class="n">spark</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="n">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[].metadata.name}&#39;</span><span class="p">)</span>
-
-<span class="n">kubectl</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NAMESPACE</span><span class="o">&gt;</span><span class="w">  </span><span class="n">describe</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="o">$</span><span class="n">POD_NAME</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">-</span><span class="mi">11</span>
+<div class="codehilite"><pre><span></span><code>admin:~/environment $ df -h
+Filesystem        Size  Used Avail Use% Mounted on
+devtmpfs          4.0M     0  4.0M   0% /dev
+tmpfs             951M     0  951M   0% /dev/shm
+tmpfs             381M  5.3M  376M   2% /run
+/dev/nvme0n1p1     30G  7.3G   23G  25% /
+tmpfs             951M   12K  951M   1% /tmp
+/dev/nvme0n1p128   10M  1.3M  8.7M  13% /boot/efi
+tmpfs             191M     0  191M   0% /run/user/1000
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="n">Annotations</span><span class="o">:</span><span class="w">  </span><span class="n">kubernetes</span><span class="o">.</span><span class="na">io</span><span class="o">/</span><span class="n">psp</span><span class="o">:</span><span class="w"> </span><span class="n">eks</span><span class="o">.</span><span class="na">privileged</span>
-<span class="w">              </span><span class="n">vpc</span><span class="o">.</span><span class="na">amazonaws</span><span class="o">.</span><span class="na">com</span><span class="o">/</span><span class="n">pod</span><span class="o">-</span><span class="n">eni</span><span class="o">:</span>
-<span class="w">                </span><span class="o">[{</span><span class="s2">&quot;eniId&quot;</span><span class="o">:</span><span class="s2">&quot;eni-xxxxxxx&quot;</span><span class="o">,</span><span class="s2">&quot;ifAddress&quot;</span><span class="o">:</span><span class="s2">&quot;xx:xx:xx:xx:xx:xx&quot;</span><span class="o">,</span><span class="s2">&quot;privateIp&quot;</span><span class="o">:</span><span class="s2">&quot;x.x.x.x&quot;</span><span class="o">,</span><span class="s2">&quot;vlanId&quot;</span><span class="o">:</span><span class="mi">1</span><span class="o">,</span><span class="s2">&quot;subnetCidr&quot;</span><span class="o">:</span><span class="s2">&quot;x.x.x.x/x&quot;</span><span class="o">}]</span>
+<h3 id="2-install-docker-and-buildx-if-required">2. Install Docker and Buildx if required<a class="headerlink" href="#2-install-docker-and-buildx-if-required" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Installing Docker</strong> - a Cloud9 EC2 instance comes with a Docker daemon pre-installed. Outside of the Cloud9, your environment may or may not need to install Docker. If needed, follow the instructions in the <a href="https://docs.docker.com/desktop/#download-and-install">Docker Desktop page</a> to install.</p>
+</li>
+<li>
+<p><strong>Installing Buildx</strong> (pre-installed in Cloud9) - To build a single multi-arch Docker image (x86_64 and arm64), we may or may not need to <a href="https://docs.docker.com/build/architecture/#install-buildx">install an extra Buildx plugin</a> that extends the Docker CLI to support the multi-architecture feature. Docker Buildx is installed by default with a Docker Engine since <strong>version 23.0+</strong>. For an earlier version, it requires you grab a binary from GitHub repository and install it manually, or get it from a separate package. See <a href="https://github.com/docker/buildx#manual-download">docker/buildx README</a> for more information. </p>
+</li>
+</ul>
+<p>Once the buildx CLI is available, we can create a builder instance which gives access to the new multi-architecture features.You only have to perform this task once.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># create a builder</span>
+docker<span class="w"> </span>buildx<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>mybuilder<span class="w"> </span>--use
+<span class="c1"># boot up the builder and inspect</span>
+docker<span class="w"> </span>buildx<span class="w"> </span>inspect<span class="w"> </span>--bootstrap
+
+
+<span class="c1"># list builder instances</span>
+<span class="c1"># the asterisk (*) next to a builder name indicates the selected builder.</span>
+docker<span class="w"> </span>buildx<span class="w"> </span>ls
+</code></pre></div>
+
+<p>If your builder doesn't support <a href="https://docs.docker.com/build/building/multi-platform/#qemu">QEMU</a>, only limited platform types are supported as below. For example, the current builder instance created in Cloud9 doesn't support QEMU, so we can't build the docker image for the arm64 CPU type yet. </p>
+<div class="codehilite"><pre><span></span><code>NAME/NODE<span class="w">       </span>DRIVER/ENDPOINT<span class="w">      </span>STATUS<span class="w">   </span>BUILDKIT<span class="w"> </span>PLATFORMS
+default<span class="w">        </span>docker
+default<span class="w">       </span>default<span class="w">              </span>running<span class="w">  </span>v0.11.6<span class="w">  </span>linux/amd64,<span class="w"> </span>linux/amd64/v2,<span class="w"> </span>linux/amd64/v3,<span class="w"> </span>linux/386
+mybuilder<span class="w"> </span>*<span class="w">    </span>docker-container
+my_builder0<span class="w">   </span>default<span class="w">              </span>running<span class="w">  </span>v0.11.6<span class="w">  </span>linux/amd64,<span class="w"> </span>linux/amd64/v2,<span class="w"> </span>linux/amd64/v3,<span class="w"> </span>linux/386
+</code></pre></div>
+
+<ul>
+<li><strong>Installing QEMU for Cloud9</strong> - Building multi-platform images under emulation with QEMU is the easiest way to get started if your builder already supports it. However, AWS Cloud9 isn't preconfigured with the <a href="https://en.wikipedia.org/wiki/Binfmt_misc">binfmt_misc</a> support. We must install compiled QEMU binaries.  The installations can be easily done via the docker run CLI:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--privileged<span class="w"> </span>--rm<span class="w"> </span>tonistiigi/binfmt<span class="w"> </span>--install<span class="w"> </span>all
+</code></pre></div>
+
+<p>List the builder instance again. Now we see the full list of platforms are supported,including arm-based CPU:</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>ls
+
+NAME/NODE<span class="w">     </span>DRIVER/ENDPOINT<span class="w">             </span>STATUS<span class="w">   </span>BUILDKIT<span class="w"> </span>PLATFORMS
+mybuilder<span class="w"> </span>*<span class="w">   </span>docker-container<span class="w">                              </span>
+<span class="w">  </span>mybuilder20<span class="w"> </span>unix:///var/run/docker.sock<span class="w"> </span>running<span class="w">  </span>v0.13.2<span class="w">  </span>linux/amd64,<span class="w"> </span>linux/amd64/v2,<span class="w"> </span>linux/amd64/v3,<span class="w"> </span>linux/amd64/v4,<span class="w"> </span>linux/arm64,<span class="w"> </span>linux/riscv64,<span class="w"> </span>linux/ppc64le,<span class="w"> </span>linux/s390x,<span class="w"> </span>linux/386,<span class="w"> </span>linux/mips64le,<span class="w"> </span>linux/mips64,<span class="w"> </span>linux/arm/v7,<span class="w"> </span>linux/arm/v6<span class="w">     </span>
+default<span class="w">       </span>docker<span class="w">                                        </span>
+<span class="w">  </span>default<span class="w">     </span>default<span class="w">                     </span>running<span class="w">  </span>v0.12.5<span class="w">  </span>linux/amd64,<span class="w"> </span>linux/amd64/v2,<span class="w"> </span>linux/amd64/v3,<span class="w"> </span>linux/amd64/v4,<span class="w"> </span>linux/386,<span class="w"> </span>linux/arm64,<span class="w"> </span>linux/riscv64,<span class="w"> </span>linux/ppc64le,<span class="w"> </span>linux/s390x,<span class="w"> </span>linux/mips64le,<span class="w"> </span>linux/mips64,<span class="w"> </span>linux/arm/v7,<span class="w"> </span>linux/arm/v6
+</code></pre></div>
+
+<h2 id="build-a-docker-image-supporting-multi-arch">Build a docker image supporting multi-arch<a class="headerlink" href="#build-a-docker-image-supporting-multi-arch" title="Permanent link">&para;</a></h2>
+<p>In this example, we will create a <a href="https://github.com/aws-samples/emr-on-eks-benchmark">spark-benchmark-utility</a> container image. We are going to reuse the source code from the <a href="https://github.com/aws-samples/emr-on-eks-benchmark">EMR on EKS benchmark Github repo</a>.</p>
+<h3 id="1-download-the-source-code-from-the-github">1. Download the source code from the Github:<a class="headerlink" href="#1-download-the-source-code-from-the-github" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/aws-samples/emr-on-eks-benchmark.git
+<span class="nb">cd</span><span class="w"> </span>emr-on-eks-benchmark
+</code></pre></div>
+
+<h3 id="2-setup-required-environment-variables">2. Setup required environment variables<a class="headerlink" href="#2-setup-required-environment-variables" title="Permanent link">&para;</a></h3>
+<p>We will build an image to test EMR 6.15's performance. The equivalent versions are Spark 3.4.1 and Hadoop 3.3.4. Change them accordingly if needed.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">SPARK_VERSION</span><span class="o">=</span><span class="m">3</span>.4.1
+<span class="nb">export</span><span class="w"> </span><span class="nv">HADOOP_VERSION</span><span class="o">=</span><span class="m">3</span>.3.6
+</code></pre></div>
+
+<p>Log in to your own Amazon ECR registry: </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-east-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNT_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ECR_URL</span><span class="o">=</span><span class="nv">$ACCOUNT_ID</span>.dkr.ecr.<span class="nv">$AWS_REGION</span>.amazonaws.com
+
+aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span><span class="nv">$AWS_REGION</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$ECR_URL</span>
+</code></pre></div>
+
+<h3 id="3-build-oss-spark-base-image-if-required">3. Build OSS Spark base image if required<a class="headerlink" href="#3-build-oss-spark-base-image-if-required" title="Permanent link">&para;</a></h3>
+<p>If you want to test open-source Apache Spark's performance, build a base Spark image first. Otherwise skip this step.</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+-f<span class="w"> </span>docker/hadoop-aws-3.3.1/Dockerfile<span class="w"> </span><span class="se">\</span>
+--build-arg<span class="w"> </span><span class="nv">HADOOP_VERSION</span><span class="o">=</span><span class="nv">$HADOOP_VERSION</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">SPARK_VERSION</span><span class="o">=</span><span class="nv">$SPARK_VERSION</span><span class="w"> </span>--push<span class="w"> </span>.
+</code></pre></div>
+
+<h3 id="4-get-emr-spark-base-image-from-aws">4. Get EMR Spark base image from AWS<a class="headerlink" href="#4-get-emr-spark-base-image-from-aws" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">SRC_ECR_URL</span><span class="o">=</span><span class="m">755674844232</span>.dkr.ecr.us-east-1.amazonaws.com
+aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span>us-east-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$SRC_ECR_URL</span>
+
+docker<span class="w"> </span>pull<span class="w"> </span><span class="nv">$SRC_ECR_URL</span>/spark/emr-6.15.0:latest
+</code></pre></div>
+
+<h3 id="5-build-the-benchmark-utility-image">5. Build the Benchmark Utility image<a class="headerlink" href="#5-build-the-benchmark-utility-image" title="Permanent link">&para;</a></h3>
+<p>Build and push the docker image based the OSS Spark engine built before (Step #3):</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+-f<span class="w"> </span>docker/benchmark-util/Dockerfile<span class="w"> </span><span class="se">\</span>
+--build-arg<span class="w"> </span><span class="nv">SPARK_BASE_IMAGE</span><span class="o">=</span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+--push<span class="w"> </span>.
+</code></pre></div>
+
+<p>Build and push the benchmark docker image based EMR's Spark runtime (Step #4):</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/eks-spark-benchmark:emr6.15<span class="w"> </span><span class="se">\</span>
+-f<span class="w"> </span>docker/benchmark-util/Dockerfile<span class="w"> </span><span class="se">\</span>
+--build-arg<span class="w"> </span><span class="nv">SPARK_BASE_IMAGE</span><span class="o">=</span><span class="nv">$SRC_ECR_URL</span>/spark/emr-6.15.0:latest<span class="w"> </span><span class="se">\</span>
+--push<span class="w"> </span>.
+</code></pre></div>
+
+<h2 id="benchmark-application-based-on-the-docker-images-built">Benchmark application based on the docker images built<a class="headerlink" href="#benchmark-application-based-on-the-docker-images-built" title="Permanent link">&para;</a></h2>
+<p>Based on the mutli-arch docker images built previously, now you can start to <a href="https://github.com/aws-samples/emr-on-eks-benchmark/tree/delta?tab=readme-ov-file#run-benchmark">run benchmark applications</a> on both intel and arm-based CPU nodes.</p>
+<p>In Cloud9, the following extra steps are required to configure the environment, before you can submit the applications. </p>
+<ol>
+<li>
+<p>Install kkubectl/helm/eksctl CLI tools. refer to this <a href="https://github.com/aws-samples/stream-emr-on-eks/blob/workshop/deployment/app_code/post-deployment.sh">sample scirpt</a></p>
+</li>
+<li>
+<p>Modify the IAM role attached to the Cloud9 EC2 instance, allowing it has enough privilege to assume an EKS cluster's admin role or has the permission to submit jobs against the EKS cluster.</p>
+</li>
+<li>
+<p>Upgrade AWS CLI and turn off the AWS managed temporary credentials in Cloud9:</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>curl<span class="w"> </span><span class="s2">&quot;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;awscliv2.zip&quot;</span>
+unzip<span class="w"> </span>awscliv2.zip
+sudo<span class="w"> </span>./aws/install<span class="w"> </span>--update
+/usr/local/bin/aws<span class="w"> </span>cloud9<span class="w"> </span>update-environment<span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$C9_PID</span><span class="w"> </span>--managed-credentials-action<span class="w"> </span>DISABLE
+rm<span class="w"> </span>-vf<span class="w"> </span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/.aws/credentials
+</code></pre></div>
+
+<ol>
+<li>Connect to the EKS cluster</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="c1"># a sample connection string</span>
+aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>YOUR_EKS_CLUSTER_NAME<span class="w"> </span>--region<span class="w"> </span>us-east-1<span class="w"> </span>--role-arn<span class="w"> </span>arn:aws:iam::ACCOUNTID:role/SparkOnEKS-iamrolesclusterAdmin-xxxxxx
+
+<span class="c1"># validate the connection</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc
 </code></pre></div>
 
 
