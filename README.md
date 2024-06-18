@@ -28,8 +28,15 @@ mkdocs serve
 ```bash
 mkdocs build
 ```
-8. This will refresh the directory `site`. Take a look inside the directory and make sure your changes are included.
+8. This will refresh the directory `./site`. Take a look inside the directory and make sure your changes are included.
 ```bash
 ls site
 ```
 9. Commit change to github and send us a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork).
+
+10. With a repo admin permission, we can merge the pull request into the main branch.
+
+11. Most importantly, as a repo admin, we must run the deploy command to copy the './site' content to 'gh-pages' branch and pushing to GitHub. Without this step, the website content won't be refreshed.
+```bash
+mkdocs gh-deploy
+``` 
