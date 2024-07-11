@@ -15,7 +15,7 @@ AWS Cloud9 is a cloud-based IDE that lets you write, run, and debug your code vi
 **Storage size** - You must increase the Cloud9's EBS volume size (pre-attached to your AWS Cloud9 instance) to 30+ GB, because the default disk space ( 10 GB with ~72% used) is not enough for building a container image. Refer to [Resize an Amazon EBS volume used by an environment](https://docs.aws.amazon.com/cloud9/latest/user-guide/move-environment.html#move-environment-resize) document, download the script `resize.sh` to your cloud9 environment.
 
 ```bash
-touch reaize.sh
+touch resize.sh
 # Double click the file name in cloud9
 # Copy and paste the content from the official document to your file, save and close it
 ```
