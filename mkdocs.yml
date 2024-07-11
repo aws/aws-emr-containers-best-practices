@@ -29,7 +29,7 @@ nav:
       - Spark Log Location in S3 and CloudWatch: 'troubleshooting/docs/where-to-look-for-spark-logs.md'
       - Change Log Level: 'troubleshooting/docs/change-log-level.md'
       - Connect to Spark UI: 'troubleshooting/docs/connect-spark-ui.md'
-      - Connect to Spark UI via Reverse Proxy: 'reverse-proxy-sparkui.md'
+      - Connect to Spark UI via Reverse Proxy: 'troubleshooting/docs/reverse-proxy-sparkui.md'
       - Self Hosted SHS: 'troubleshooting/docs/self-hosted-shs.md'
       - RBAC Permissions error: 'troubleshooting/docs/rbac-permissions-errors.md'
       - EKS Cluster AutoScaler: 'troubleshooting/docs/eks-cluster-auto-scaler.md'

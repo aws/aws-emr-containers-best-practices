@@ -104,7 +104,7 @@ cat >spark-python-in-s3-ebs-static-localdir.json << EOF
   "name": "spark-python-in-s3-ebs-static-localdir", 
   "virtualClusterId": "<virtual-cluster-id>", 
   "executionRoleArn": "<execution-role-arn>", 
-  "releaseLabel": "emr-6.2.0-latest", 
+  "releaseLabel": "emr-6.15.0-latest", 
   "jobDriver": {
     "sparkSubmitJobDriver": {
       "entryPoint": "s3://<s3 prefix>/trip-count-fsx.py", 
@@ -146,11 +146,11 @@ kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 
 ### Dynamic Provisioning
 
-Dynamic Provisioning of volumes is supported for both, driver and executors for EMR versions >= 6.3.0
+Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executors for EMR versions >= 6.3.0.
 
 #### EKS Admin Tasks
 
-Create an new EBS Storage Class or use an existing one:
+Create a new "gp3" EBS Storage Class or use an existing one:
 
 ```
 cat >demo-gp3-sc.yaml << EOF
@@ -181,7 +181,7 @@ cat >spark-python-in-s3-ebs-dynamic-localdir.json << EOF
   "name": "spark-python-in-s3-ebs-dynamic-localdir", 
   "virtualClusterId": "<virtual-cluster-id>", 
   "executionRoleArn": "<execution-role-arn>", 
-  "releaseLabel": "emr-6.2.0-latest", 
+  "releaseLabel": "emr-6.15.0-latest", 
   "jobDriver": {
     "sparkSubmitJobDriver": {
       "entryPoint": "s3://<s3 prefix>/trip-count-fsx.py", 
@@ -224,11 +224,10 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-ebs
 
 **Observed Behavior:**
 When the job gets started, an EBS volume is provisioned dynamically by the EBS CSI driver and mounted to Spark's driver and  executor pods. You can exec into the driver / executor container to verify that the EBS volume is mounted. Also, you can verify the mount from driver / executor pod spec.  
-
-
 ```bash
 # verify the EBS volume is mounted or not
 kubectl get pod <driver pod name> -n <namespace> -c spark-kubernetes-driver -- df -h
+
 # export the driver pod spec to a yaml file
 kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 ```

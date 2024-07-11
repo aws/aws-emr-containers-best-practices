@@ -6,9 +6,9 @@ This is an example of connecting to SparkUI running on Spark's driver pod via a 
 
 There are 3 Steps to set up in EKS:
 
-1. Create a SparkUI reverse proxy and an ALB first. 
+1.Create a SparkUI reverse proxy and an ALB first. 
 
-The sample yaml file is in the [Appendix](#deployment.yaml). Make sure the EMR on EKS namespace at line #25 is updated by your namespace:
+The sample yaml file is in the [Appendix](#deploymentyaml). Make sure the EMR on EKS namespace at line #25 is updated by your namespace:
 ```bash
 kubectl apply -f deployment.yaml
 ```
@@ -16,32 +16,33 @@ kubectl apply -f deployment.yaml
   <strong>NOTE:</strong> The example file is not production ready. The listen port 80 is not recommended. Make sure to stronger your Application Load Balance's security posture before deploy it to your production environment.
 </div>
 
-2. Submit 2 test jobs using EMR on EKS's Spark Operator. Check out the sample job file [emr-eks-spark-example-01.yaml](#emr-eks-spark-example-01yaml) and [emr-eks-spark-example-02.yaml](#emr-eks-spark-example-02yaml) in the Appendix section.
+2.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts [emr-eks-spark-example-01.yaml](#emr-eks-spark-example-01yaml) and [emr-eks-spark-example-02.yaml](#emr-eks-spark-example-02yaml) can be found in the Appendix section.
 
-Remember to specify the Spark configuration at line #16 **spark.ui.proxyBase: /sparkui/YOUR_SPARK_APP_NAME**, eg. `spark.ui.proxyBase: /sparkui/test-02`.
+Remember to specify the Spark configuration at line #16 `spark.ui.proxyBase: /sparkui/YOUR_SPARK_APP_NAME`, eg. `spark.ui.proxyBase: /sparkui/test-02`.
 ```bash
 kubectl apply -f emr-eks-spark-example-01.yaml
 kubectl apply -f emr-eks-spark-example-02.yaml
 ```
-3. Go to a web browser, then access their Spark Web UI while jobs are still running:
+
+3.Go to a web browser, then access their Spark Web UI while jobs are still running:
 
 ```
 http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/spark-example-01
 http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/test-02
 ```
 
-EKS Admin can provide the ALB endpoint address to users. It can be found via the command: 
+EKS Admin can provide the ALB endpoint address to users via this command: 
 ```bash
 kubectl get ingress
 ```
  
 ## Launch EMR on EKS jobs via Job Run API
 
-1. Update the the environment variables in the sample job script:
+1.Update the the environment variables in the sample job submission script:
 
 ```bash
-export EMR_VIRTUAL_CLUSTER_NAME=emr-on-eks-rss
-export AWS_REGION=us-west-2
+export EMR_VIRTUAL_CLUSTER_NAME=YOUR_EMR_VIRTUAL_CLUSTER_NAME
+export AWS_REGION=YOUR_AWS_REGION
 export app_name=job-run-api
 
 export ACCOUNTID=$(aws sts get-caller-identity --query Account --output text)
@@ -69,7 +70,7 @@ aws emr-containers start-job-run \
     }}]}'
 ```
 
-2. Once the job's driver pod is running, create a kubernetes service based on the driver pod name. Ensure its name contains the suffix **ui-svc**:
+2.Once the job's driver pod is running, create a kubernetes service based on the driver pod name. Ensure its name contains the suffix **ui-svc**:
 ```bash
 # query the driver pod name
 job_id=$(aws emr-containers list-job-runs --virtual-cluster-id $VIRTUAL_CLUSTER_ID --query "jobRuns[?name=='$app_name' && state=='RUNNING'].id" --output text)
@@ -89,7 +90,7 @@ NAME                  TYPE      CLUSTER-IP  EXTERNAL-IP   PORT(S)  AGE
 job-run-api-ui-svc ClusterIP 10.100.233.186  <none>      4040/TCP   9s
 ```
 
-3. Finally, we access the sparkUI in this format:
+3.Finally, access the SparkUI in this format:
 ```
 http://<YOUR_INGRESS_ADDRESS>/sparkui/<app_name>
 ```
@@ -99,14 +100,14 @@ kubectl get ingress
 ```
 ## Launch EMR on EKS jobs by Spark Submit:
 
-1. Create an EMR on EKS pod with a service account that has the IRSA associated
+1.Create an EMR on EKS pod with a service account that has the IRSA associated
 ```bash
 kubectl run -it emrekspod \
 --image=public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest \
 --overrides='{ "spec": {"serviceAccount": "emr-containers-sa-spark"}}' \
 --command -n spark-operator /bin/bash
 ```
-2. After login into the “emrekspod” pod, submit the job:
+2.After login into the "emrekspod" pod, submit the job:
 ```bash
 export app_name=sparksubmittest
 
@@ -122,7 +123,7 @@ spark-submit \
 --conf spark.kubernetes.namespace=spark-operator \
 local:///usr/lib/spark/examples/jars/spark-examples.jar 100000
 ```
-3. As soon as the driver pod is running, create a kubernetes service for Spark UI and ensure its name has the suffix of **ui-svc**:
+3.As soon as the driver pod is running, create a kubernetes service for Spark UI and ensure its name has the suffix of **ui-svc**:
 ```bash
 export app_name=sparksubmittest
 # get the running driver pod name
