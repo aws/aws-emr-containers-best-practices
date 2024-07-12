@@ -139,24 +139,28 @@ More details on this can be found [here](./node-decommission.md)
 
 **PVC Reuse:**
 
-A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, [SPARK-25299](https://issues.apache.org/jira/browse/SPARK-25299) for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create the claims/volumes for the executors and delete it during the executor decommissioning.
+A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, [SPARK-29873](https://github.com/apache/spark/pull/29873) for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create any claims/volumes for executors and delete it during the executor decommissioning.
 
-If a Spark executor is killed due to EC2 Spot interruption or any other failure then the PVC is not deleted but persisted and reattached to another executor. If there are shuffle files in that volume then they are reused. Previously if an external shuffle service process or node became unavailable, the executors were killed and all the shuffle blocks were lost, which needed to be recomputed.
+Since Spark3.2, PVC reuse is introduced. In case of a Spark executor is killed due to EC2 Spot interruption or any other failure, then its PVC is not deleted but persisted throughtout the entire job lifetime. It will be reattached to a new executor for a faster recovery. If there are shuffle files on that volume, then they are reused. Without enabling this feature, the owner of dynamic PVCs is the executor pods. It means if a pod or a node became unavailable, the PVC would be terminated, resulting in all the shuffle data were lost, and the recompute would be triggered.
 
 <p align="center">
   <img src="../resources/images/pvc_reuse.gif " width="640" height="400"/>
 </p>
 
-This feature is available on Amazon EMR version 6.8 and above. To set up this feature, you can add these lines to the executor configuration:
+This feature is available started from Amazon EMR version 6.6+. To set it up, you can add these configurations to Spark jobs:
 
 ```bash
 "spark.kubernetes.driver.ownPersistentVolumeClaim": "true"
 "spark.kubernetes.driver.reusePersistentVolumeClaim": "true
 ```
+since Spark3.4 (EMR6.12), Spark driver is able to do PVC-oriented executor allocation which means Spark counts the total number of created PVCs which the job can have, and holds on a new executor creation if the driver owns the maximum number of PVCs. This helps the transition of the existing PVC from one executor to another executor. Add this extra config to improve your PVC reuse performance:
+```bash
+"spark.kubernetes.driver.waitToReusePersistentVolumeClaim": "true"
+```
 
-One key benefit is that if any Executor running on EC2 Spot becomes unavailable, the new executor replacement can reuse the shuffle files from the PVC, avoiding recompute of the shuffle block. Dynamic PVC or persistence volume claim enables ‘true’ decoupling of data and processing when we are running Spark jobs on Kubernetes, as it can be used as a local storage to spill in-process files too. We recommend to enable PVC reuse feature because the time taken to resume the task when there is a Spot interruption is optimized as the files are used in-situ and there is no time required to move the files around.
+One key benefit of the PVC reuse is that if any Executor running on EC2 Spot becomes unavailable, the new executor replacement can reuse the shuffle data from the existing PVC, avoiding recompute of the shuffle blocks. Dynamic PVC or persistence volume claim enables ‘true’ decoupling of storage and compute when we run Spark jobs on Kubernetes, as it can be used as a local storage to spill in-process files too. We recommend to enable PVC reuse feature because the time taken to resume the task when there is a Spot interruption is optimized as the files are used in-situ and there is no time required to move the files around.
 
-If one or more of the nodes which are running executors is interrupted the underlying pods gets deleted and the driver gets the update. Note the driver is the owner of the PVC of the executors and they are not deleted.
+If one or more of the nodes which are running executors is interrupted the underlying pods gets deleted and the driver gets the update. Note the driver is the owner of those PVCs attaching to executor pods and they are not deleted throughout the job lifetime.
 
 ```
 22/06/15 23:25:07 DEBUG ExecutorPodsWatchSnapshotSource: Received executor pod update for pod named amazon-reviews-word-count-9ee82b8169a75183-exec-3, action DELETED
