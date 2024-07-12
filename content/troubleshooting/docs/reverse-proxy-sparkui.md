@@ -6,9 +6,9 @@ This is an example of connecting to SparkUI running on Spark's driver pod via a 
 
 There are 3 Steps to set up in EKS:
 
-1.Create a SparkUI reverse proxy and an ALB first. 
+1.Create a SparkUI reverse proxy and an ALB in a default namespace, which is a different namespace from your EMR on EKS virtual cluster environment. It can be configured to the EMR's namespace if neccessary.
 
-The sample yaml file is in the [Appendix](#deploymentyaml). Make sure the EMR on EKS namespace at line #25 is updated by your namespace:
+The [sample yaml file](#deploymentyaml) is in the Appendix section. Make sure the EMR on EKS's namespace at the line #25 in `deployment.yaml` is updated if needed:
 ```bash
 kubectl apply -f deployment.yaml
 ```
@@ -16,7 +16,7 @@ kubectl apply -f deployment.yaml
   <strong>NOTE:</strong> The example file is not production ready. The listen port 80 is not recommended. Make sure to stronger your Application Load Balance's security posture before deploy it to your production environment.
 </div>
 
-2.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts [emr-eks-spark-example-01.yaml](#emr-eks-spark-example-01yaml) and [emr-eks-spark-example-02.yaml](#emr-eks-spark-example-02yaml) can be found in the Appendix section.
+2.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts [emr-eks-spark-example-01.yaml](#emr-eks-spark-example-01yaml) and [emr-eks-spark-example-02.yaml](#emr-eks-spark-example-02yaml) can be found in the Appendix section. The "spec.driver.Serviceaccount" attribute should be updated based on your own [IAM Role for Service Account (IRSA)](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html) setup in EMR on EKS.
 
 Remember to specify the Spark configuration at line #16 `spark.ui.proxyBase: /sparkui/YOUR_SPARK_APP_NAME`, eg. `spark.ui.proxyBase: /sparkui/test-02`.
 ```bash
@@ -24,14 +24,16 @@ kubectl apply -f emr-eks-spark-example-01.yaml
 kubectl apply -f emr-eks-spark-example-02.yaml
 ```
 
-3.Go to a web browser, then access their Spark Web UI while jobs are still running:
+3.Go to a web browser, then access their Spark Web UI while jobs are still running.
+
+The Web UI address is in the format of `http://ALB_ENDPOINT_ADDRESS:PORT/sparkui/YOUR_SPARK_APP_NAME`. For example:
 
 ```
 http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/spark-example-01
 http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/test-02
 ```
 
-EKS Admin can provide the ALB endpoint address to users via this command: 
+EKS Admin can provide the ALB endpoint address to users via the command: 
 ```bash
 kubectl get ingress
 ```
@@ -100,7 +102,7 @@ kubectl get ingress
 ```
 ## Launch EMR on EKS jobs by Spark Submit:
 
-1.Create an EMR on EKS pod with a service account that has the IRSA associated
+1.Create an EMR on EKS pod with a service account that has the [IRSA](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html) associated
 ```bash
 kubectl run -it emrekspod \
 --image=public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest \
