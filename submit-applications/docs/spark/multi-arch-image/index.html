@@ -1143,6 +1143,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI via Reverse Proxy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
         
   
@@ -1652,7 +1673,7 @@
 <p><strong>Instance type</strong> - Create an AWS Cloud9 environment from the <a href="https://console.aws.amazon.com/cloud9">AWS Management Console</a> with an instance type of <code>t3.small or larger</code>. In our example, we used <code>m5.xlarge</code> for adequate memory and CPU to compile and build a large docker image. </p>
 <p><strong>VPC</strong> - Follow the launch wizard and provide the required name. To interact with an existing EKS cluster in the same region later on, recommend to use the same VPC to your EKS cluster in the Cloud9 environment. Leave the remaining default values as they are. </p>
 <p><strong>Storage size</strong> - You must increase the Cloud9's EBS volume size (pre-attached to your AWS Cloud9 instance) to 30+ GB, because the default disk space ( 10 GB with ~72% used) is not enough for building a container image. Refer to <a href="https://docs.aws.amazon.com/cloud9/latest/user-guide/move-environment.html#move-environment-resize">Resize an Amazon EBS volume used by an environment</a> document, download the script <code>resize.sh</code> to your cloud9 environment.</p>
-<div class="codehilite"><pre><span></span><code>touch<span class="w"> </span>reaize.sh
+<div class="codehilite"><pre><span></span><code>touch<span class="w"> </span>resize.sh
 <span class="c1"># Double click the file name in cloud9</span>
 <span class="c1"># Copy and paste the content from the official document to your file, save and close it</span>
 </code></pre></div>

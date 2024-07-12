@@ -987,6 +987,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI via Reverse Proxy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
         
   
@@ -1649,19 +1670,23 @@ requirement for our customers, and this can be achieved by using <a href="https:
 
 <p>More details on this can be found <a href="../node-decommission/">here</a></p>
 <p><strong>PVC Reuse:</strong></p>
-<p>A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, <a href="https://issues.apache.org/jira/browse/SPARK-25299">SPARK-25299</a> for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create the claims/volumes for the executors and delete it during the executor decommissioning.</p>
-<p>If a Spark executor is killed due to EC2 Spot interruption or any other failure then the PVC is not deleted but persisted and reattached to another executor. If there are shuffle files in that volume then they are reused. Previously if an external shuffle service process or node became unavailable, the executors were killed and all the shuffle blocks were lost, which needed to be recomputed.</p>
+<p>A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, <a href="https://github.com/apache/spark/pull/29873">SPARK-29873</a> for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create any claims/volumes for executors and delete it during the executor decommissioning.</p>
+<p>Since Spark3.2, PVC reuse is introduced. In case of a Spark executor is killed due to EC2 Spot interruption or any other failure, then its PVC is not deleted but persisted throughtout the entire job lifetime. It will be reattached to a new executor for a faster recovery. If there are shuffle files on that volume, then they are reused. Without enabling this feature, the owner of dynamic PVCs is the executor pods. It means if a pod or a node became unavailable, the PVC would be terminated, resulting in all the shuffle data were lost, and the recompute would be triggered.</p>
 <p align="center">
   <img src="../resources/images/pvc_reuse.gif " width="640" height="400"/>
 </p>
 
-<p>This feature is available on Amazon EMR version 6.8 and above. To set up this feature, you can add these lines to the executor configuration:</p>
+<p>This feature is available started from Amazon EMR version 6.6+. To set it up, you can add these configurations to Spark jobs:</p>
 <div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>
 <span class="s2">&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true</span>
 </code></pre></div>
 
-<p>One key benefit is that if any Executor running on EC2 Spot becomes unavailable, the new executor replacement can reuse the shuffle files from the PVC, avoiding recompute of the shuffle block. Dynamic PVC or persistence volume claim enables ‘true’ decoupling of data and processing when we are running Spark jobs on Kubernetes, as it can be used as a local storage to spill in-process files too. We recommend to enable PVC reuse feature because the time taken to resume the task when there is a Spot interruption is optimized as the files are used in-situ and there is no time required to move the files around.</p>
-<p>If one or more of the nodes which are running executors is interrupted the underlying pods gets deleted and the driver gets the update. Note the driver is the owner of the PVC of the executors and they are not deleted.</p>
+<p>since Spark3.4 (EMR6.12), Spark driver is able to do PVC-oriented executor allocation which means Spark counts the total number of created PVCs which the job can have, and holds on a new executor creation if the driver owns the maximum number of PVCs. This helps the transition of the existing PVC from one executor to another executor. Add this extra config to improve your PVC reuse performance:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>
+</code></pre></div>
+
+<p>One key benefit of the PVC reuse is that if any Executor running on EC2 Spot becomes unavailable, the new executor replacement can reuse the shuffle data from the existing PVC, avoiding recompute of the shuffle blocks. Dynamic PVC or persistence volume claim enables ‘true’ decoupling of storage and compute when we run Spark jobs on Kubernetes, as it can be used as a local storage to spill in-process files too. We recommend to enable PVC reuse feature because the time taken to resume the task when there is a Spot interruption is optimized as the files are used in-situ and there is no time required to move the files around.</p>
+<p>If one or more of the nodes which are running executors is interrupted the underlying pods gets deleted and the driver gets the update. Note the driver is the owner of those PVCs attaching to executor pods and they are not deleted throughout the job lifetime.</p>
 <div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">DELETED</span>
 <span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">MODIFIED</span>
 <span class="mf">22</span><span class="o">/</span><span class="mf">06</span><span class="o">/</span><span class="mf">15</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">ExecutorPodsWatchSnapshotSource</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">named</span><span class="w"> </span><span class="n">amazon</span><span class="o">-</span><span class="n">reviews</span><span class="o">-</span><span class="n">word</span><span class="o">-</span><span class="n">count</span><span class="o">-</span><span class="mf">9</span><span class="n">ee82b8169a75183</span><span class="o">-</span><span class="n">exec</span><span class="o">-</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="n">DELETED</span>
