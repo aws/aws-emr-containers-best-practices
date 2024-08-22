@@ -121,9 +121,9 @@ aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --
 If you want to test open-source Apache Spark's performance, build a base Spark image first. Otherwise skip this step.
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
--t $ECR_URL/spark:$SPARK_VERSION_hadoop_$HADOOP_VERSION \
+-t $ECR_URL/spark:${SPARK_VERSION}_hadoop_${HADOOP_VERSION} \
 -f docker/hadoop-aws-3.3.1/Dockerfile \
---build-arg HADOOP_VERSION=$HADOOP_VERSION --build-arg SPARK_VERSION=$SPARK_VERSION --push .
+--build-arg HADOOP_VERSION=${HADOOP_VERSION} --build-arg SPARK_VERSION=${SPARK_VERSION} --push .
 ```
 
 ### 4. Get EMR Spark base image from AWS
@@ -142,9 +142,9 @@ Build and push the docker image based the OSS Spark engine built before (Step #3
 ```bash
 
 docker buildx build --platform linux/amd64,linux/arm64 \
--t $ECR_URL/spark:$SPARK_VERSION_hadoop_$HADOOP_VERSION \
+-t $ECR_URL/eks-spark-benchmark:${SPARK_VERSION}_hadoop_${HADOOP_VERSION} \
 -f docker/benchmark-util/Dockerfile \
---build-arg SPARK_BASE_IMAGE=$ECR_URL/spark:$SPARK_VERSION_hadoop_$HADOOP_VERSION \
+--build-arg SPARK_BASE_IMAGE=$ECR_URL/spark:${SPARK_VERSION}_hadoop_${HADOOP_VERSION} \
 --push .
 ```
 
