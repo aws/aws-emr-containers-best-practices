@@ -41,14 +41,14 @@ eks-node-viewer --resources cpu,memory
 
 In the [scheduling-plugin](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins) ` NodeResourcesFit` of kube-scheduler, there are two scoring strategies that support the bin packing of resources:       `MostAllocated` and `RequestedToCapacityRatio`. We created a custom scheduler based on the **MostAllocated strategy**. See the K8s’s [Resource Bin Packing](https://kubernetes.io/docs/concepts/scheduling-eviction/resource-bin-packing/) documentation for more details.
 
-The following customer scheduler named “my-scheduler” is created for EKS version v1.28, as the “kube-scheduler” container image version and “KubeSchedulerConfiguration“ API version are set for the v1.28. Please adjust them accordingly, if your EKS version is different.  
+The following customer scheduler named “my-scheduler” is created for EKS version v1.28, as the “kube-scheduler” container image version is required to match with EKS version. The KubeSchedulerConfiguration API version is stable(v1) in Kubernetes 1.25, for those cluster prior to 1.25, should use kubescheduler.config.k8s.io/v1beta2. Please adjust them accordingly if your EKS version is different.  
 
 We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:
 
-**Amazon EKS 1.28 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest
-**Amazon EKS 1.29 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.29.6-eks-1-29-18
+- **Amazon EKS 1.28 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest
+- **Amazon EKS 1.29 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.29.6-eks-1-29-18
 
-The KubeSchedulerConfiguration API version is stable(v1) in Kubernetes 1.25, for those cluster prior to 1.25, should use kubescheduler.config.k8s.io/v1beta2.
+
 
 Run the following command against **EKS v1.28**:
 
@@ -379,10 +379,29 @@ EOF
 eks-node-viewer --resources cpu,memory
 ```
 
-- **Step 2:** Add the custom scheduler to an EMR on EKS job via Pod Templates. For exmaple:
+- **Step 2:** Add the custom scheduler to an EMR on EKS job either via a Spark config or via Pod Templates. For exmaple:
 
-**executor-pod-template.yaml (line #3)**
-
+sample-job.sh **(last line)**
+```bash
+aws emr-containers start-job-run \
+--virtual-cluster-id $VIRTUAL_CLUSTER_ID \
+--name $app_name \
+--execution-role-arn $EMR_ROLE_ARN \
+--release-label emr-7.2.0-latest \
+--job-driver '{
+"sparkSubmitJobDriver": {
+    "entryPoint": "local:///usr/lib/spark/examples/jars/spark-examples.jar", 
+    "entryPointArguments": ["1000000"],
+    "sparkSubmitParameters": "--class org.apache.spark.examples.SparkPi --conf spark.executor.instances=10" }}' \
+--configuration-overrides '{
+"applicationConfiguration": [
+    {
+    "classification": "spark-defaults", 
+    "properties": {
+        "spark.kubernetes.node.selector.provisioner": "karpenter-binpack-test",
+        "spark.kubernetes.scheduler.name": "my-scheduler" }}]}'
+```
+OR sample-pod-template.yaml **(line #3)**
 ```yaml
 kind: Pod
 spec:
