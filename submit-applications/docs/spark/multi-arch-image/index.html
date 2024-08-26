@@ -1401,6 +1401,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../performance/docs/binpack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BinPacking
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
         
   
@@ -1774,9 +1795,9 @@ aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span cl
 <h3 id="3-build-oss-spark-base-image-if-required">3. Build OSS Spark base image if required<a class="headerlink" href="#3-build-oss-spark-base-image-if-required" title="Permanent link">&para;</a></h3>
 <p>If you want to test open-source Apache Spark's performance, build a base Spark image first. Otherwise skip this step.</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
--t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:<span class="si">${</span><span class="nv">SPARK_VERSION</span><span class="si">}</span>_hadoop_<span class="si">${</span><span class="nv">HADOOP_VERSION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 -f<span class="w"> </span>docker/hadoop-aws-3.3.1/Dockerfile<span class="w"> </span><span class="se">\</span>
---build-arg<span class="w"> </span><span class="nv">HADOOP_VERSION</span><span class="o">=</span><span class="nv">$HADOOP_VERSION</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">SPARK_VERSION</span><span class="o">=</span><span class="nv">$SPARK_VERSION</span><span class="w"> </span>--push<span class="w"> </span>.
+--build-arg<span class="w"> </span><span class="nv">HADOOP_VERSION</span><span class="o">=</span><span class="si">${</span><span class="nv">HADOOP_VERSION</span><span class="si">}</span><span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">SPARK_VERSION</span><span class="o">=</span><span class="si">${</span><span class="nv">SPARK_VERSION</span><span class="si">}</span><span class="w"> </span>--push<span class="w"> </span>.
 </code></pre></div>
 
 <h3 id="4-get-emr-spark-base-image-from-aws">4. Get EMR Spark base image from AWS<a class="headerlink" href="#4-get-emr-spark-base-image-from-aws" title="Permanent link">&para;</a></h3>
@@ -1789,9 +1810,9 @@ docker<span class="w"> </span>pull<span class="w"> </span><span class="nv">$SRC_
 <h3 id="5-build-the-benchmark-utility-image">5. Build the Benchmark Utility image<a class="headerlink" href="#5-build-the-benchmark-utility-image" title="Permanent link">&para;</a></h3>
 <p>Build and push the docker image based the OSS Spark engine built before (Step #3):</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
--t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/eks-spark-benchmark:<span class="si">${</span><span class="nv">SPARK_VERSION</span><span class="si">}</span>_hadoop_<span class="si">${</span><span class="nv">HADOOP_VERSION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 -f<span class="w"> </span>docker/benchmark-util/Dockerfile<span class="w"> </span><span class="se">\</span>
---build-arg<span class="w"> </span><span class="nv">SPARK_BASE_IMAGE</span><span class="o">=</span><span class="nv">$ECR_URL</span>/spark:<span class="nv">$SPARK_VERSION_hadoop_$HADOOP_VERSION</span><span class="w"> </span><span class="se">\</span>
+--build-arg<span class="w"> </span><span class="nv">SPARK_BASE_IMAGE</span><span class="o">=</span><span class="nv">$ECR_URL</span>/spark:<span class="si">${</span><span class="nv">SPARK_VERSION</span><span class="si">}</span>_hadoop_<span class="si">${</span><span class="nv">HADOOP_VERSION</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
 --push<span class="w"> </span>.
 </code></pre></div>
 
