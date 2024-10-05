@@ -92,7 +92,8 @@ kubectl apply -f ebs-static-pvc.yaml -n <namespace>
 
 PVC - `ebs-static-pvc` can be used by spark developer to mount to the spark pod  
 
-**NOTE**: Pods running in EKS worker nodes can only attach to the EBS volume provisioned in the same AZ as the EKS worker node. Use [node selectors](../../../node-placement/docs/eks-node-placement.md) to schedule pods on EKS worker nodes the specified AZ.
+!!! warning "Warning"
+    Pods running in EKS worker nodes can only attach to the EBS volume provisioned in the same AZ as the EKS worker node. Use [node selectors](../../../node-placement/docs/eks-node-placement.md) to schedule pods on EKS worker nodes the specified AZ.
 
 #### Spark Developer Tasks
 
@@ -146,36 +147,83 @@ kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 
 ### Dynamic Provisioning
 
-Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executors for EMR versions >= 6.3.0.
+EMR versions 6.3.0 and newer support dynamic provisioning of PVC/Volumes for both Spark driver and executors.
+
+The EBS CSI Driver offers two ways to bind volumes in Kubernetes:
+
+1. `WaitForFirstConsumer` Mode:
+    - The volume is created in the right Availability Zone only when a Pod needs it.
+    - This is usually the best choice for most situations.
+
+2. `Immediate` Mode:
+    - The volume is created right away, but it might not be in the right Availability Zone.
+    - This can sometimes cause problems with scheduling Pods and may result in unschedulable Pods.
+    - **Important**: Availability Zone constraints are mandatory to avoid unschedulable Pods.
+    - Only use this if you need the fastest possible start-up time.
+
 
 #### EKS Admin Tasks
 
-Create a new "gp3" EBS Storage Class or use an existing one:
+To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one.
 
-```
+When using `WaitForFirstConsumer` mode, you don't need to specify the Availability Zone. Here's an example:
+
+```shell
 cat >demo-gp3-sc.yaml << EOF
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: demo-gp3-sc
-provisioner: kubernetes.io/aws-ebs
+  name: demo-gp3-sc-wait-for-first-consumer
+provisioner: ebs.csi.aws.com
 parameters:
   type: gp3
-reclaimPolicy: Retain
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: WaitForFirstConsumer
+EOF
+```
+
+When using `Immediate` mode, you must specify where the volume should be created to avoid problems. Here's an example:
+
+
+```bash
+cat >demo-gp3-sc.yaml << EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: demo-gp3-sc-immediate-us-east-1a
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+reclaimPolicy: Delete
 allowVolumeExpansion: true
 mountOptions:
   - debug
 volumeBindingMode: Immediate
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/zone
+    values:
+    - us-east-1a
 EOF
+```
 
+!!! info "Info"
+    It's important to note that you need to create a separate storage class for each Availability Zone (AZ) where you want to run your application. This ensures that volumes can be provisioned in the correct AZ to match your application's requirements. 
+
+To apply either configuration, save it to a file (e.g., demo-gp3-sc.yaml) and run:
+
+```bash
 kubectl apply -f demo-gp3-sc.yaml
 ```
 
 #### Spark Developer Tasks
 
-**Request**
+**Request for `WaitForFirstConsumer` Mode**
 
-```
+```bash
 cat >spark-python-in-s3-ebs-dynamic-localdir.json << EOF
 {
   "name": "spark-python-in-s3-ebs-dynamic-localdir", 
@@ -194,13 +242,67 @@ cat >spark-python-in-s3-ebs-dynamic-localdir.json << EOF
         "classification": "spark-defaults", 
         "properties": {
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName": "OnDemand",
-          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc",
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc-wait-for-first-consumer",
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path":"/data",
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly": "false",
           "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "10Gi",
           
           "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName":"OnDemand",
-          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc-wait-for-first-consumer",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path": "/data",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly": "false",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "50Gi",
+         }
+      }
+    ], 
+    "monitoringConfiguration": {
+      "cloudWatchMonitoringConfiguration": {
+        "logGroupName": "/emr-containers/jobs", 
+        "logStreamNamePrefix": "demo"
+      }, 
+      "s3MonitoringConfiguration": {
+        "logUri": "s3://joblogs"
+      }
+    }
+  }
+}
+EOF
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-ebs-dynamic-localdir.json
+```
+
+**Request for `Immediate` Mode**
+
+!!! warning "Warning"
+    Pods running in EKS worker nodes can only attach to the EBS volume provisioned in the same AZ as the EKS worker node. Use [node selectors](../../../node-placement/docs/eks-node-placement.md) to schedule pods on EKS worker nodes the specified AZ.
+
+```bash
+cat >spark-python-in-s3-ebs-dynamic-localdir.json << EOF
+{
+  "name": "spark-python-in-s3-ebs-dynamic-localdir", 
+  "virtualClusterId": "<virtual-cluster-id>", 
+  "executionRoleArn": "<execution-role-arn>", 
+  "releaseLabel": "emr-6.15.0-latest", 
+  "jobDriver": {
+    "sparkSubmitJobDriver": {
+      "entryPoint": "s3://<s3 prefix>/trip-count-fsx.py", 
+       "sparkSubmitParameters": "--conf spark.driver.cores=5 --conf spark.executor.instances=10 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6"
+    }
+  }, 
+  "configurationOverrides": {
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.kubernetes.node.selector.topology.kubernetes.io/zone": "us-east-1a",
+        
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName": "OnDemand",
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc-immediate-us-east-1a",
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path":"/data",
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly": "false",
+          "spark.kubernetes.driver.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "10Gi",
+          
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName":"OnDemand",
+          "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "demo-gp3-sc-immediate-us-east-1a",
           "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path": "/data",
           "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly": "false",
           "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "50Gi",
