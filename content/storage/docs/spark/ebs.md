@@ -147,7 +147,7 @@ kubectl get pod <driver pod name> -n <namespace> -o yaml --export
 
 ### Dynamic Provisioning
 
-EMR versions 6.3.0 and newer support dynamic provisioning of PVC/Volumes for both Spark driver and executors.
+Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executors for EMR versions >= 6.3.0.
 
 The EBS CSI Driver offers two ways to bind volumes in Kubernetes:
 
