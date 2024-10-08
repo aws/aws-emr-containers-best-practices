@@ -164,6 +164,12 @@ The EBS CSI Driver offers two ways to bind volumes in Kubernetes:
 
 #### EKS Admin Tasks
 
+!!! warning "Warning"
+    The default Kubernetes role for `emr-containers` does not have the required PVC permissions and the job fails when 
+    you submit it. Please follow [AWS Troubleshooting Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/permissions-for-pvc.html) 
+    to add the required PVC permissions.
+
+
 To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one.
 
 When using `WaitForFirstConsumer` mode, you don't need to specify the Availability Zone. Here's an example:
