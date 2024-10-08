@@ -43,8 +43,8 @@ managedNodeGroups:
       - YOUR_NG_SUBNET
     preBootstrapCommands: # commands executed as root
       - yum install -y mdadm nvme-cli
-      - nvme_disks=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | awk -F'[[:space:]][[:space:]]+' '{print $1}')) && [[ ${#nvme_disks[@]} -eq 1 ]] && mkfs.ext4 -F ${nvme_disks[*]} && mkdir -p /var/lib/kubelet/pods && mount ${nvme_disks[*]} /var/lib/kubelet/pods && chmod 750 /var/lib/kubelet
-      - nvme_disks=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | awk -F'[[:space:]][[:space:]]+' '{print $1}')) && [[ ${#nvme_disks[@]} -ge 2 ]] && mdadm --create --verbose /dev/md0 --level=0 --raid-devices=${#nvme_disks[@]} ${nvme_disks[*]} && mkfs.ext4 -F /dev/md0 && mkdir -p /var/lib/kubelet/pods && mount /dev/md0 /var/lib/kubelet/pods && chmod 750 /var/lib/kubelet
+      - nvme_disks=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | awk -F'[[:space:]][[:space:]]+' '{print $1}')) && [[ ${#nvme_disks[@]} -eq 1 ]] && mkfs.ext4 -F ${nvme_disks[*]} && systemctl stop docker && mkdir -p /var/lib/kubelet/pods && mount ${nvme_disks[*]} /var/lib/kubelet/pods && chmod 750 /var/lib/docker && systemctl start docker
+      - nvme_disks=($(nvme list | grep "Amazon EC2 NVMe Instance Storage" | awk -F'[[:space:]][[:space:]]+' '{print $1}')) && [[ ${#nvme_disks[@]} -ge 2 ]] && mdadm --create --verbose /dev/md0 --level=0 --raid-devices=${#nvme_disks[@]} ${nvme_disks[*]} && mkfs.ext4 -F /dev/md0 && systemctl stop docker && mkdir -p /var/lib/kubelet/pods && mount /dev/md0 /var/lib/kubelet/pods && chmod 750 /var/lib/docker && systemctl start docker
 ```
 
 
