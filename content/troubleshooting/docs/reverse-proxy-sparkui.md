@@ -96,7 +96,7 @@ kubectl auth can-i patch  service -n $EMR_CONTAINERS_NAMESPACE --as=system:servi
 
 ## Launch EMR on EKS jobs via Spark Operator
 
-1.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts [emr-eks-spark-example-01.yaml](#emr-eks-spark-example-01yaml) and [emr-eks-spark-example-02.yaml](#emr-eks-spark-example-02yaml) can be found in the Appendix section. 
+1.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts [spark-operator-example-01.yaml](#spark-operator-example-01yaml) and [spark-operator-example-02.yaml](#spark-operator-example-02yaml) can be found in the Appendix section. 
 
 * The `spec.driver.Serviceaccount` attribute should be updated based on your own [IAM Role for Service Account (IRSA)](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html) setup in EMR on EKS.
 * The `namespace` attribute should be updated to namespace where EMR on EKS is running
