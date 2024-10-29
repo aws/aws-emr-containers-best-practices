@@ -1038,6 +1038,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#deploy-sparkui-reserve-proxy-and-an-ingress-in-a-default-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy SparkUI reserve proxy and an Ingress in a default namespace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grant-permissions-to-driver-pods-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grant permissions to Driver pod's Service Account
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#launch-emr-on-eks-jobs-via-spark-operator" class="md-nav__link">
     <span class="md-ellipsis">
       Launch EMR on EKS jobs via Spark Operator
@@ -1084,18 +1102,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#emr-eks-spark-example-01yaml" class="md-nav__link">
+  <a href="#spark-operator-example-01yaml" class="md-nav__link">
     <span class="md-ellipsis">
-      emr-eks-spark-example-01.yaml
+      spark-operator-example-01.yaml
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#emr-eks-spark-example-02yaml" class="md-nav__link">
+  <a href="#spark-operator-example-02yaml" class="md-nav__link">
     <span class="md-ellipsis">
-      emr-eks-spark-example-02.yaml
+      spark-operator-example-02.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#driver-pod-templateyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      driver-pod-template.yaml
     </span>
   </a>
   
@@ -1515,6 +1542,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#deploy-sparkui-reserve-proxy-and-an-ingress-in-a-default-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy SparkUI reserve proxy and an Ingress in a default namespace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grant-permissions-to-driver-pods-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grant permissions to Driver pod's Service Account
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#launch-emr-on-eks-jobs-via-spark-operator" class="md-nav__link">
     <span class="md-ellipsis">
       Launch EMR on EKS jobs via Spark Operator
@@ -1561,18 +1606,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#emr-eks-spark-example-01yaml" class="md-nav__link">
+  <a href="#spark-operator-example-01yaml" class="md-nav__link">
     <span class="md-ellipsis">
-      emr-eks-spark-example-01.yaml
+      spark-operator-example-01.yaml
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#emr-eks-spark-example-02yaml" class="md-nav__link">
+  <a href="#spark-operator-example-02yaml" class="md-nav__link">
     <span class="md-ellipsis">
-      emr-eks-spark-example-02.yaml
+      spark-operator-example-02.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#driver-pod-templateyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      driver-pod-template.yaml
     </span>
   </a>
   
@@ -1602,10 +1656,38 @@
 
 
 <h1 id="connect-to-sparkui-without-port-fowarding"><strong>Connect to SparkUI without Port Fowarding</strong><a class="headerlink" href="#connect-to-sparkui-without-port-fowarding" title="Permanent link">&para;</a></h1>
-<p>This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. We demostrate how to set it up via three EMR on EKS deployment methods: Spark Operator, JobRun API, and spark-submit.</p>
-<h2 id="launch-emr-on-eks-jobs-via-spark-operator">Launch EMR on EKS jobs via Spark Operator<a class="headerlink" href="#launch-emr-on-eks-jobs-via-spark-operator" title="Permanent link">&para;</a></h2>
-<p>There are 3 Steps to set up in EKS:</p>
-<p>1.Create a SparkUI reverse proxy and an ALB in a default namespace, which is a different namespace from your EMR on EKS virtual cluster environment. It can be configured to the EMR's namespace if neccessary.</p>
+<p>This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. The flow of Spark UI access is as follows,<br />
+User's Browser --&gt; Kubernetes Ingress (ALB - Application Load Balancer) --&gt; Spark UI Reverse Proxy --&gt; Kubernetes Service --&gt; Spark Driver Pod</p>
+<p>The reverse proxy uses URI path to redirects the traffic to corresponding driver pod via Kubernetes service object. The name of the service should be <code>&lt;last-segment-of-URI-path&gt;-ui-svc</code> and following properties needs to be set in the spark configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Configuratin</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.ui.proxyBase</td>
+<td>/sparkui/my-spark-app</td>
+<td>The URI path on which to access the particular job's spark UI. This is divided into two parts, first is base URI (i.e. /sparkui) and second is the name used to redirect the traffic to corresponding service. e.g. if URI path is "/sparkui/my-spark-app" then reverse proxy redirects the traffic to service named "my-spark-app-ui-svc".  Note: Don't change the /sparkui/ base URI as its a default base URI used by Spark revserve proxy</td>
+</tr>
+<tr>
+<td>spark.ui.proxyRedirectUri</td>
+<td>/</td>
+<td>Redirect URI. Keep it "/".</td>
+</tr>
+</tbody>
+</table>
+<p>The URL to access Spark UI is,<br />
+<code>http://YOUR_INGRESS_ADDRESS:PORT/&lt;spark.ui.proxyBase&gt;</code><br />
+e.g. http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/my-spark-app</p>
+<p>Where,<br />
+<em> YOUR_INGRESS_ADDRESS:PORT</em> :- Ingress ALB's DNS name and port. </p>
+<p>We demostrate how to set up Ingress and Reverse Proxy. Then launch the jobs via three EMR on EKS deployment methods: Spark Operator, JobRun API, and spark-submit. The spark operator creates the Kubernetes service object with target as driver pod for each job. However, JobRun API and spark-submit do not create Kubernetes service object so we use driver pod's "postStart" lifecycle hook to create the service object in driver pod's template.</p>
+<h2 id="deploy-sparkui-reserve-proxy-and-an-ingress-in-a-default-namespace">Deploy SparkUI reserve proxy and an Ingress in a default namespace<a class="headerlink" href="#deploy-sparkui-reserve-proxy-and-an-ingress-in-a-default-namespace" title="Permanent link">&para;</a></h2>
+<p>Create a SparkUI reverse proxy and an Ingress (ALB) in a default namespace, which is a different namespace from your EMR on EKS virtual cluster environment. It can be configured to the EMR's namespace if neccessary.</p>
 <p>The <a href="#deploymentyaml">sample yaml file</a> is in the Appendix section. Make sure the EMR on EKS's namespace at the line #25 in <code>deployment.yaml</code> is updated if needed:</p>
 <div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
 </code></pre></div>
@@ -1614,63 +1696,164 @@
   <strong>NOTE:</strong> The example file is not production ready. The listen port 80 is not recommended. Make sure to stronger your Application Load Balance's security posture before deploy it to your production environment.
 </div>
 
-<p>2.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts <a href="#emr-eks-spark-example-01yaml">emr-eks-spark-example-01.yaml</a> and <a href="#emr-eks-spark-example-02yaml">emr-eks-spark-example-02.yaml</a> can be found in the Appendix section. The "spec.driver.Serviceaccount" attribute should be updated based on your own <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html">IAM Role for Service Account (IRSA)</a> setup in EMR on EKS.</p>
-<p>Remember to specify the Spark configuration at line #16 <code>spark.ui.proxyBase: /sparkui/YOUR_SPARK_APP_NAME</code>, eg. <code>spark.ui.proxyBase: /sparkui/test-02</code>.</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>emr-eks-spark-example-01.yaml
-kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>emr-eks-spark-example-02.yaml
-</code></pre></div>
-
-<p>3.Go to a web browser, then access their Spark Web UI while jobs are still running.</p>
-<p>The Web UI address is in the format of <code>http://ALB_ENDPOINT_ADDRESS:PORT/sparkui/YOUR_SPARK_APP_NAME</code>. For example:</p>
-<div class="codehilite"><pre><span></span><code>http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/spark-example-01
-http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/test-02
-</code></pre></div>
-
 <p>EKS Admin can provide the ALB endpoint address to users via the command: </p>
 <div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress
+
+NAME<span class="w">       </span>CLASS<span class="w">               </span>HOSTS<span class="w">   </span>ADDRESS<span class="w">                                                                </span>PORTS<span class="w">   </span>AGE
+spark-ui<span class="w">   </span>alb-ingress-class<span class="w">   </span>*<span class="w">       </span>k8s-default-sparkui-627e515973-123456789.us-west-2.elb.amazonaws.com<span class="w">   </span><span class="m">80</span><span class="w">      </span>14d
+</code></pre></div>
+
+<h2 id="grant-permissions-to-driver-pods-service-account">Grant permissions to Driver pod's Service Account<a class="headerlink" href="#grant-permissions-to-driver-pods-service-account" title="Permanent link">&para;</a></h2>
+<div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
+  <strong>NOTE:</strong> This step is required for JobRun API or spark-submit. It is NOT required for spark operator.
+</div>
+<p>If you are going to use JobRun API or spark-submit to launch the jobs then grant permissions to Kubernetes role bound to Driver pod's Service Account to be able to manage Kubernetes Service Object.</p>
+<p>The client &amp; driver roles and corresponding service accounts are can be queried via command:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">EMR_CONTAINERS_NAMESPACE</span><span class="o">=</span><span class="n">emr</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">eks</span>
+
+<span class="n">kubectl</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">role</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">$</span><span class="n">EMR_CONTAINERS_NAMESPACE</span><span class="w">                                                                                                                     </span>
+<span class="n">NAME</span><span class="w">                               </span><span class="n">CREATED</span><span class="w"> </span><span class="n">AT</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w">                     </span><span class="mi">2024</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">19</span><span class="n">T08</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">15</span><span class="n">Z</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">client</span><span class="w">   </span><span class="mi">2024</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">19</span><span class="n">T09</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">37</span><span class="n">Z</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="w">   </span><span class="mi">2024</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">19</span><span class="n">T09</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">37</span><span class="n">Z</span>
+
+<span class="n">kubectl</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">serviceaccount</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">$</span><span class="n">EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>
+<span class="n">NAME</span><span class="w">                                                                           </span><span class="n">SECRETS</span><span class="w">   </span><span class="n">AGE</span>
+<span class="n">default</span><span class="w">                                                                        </span><span class="mi">0</span><span class="w">         </span><span class="mi">62</span><span class="n">m</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">sa</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">       </span><span class="mi">0</span><span class="w">         </span><span class="mi">28</span><span class="n">s</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">sa</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">       </span><span class="mi">0</span><span class="w">         </span><span class="mi">28</span><span class="n">s</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">sa</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">executor</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">     </span><span class="mi">0</span><span class="w">         </span><span class="mi">28</span><span class="n">s</span>
+
+<span class="n">kubectl</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">rolebindings</span><span class="o">.</span><span class="n">rbac</span><span class="o">.</span><span class="n">authorization</span><span class="o">.</span><span class="n">k8s</span><span class="o">.</span><span class="n">io</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="o">$</span><span class="n">EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>
+<span class="n">NAME</span><span class="w">                                                                       </span><span class="n">ROLE</span><span class="w">                                    </span><span class="n">AGE</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w">                                                             </span><span class="n">Role</span><span class="o">/</span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="w">                     </span><span class="mi">62</span><span class="n">m</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">rb</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">   </span><span class="n">Role</span><span class="o">/</span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">client</span><span class="w">   </span><span class="mi">46</span><span class="n">s</span>
+<span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">rb</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">   </span><span class="n">Role</span><span class="o">/</span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="w">   </span><span class="mi">46</span><span class="n">s</span>
+</code></pre></div>
+
+<p>EKS Admin can grant the list, create, update &amp; delete for Kubernetes Service Object to spark driver role via the command:  </p>
+<p>Ensure to set <code>EMR_CONTAINERS_ROLE_SPARK_DRIVER</code> to Kubernetes role binded to driver pod's service account and <code>EMR_CONTAINERS_NAMESPACE</code> to Kubernetes namespace in which EMR on EKS is running.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_ROLE_SPARK_DRIVER</span><span class="o">=</span>emr-containers-role-spark-driver
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_NAMESPACE</span><span class="o">=</span>emr-on-eks
+kubectl<span class="w"> </span>patch<span class="w"> </span>role<span class="w"> </span><span class="nv">$EMR_CONTAINERS_ROLE_SPARK_DRIVER</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--type<span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="w"> </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;: &quot;add&quot;, &quot;path&quot;: &quot;/rules/-&quot;, &quot;value&quot;: {&quot;apiGroups&quot;: [&quot;&quot;], &quot;resources&quot;: [&quot;services&quot;], &quot;verbs&quot;: [&quot;list&quot;, &quot;create&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;patch&quot;]}}]&#39;</span>
+</code></pre></div>
+
+<p>EKS Admin can varify the access to Driver Pod's Service Account via the command:  </p>
+<p>Ensure to set <code>EMR_CONTAINERS_SA_SPARK_DRIVER</code> to service account binded to above role. The output of each command should be "yes"</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_SA_SPARK_DRIVER</span><span class="o">=</span>emr-containers-sa-spark-driver-1234567890-abcdefgh123456ijklmno7890prrst
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>list<span class="w">   </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:<span class="nv">$EMR_CONTAINERS_NAMESPACE</span>:<span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>create<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:<span class="nv">$EMR_CONTAINERS_NAMESPACE</span>:<span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>update<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:<span class="nv">$EMR_CONTAINERS_NAMESPACE</span>:<span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>delete<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:<span class="nv">$EMR_CONTAINERS_NAMESPACE</span>:<span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>patch<span class="w">  </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>--as<span class="o">=</span>system:serviceaccount:<span class="nv">$EMR_CONTAINERS_NAMESPACE</span>:<span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span>
+</code></pre></div>
+
+<h2 id="launch-emr-on-eks-jobs-via-spark-operator">Launch EMR on EKS jobs via Spark Operator<a class="headerlink" href="#launch-emr-on-eks-jobs-via-spark-operator" title="Permanent link">&para;</a></h2>
+<p>1.Submit two test jobs using EMR on EKS's Spark Operator. The sample job scripts <a href="#spark-operator-example-01yaml">spark-operator-example-01.yaml</a> and <a href="#spark-operator-example-02yaml">spark-operator-example-02.yaml</a> can be found in the Appendix section. </p>
+<ul>
+<li>The <code>spec.driver.Serviceaccount</code> attribute should be updated based on your own <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html">IAM Role for Service Account (IRSA)</a> setup in EMR on EKS.</li>
+<li>The <code>namespace</code> attribute should be updated to namespace where EMR on EKS is running</li>
+<li>Remember to specify the Spark configuration at line #16 <code>spark.ui.proxyBase: /sparkui/YOUR_SPARK_APP_NAME</code>, eg. <code>spark.ui.proxyBase: /sparkui/spark-example-01</code>.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>spark-operator-example-01.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>spark-operator-example-02.yaml
+</code></pre></div>
+
+<p>2.Go to a web browser, then access their Spark Web UI while jobs are still running.</p>
+<p>The Web UI address is in the format of <code>http://YOUR_INGRESS_ADDRESS:PORT/sparkui/YOUR_SPARK_APP_NAME</code>. For example:</p>
+<div class="codehilite"><pre><span></span><code>http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/spark-example-01
+http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com:80/sparkui/spark-example-02
 </code></pre></div>
 
 <h2 id="launch-emr-on-eks-jobs-via-job-run-api">Launch EMR on EKS jobs via Job Run API<a class="headerlink" href="#launch-emr-on-eks-jobs-via-job-run-api" title="Permanent link">&para;</a></h2>
-<p>1.Update the the environment variables in the sample job submission script:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">EMR_VIRTUAL_CLUSTER_NAME</span><span class="o">=</span>YOUR_EMR_VIRTUAL_CLUSTER_NAME
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>YOUR_AWS_REGION
-<span class="nb">export</span><span class="w"> </span><span class="nv">app_name</span><span class="o">=</span>job-run-api
+<p>1.Upload the driver pod template to S3 bucket. It is assumed that template is copied under prefix (folder) <code>/templates</code> inside bucket.</p>
+<div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>driver-pod-template.yaml<span class="w"> </span>YOUR_S3_BUCKET/templates
+</code></pre></div>
+
+<p>2.Ensure that Job execution role has access to above S3 bucket.</p>
+<p>3.Set the values for <code>YOUR_APP_NAME</code>, <code>YOUR_S3_BUCKET</code>, <code>YOUR_EMR_VIRTUAL_CLUSTER_NAME</code>, <code>YOUR_EMR_JOB_EXECUTION_ROLE</code> and run the sample job submission script below:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">YOUR_APP_NAME</span><span class="o">=</span>start-job-run-pi
+<span class="nb">export</span><span class="w"> </span><span class="nv">S3BUCKET</span><span class="o">=</span>YOUR_S3_BUCKET
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_VIRTUAL_CLUSTER_NAME</span><span class="o">=</span>YOUR_EMR_VIRTUAL_CLUSTER_NAME
+<span class="nb">export</span><span class="w"> </span><span class="nv">VIRTUAL_CLUSTER_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>emr-containers<span class="w"> </span>list-virtual-clusters<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;virtualClusters[?name == &#39;</span><span class="nv">$EMR_VIRTUAL_CLUSTER_NAME</span><span class="s2">&#39; &amp;&amp; state == &#39;RUNNING&#39;].id&quot;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
 
 <span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">VIRTUAL_CLUSTER_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>emr-containers<span class="w"> </span>list-virtual-clusters<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;virtualClusters[?name == &#39;</span><span class="nv">$EMR_VIRTUAL_CLUSTER_NAME</span><span class="s2">&#39; &amp;&amp; state == &#39;RUNNING&#39;].id&quot;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_ROLE_ARN</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTID</span>:role/<span class="nv">$EMR_VIRTUAL_CLUSTER_NAME</span>-execution-role
-<span class="nb">export</span><span class="w"> </span><span class="nv">S3BUCKET</span><span class="o">=</span><span class="nv">$EMR_VIRTUAL_CLUSTER_NAME</span>-<span class="nv">$ACCOUNTID</span>-<span class="nv">$AWS_REGION</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_ROLE_ARN</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTID</span>:role/YOUR_EMR_JOB_EXECUTION_ROLE
 
 aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span><span class="se">\</span>
 --virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span><span class="se">\</span>
---name<span class="w"> </span><span class="nv">$app_name</span><span class="w"> </span><span class="se">\</span>
+--name<span class="w"> </span><span class="nv">$YOUR_APP_NAME</span><span class="w"> </span><span class="se">\</span>
 --execution-role-arn<span class="w"> </span><span class="nv">$EMR_ROLE_ARN</span><span class="w"> </span><span class="se">\</span>
 --release-label<span class="w"> </span>emr-7.1.0-latest<span class="w"> </span><span class="se">\</span>
 --job-driver<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">&quot;sparkSubmitJobDriver&quot;: {</span>
 <span class="s1">    &quot;entryPoint&quot;: &quot;local:///usr/lib/spark/examples/jars/spark-examples.jar&quot;, </span>
 <span class="s1">    &quot;entryPointArguments&quot;: [&quot;100000&quot;],</span>
-<span class="s1">    &quot;sparkSubmitParameters&quot;: &quot;--class org.apache.spark.examples.SparkPi --conf spark.executor.instances=1&quot; }}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="s1">    &quot;sparkSubmitParameters&quot;: &quot;--class org.apache.spark.examples.SparkPi --conf spark.executor.instances=1 --conf spark.kubernetes.driver.podTemplateFile=s3://&#39;</span><span class="si">${</span><span class="nv">S3BUCKET</span><span class="si">}</span><span class="s1">&#39;/templates/driver-pod-template.yaml&quot; }}&#39;</span><span class="w"> </span><span class="se">\</span>
 --configuration-overrides<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">&quot;applicationConfiguration&quot;: [</span>
 <span class="s1">    {</span>
 <span class="s1">    &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
 <span class="s1">    &quot;properties&quot;: {</span>
-<span class="s1">        &quot;spark.ui.proxyBase&quot;: &quot;/sparkui/`$app_name`&quot;,</span>
+<span class="s1">        &quot;spark.ui.proxyBase&quot;: &quot;/sparkui/&#39;</span><span class="si">${</span><span class="nv">YOUR_APP_NAME</span><span class="si">}</span><span class="s1">&#39;&quot;,</span>
 <span class="s1">        &quot;spark.ui.proxyRedirectUri&quot;: &quot;/&quot;</span>
 <span class="s1">    }}]}&#39;</span>
 </code></pre></div>
 
-<p>2.Once the job's driver pod is running, create a kubernetes service based on the driver pod name. Ensure its name contains the suffix <strong>ui-svc</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># query the driver pod name</span>
-<span class="nv">job_id</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>emr-containers<span class="w"> </span>list-job-runs<span class="w"> </span>--virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;jobRuns[?name==&#39;</span><span class="nv">$app_name</span><span class="s2">&#39; &amp;&amp; state==&#39;RUNNING&#39;].id&quot;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
-<span class="nv">driver_pod_name</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>emr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="nv">$job_id</span>-driver<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-<span class="c1"># create a k8s service</span>
-kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>emr<span class="w"> </span><span class="se">\</span>
---port<span class="o">=</span><span class="m">4040</span><span class="w"> </span><span class="se">\</span>
---target-port<span class="w"> </span><span class="m">4040</span><span class="w"> </span><span class="se">\</span>
---name<span class="o">=</span><span class="nv">$app_name</span>-ui-svc<span class="w"> </span><span class="se">\</span>
-<span class="nv">$driver_pod_name</span>
+<p>2.Go to a web browser, then access their Spark Web UI while jobs are still running.</p>
+<div class="codehilite"><pre><span></span><code>http://&lt;YOUR_INGRESS_ADDRESS&gt;/sparkui/&lt;YOUR_APP_NAME&gt;
+</code></pre></div>
+
+<p>Admin can get the ingress address by the CLI:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress
+</code></pre></div>
+
+<p>The SparkUI service is created on postStart event of driver container and looks like this:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span>
+
+NAME<span class="w">                  </span>TYPE<span class="w">      </span>CLUSTER-IP<span class="w">  </span>EXTERNAL-IP<span class="w">   </span>PORT<span class="o">(</span>S<span class="o">)</span><span class="w">  </span>AGE
+YOUR_APP_NAME-ui-svc<span class="w"> </span>ClusterIP<span class="w"> </span><span class="m">10</span>.100.233.186<span class="w">  </span>&lt;none&gt;<span class="w">      </span><span class="m">4040</span>/TCP<span class="w">   </span>9s
+</code></pre></div>
+
+<h2 id="launch-emr-on-eks-jobs-by-spark-submit">Launch EMR on EKS jobs by Spark Submit:<a class="headerlink" href="#launch-emr-on-eks-jobs-by-spark-submit" title="Permanent link">&para;</a></h2>
+<p>1.Create an EMR on EKS pod with a service account that has the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html">IRSA</a> associated and have permission to access the S3 bucket which has pod template.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_NAMESPACE</span><span class="o">=</span>emr-on-eks
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_SA_SPARK_CLIENT</span><span class="o">=</span>emr-containers-sa-spark-client-1234567890-abcdefgh123456ijklmno7890prrst
+
+kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>emrekspod<span class="w"> </span><span class="se">\</span>
+--image<span class="o">=</span>public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest<span class="w"> </span><span class="se">\</span>
+--overrides<span class="o">=</span><span class="s1">&#39;{ &quot;spec&quot;: {&quot;serviceAccount&quot;: &quot;&#39;</span><span class="si">${</span><span class="nv">EMR_CONTAINERS_SA_SPARK_CLIENT</span><span class="si">}</span><span class="s1">&#39;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+--command<span class="w"> </span>-n<span class="w"> </span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span>/bin/bash
+</code></pre></div>
+
+<p>2.After login into the "emrekspod" pod, submit the job:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">YOUR_APP_NAME</span><span class="o">=</span>spark-submit-pi
+<span class="nb">export</span><span class="w"> </span><span class="nv">S3BUCKET</span><span class="o">=</span>YOUR_S3_BUCKET
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_NAMESPACE</span><span class="o">=</span>emr-on-eks
+<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_SA_SPARK_DRIVER</span><span class="o">=</span>emr-containers-sa-spark-driver-1234567890-abcdefgh123456ijklmno7890prrst
+
+spark-submit<span class="w"> </span><span class="se">\</span>
+--master<span class="w"> </span>k8s://<span class="nv">$KUBERNETES_SERVICE_HOST</span>:443<span class="w"> </span><span class="se">\</span>
+--deploy-mode<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
+--name<span class="w"> </span><span class="nv">$YOUR_APP_NAME</span><span class="w"> </span><span class="se">\</span>
+--class<span class="w"> </span>org.apache.spark.examples.SparkPi<span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.kubernetes.driver.podTemplateFile<span class="o">=</span>s3://<span class="nv">$S3BUCKET</span>/templates/driver-pod-template.yaml<span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.kubernetes.driver.podTemplateContainerName<span class="o">=</span>spark-kubernetes-driver<span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.ui.proxyBase<span class="o">=</span>/sparkui/<span class="nv">$YOUR_APP_NAME</span><span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.ui.proxyRedirectUri<span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.kubernetes.container.image<span class="o">=</span>public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest<span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.kubernetes.authenticate.driver.serviceAccountName<span class="o">=</span><span class="nv">$EMR_CONTAINERS_SA_SPARK_DRIVER</span><span class="w"> </span><span class="se">\</span>
+--conf<span class="w"> </span>spark.kubernetes.namespace<span class="o">=</span><span class="nv">$EMR_CONTAINERS_NAMESPACE</span><span class="w"> </span><span class="se">\</span>
+local:///usr/lib/spark/examples/jars/spark-examples.jar<span class="w"> </span><span class="m">100000</span>
+</code></pre></div>
+
+<p>3.Go to a web browser, then access their Spark Web UI while jobs are still running.</p>
+<div class="codehilite"><pre><span></span><code>http://&lt;YOUR_INGRESS_ADDRESS&gt;/sparkui/&lt;YOUR_APP_NAME&gt;
+</code></pre></div>
+
+<p>Admin can get the ingress address by the CLI:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress
 </code></pre></div>
 
 <p>The SparkUI service looks like this:</p>
@@ -1678,54 +1861,6 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 
 NAME<span class="w">                  </span>TYPE<span class="w">      </span>CLUSTER-IP<span class="w">  </span>EXTERNAL-IP<span class="w">   </span>PORT<span class="o">(</span>S<span class="o">)</span><span class="w">  </span>AGE
 job-run-api-ui-svc<span class="w"> </span>ClusterIP<span class="w"> </span><span class="m">10</span>.100.233.186<span class="w">  </span>&lt;none&gt;<span class="w">      </span><span class="m">4040</span>/TCP<span class="w">   </span>9s
-</code></pre></div>
-
-<p>3.Finally, access the SparkUI in this format:</p>
-<div class="codehilite"><pre><span></span><code>http://&lt;YOUR_INGRESS_ADDRESS&gt;/sparkui/&lt;app_name&gt;
-</code></pre></div>
-
-<p>Admin can get the ingress address by the CLI:</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>ingress
-</code></pre></div>
-
-<h2 id="launch-emr-on-eks-jobs-by-spark-submit">Launch EMR on EKS jobs by Spark Submit:<a class="headerlink" href="#launch-emr-on-eks-jobs-by-spark-submit" title="Permanent link">&para;</a></h2>
-<p>1.Create an EMR on EKS pod with a service account that has the <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html">IRSA</a> associated</p>
-<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>emrekspod<span class="w"> </span><span class="se">\</span>
---image<span class="o">=</span>public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest<span class="w"> </span><span class="se">\</span>
---overrides<span class="o">=</span><span class="s1">&#39;{ &quot;spec&quot;: {&quot;serviceAccount&quot;: &quot;emr-containers-sa-spark&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
---command<span class="w"> </span>-n<span class="w"> </span>spark-operator<span class="w"> </span>/bin/bash
-</code></pre></div>
-
-<p>2.After login into the "emrekspod" pod, submit the job:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">app_name</span><span class="o">=</span>sparksubmittest
-
-spark-submit<span class="w"> </span><span class="se">\</span>
---master<span class="w"> </span>k8s://<span class="nv">$KUBERNETES_SERVICE_HOST</span>:443<span class="w"> </span><span class="se">\</span>
---deploy-mode<span class="w"> </span>cluster<span class="w"> </span><span class="se">\</span>
---name<span class="w"> </span><span class="nv">$app_name</span><span class="w"> </span><span class="se">\</span>
---class<span class="w"> </span>org.apache.spark.examples.SparkPi<span class="w"> </span><span class="se">\</span>
---conf<span class="w"> </span>spark.ui.proxyBase<span class="o">=</span>/sparkui/<span class="nv">$app_name</span><span class="w"> </span><span class="se">\</span>
---conf<span class="w"> </span>spark.ui.proxyRedirectUri<span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="w"> </span><span class="se">\</span>
---conf<span class="w"> </span>spark.kubernetes.container.image<span class="o">=</span>public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest<span class="w"> </span><span class="se">\</span>
---conf<span class="w"> </span>spark.kubernetes.authenticate.driver.serviceAccountName<span class="o">=</span>emr-containers-sa-spark<span class="w"> </span><span class="se">\</span>
---conf<span class="w"> </span>spark.kubernetes.namespace<span class="o">=</span>spark-operator<span class="w"> </span><span class="se">\</span>
-local:///usr/lib/spark/examples/jars/spark-examples.jar<span class="w"> </span><span class="m">100000</span>
-</code></pre></div>
-
-<p>3.As soon as the driver pod is running, create a kubernetes service for Spark UI and ensure its name has the suffix of <strong>ui-svc</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">app_name</span><span class="o">=</span>sparksubmittest
-<span class="c1"># get the running driver pod name</span>
-<span class="nv">driver_pod_name</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>spark-operator<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;sparksubmittest-.*-driver&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;Running&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
-
-<span class="c1"># OPTIONAL - remove existing service if needed</span>
-kubectl<span class="w"> </span>delete<span class="w"> </span>svc<span class="w"> </span><span class="nv">$app_name</span>-ui-svc<span class="w"> </span>-n<span class="w"> </span>spark-operator
-
-<span class="c1"># create k8s service</span>
-kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> </span>-n<span class="w"> </span>spark-operator<span class="w"> </span><span class="se">\</span>
---port<span class="o">=</span><span class="m">4040</span><span class="w"> </span><span class="se">\</span>
---target-port<span class="w"> </span><span class="m">4040</span><span class="w"> </span><span class="se">\</span>
---name<span class="o">=</span><span class="nv">$app_name</span>-ui-svc<span class="w"> </span><span class="se">\</span>
-<span class="nv">$driver_pod_name</span>
 </code></pre></div>
 
 <h2 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h2>
@@ -1754,7 +1889,7 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;/usr/bin/spark-ui-reverse-proxy&#39;</span>
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span>
 <span class="w">          </span><span class="c1"># EMR on EKS&#39;s namespace</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-namespace=spark-operator</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-namespace=emr-on-eks</span>
 <span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
@@ -1814,12 +1949,12 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 <span class="w">                </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 </code></pre></div>
 
-<h3 id="emr-eks-spark-example-01yaml">emr-eks-spark-example-01.yaml<a class="headerlink" href="#emr-eks-spark-example-01yaml" title="Permanent link">&para;</a></h3>
+<h3 id="spark-operator-example-01yaml">spark-operator-example-01.yaml<a class="headerlink" href="#spark-operator-example-01yaml" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sparkoperator.k8s.io/v1beta2&quot;</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SparkApplication</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-example-01</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-operator</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emr-on-eks</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scala</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest</span>
@@ -1838,17 +1973,17 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1g&quot;</span>
 <span class="w">    </span><span class="nt">serviceAccount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emr-containers-sa-spark</span>
 <span class="w">  </span><span class="nt">executor</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">cores</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">cores</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5120m&quot;</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2g&quot;</span>
 </code></pre></div>
 
-<h3 id="emr-eks-spark-example-02yaml">emr-eks-spark-example-02.yaml<a class="headerlink" href="#emr-eks-spark-example-02yaml" title="Permanent link">&para;</a></h3>
+<h3 id="spark-operator-example-02yaml">spark-operator-example-02.yaml<a class="headerlink" href="#spark-operator-example-02yaml" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sparkoperator.k8s.io/v1beta2&quot;</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SparkApplication</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-example-02</span>
-<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-operator</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emr-on-eks</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scala</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">public.ecr.aws/emr-on-eks/spark/emr-7.1.0:latest</span>
@@ -1859,7 +1994,7 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 <span class="w">  </span><span class="nt">restartPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Never</span>
 <span class="w">  </span><span class="nt">sparkConf</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">spark.ui.proxyBase</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sparkui/test-02</span>
+<span class="w">    </span><span class="nt">spark.ui.proxyBase</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sparkui/spark-example-02</span>
 <span class="w">    </span><span class="nt">spark.ui.proxyRedirectUri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
 <span class="w">  </span><span class="nt">driver</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cores</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
@@ -1870,6 +2005,52 @@ kubectl<span class="w"> </span>expose<span class="w"> </span>po<span class="w"> 
 <span class="w">    </span><span class="nt">cores</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2120m&quot;</span>
+</code></pre></div>
+
+<h3 id="driver-pod-templateyaml">driver-pod-template.yaml<a class="headerlink" href="#driver-pod-templateyaml" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-kubernetes-driver</span><span class="w"> </span><span class="c1"># This will be interpreted as driver Spark main container</span>
+<span class="w">    </span><span class="nt">lifecycle</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">postStart</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">exec</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/bin/bash</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-c</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no"># Set Variables</span>
+<span class="w">              </span><span class="no">export K8S_NAMESPACE=`cat  /run/secrets/kubernetes.io/serviceaccount/namespace`</span>
+<span class="w">              </span><span class="no">export SPARK_UI_PROXYBASE=`grep spark.ui.proxyBase ${SPARK_CONF_DIR}/spark.properties | rev |  cut -d/ -f1 | rev`</span>
+<span class="w">              </span><span class="no">export SPARK_UI_SERVICE_NAME=${SPARK_UI_PROXYBASE}-ui-svc</span>
+
+<span class="w">              </span><span class="no">cat &gt; /tmp/service.yaml &lt;&lt; EOF</span>
+<span class="w">              </span><span class="no">apiVersion: v1</span>
+<span class="w">              </span><span class="no">kind: Service</span>
+<span class="w">              </span><span class="no">metadata:</span>
+<span class="w">                </span><span class="no">name: ${SPARK_UI_SERVICE_NAME}</span>
+<span class="w">                </span><span class="no">namespace: $K8S_NAMESPACE</span>
+<span class="w">                </span><span class="no">labels:</span>
+<span class="w">                  </span><span class="no">spark-app-selector: ${SPARK_APPLICATION_ID}</span>
+<span class="w">                  </span><span class="no">spark-role: driver</span>
+<span class="w">              </span><span class="no">spec:</span>
+<span class="w">                </span><span class="no">ports:</span>
+<span class="w">                </span><span class="no">- port: 4040</span>
+<span class="w">                  </span><span class="no">targetPort: 4040</span>
+<span class="w">                  </span><span class="no">protocol: TCP</span>
+<span class="w">                </span><span class="no">selector:</span>
+<span class="w">                  </span><span class="no">spark-app-selector: ${SPARK_APPLICATION_ID}</span>
+<span class="w">                  </span><span class="no">spark-role: driver</span>
+<span class="w">                </span><span class="no">type: ClusterIP</span>
+<span class="w">              </span><span class="no">EOF</span>
+
+<span class="w">              </span><span class="no">if [ -n &quot;${SPARK_UI_PROXYBASE:-}&quot; ]; then</span>
+<span class="w">                </span><span class="no"># Create or replace the service </span>
+<span class="w">                </span><span class="no">curl -X PUT https://${KUBERNETES_SERVICE_HOST}/api/v1/namespaces/${K8S_NAMESPACE}/services/${SPARK_UI_SERVICE_NAME} -H &quot;Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)&quot; -H &quot;Content-Type: application/yaml&quot; --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --data-binary @/tmp/service.yaml &gt; /tmp/service.out</span>
+<span class="w">              </span><span class="no">else</span>
+<span class="w">                </span><span class="no">echo spark.ui.proxyBase is NOT set in ${SPARK_CONF_DIR}/spark.properties &gt; /tmp/service.out</span>
+<span class="w">              </span><span class="no">fi</span>
 </code></pre></div>
 
 
