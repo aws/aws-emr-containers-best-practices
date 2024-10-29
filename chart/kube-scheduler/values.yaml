@@ -1,0 +1,28 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 2
+
+image:
+  repository: public.ecr.aws/eks-distro/kubernetes/kube-scheduler
+  tag: v1.31.0-eks-1-31-latest
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+
+resources:
+  requests:
+    cpu: '1'
+
+livenessProbe:
+  initialDelaySeconds: 15
+  periodSeconds: 10
+readinessProbe:
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
