@@ -1,13 +1,17 @@
 # **Connect to SparkUI without Port Fowarding**
 
-This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. The flow of Spark UI access is as follows,  
-User's Browser --> Kubernetes Ingress (ALB - Application Load Balancer) --> Spark UI Reverse Proxy --> Kubernetes Service --> Spark Driver Pod
+This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. 
 
-The reverse proxy uses URI path to redirects the traffic to corresponding driver pod via Kubernetes service object. The name of the service should be `<last-segment-of-URI-path>-ui-svc` and following properties needs to be set in the spark configuration.
+<div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
+  <strong>NOTE:</strong> We don't maintain the reverse proxy solution's docker image. 
+</div>  
+
+A reverse proxy sits between a single Ingress ALB and multiple driver pods. The ALB forwards all incoming traffic to the reverse proxy, which then directs requests to the appropriate driver pods based on the URI path in each request. This routing occurs via Kubernetes service objects, with one service object required for each driver pod. These service objects should be named using the format `<last-segment-of-URI-path>-ui-svc`. To complete this setup, the following properties must be configured in the Spark configuration:
+
 
 |Configuratin|Example|Description|
 |---|---|---|
-|spark.ui.proxyBase|/sparkui/my-spark-app|The URI path on which to access the particular job's spark UI. This is divided into two parts, first is base URI (i.e. /sparkui) and second is the name used to redirect the traffic to corresponding service. e.g. if URI path is "/sparkui/my-spark-app" then reverse proxy redirects the traffic to service named "my-spark-app-ui-svc".  Note: Don't change the /sparkui/ base URI as its a default base URI used by Spark revserve proxy|
+|spark.ui.proxyBase|/sparkui/my-spark-app|The URI path on which to access the particular job's spark UI. This is divided into two parts, first is base URI (i.e. /sparkui) and second is the name used to redirect the traffic to corresponding kubernetes service. e.g. if URI path is "/sparkui/my-spark-app" then reverse proxy redirects the traffic to Kubernetes service named "my-spark-app-ui-svc".  Note: Don't change the /sparkui/ base URI as its a default base URI used by Spark revserve proxy|
 |spark.ui.proxyRedirectUri|/|Redirect URI. Keep it "/".
 
 The URL to access Spark UI is,  
@@ -29,7 +33,7 @@ The [sample yaml file](#deploymentyaml) is in the Appendix section. Make sure th
 kubectl apply -f deployment.yaml
 ```
 <div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
-  <strong>NOTE:</strong> The example file is not production ready. The listen port 80 is not recommended. Make sure to stronger your Application Load Balance's security posture before deploy it to your production environment.
+  <strong>NOTE:</strong> The example file is not production ready. This solution doesn't have authenticate on spark UI in place. Also, the listen port 80 is not recommended. Make sure to strengthen your Application Load Balance's security posture before deploying it to your production environment.
 </div>  
 
   
@@ -71,7 +75,7 @@ emr-containers-rb-spark-client-1234567890-abcdefgh123456ijklmno7890prrst   Role/
 emr-containers-rb-spark-driver-1234567890-abcdefgh123456ijklmno7890prrst   Role/emr-containers-role-spark-driver   46s
 ```
 
-EKS Admin can grant the list, create, update & delete for Kubernetes Service Object to spark driver role via the command:  
+EKS Admin can grant the list, create, update, delete and patch for Kubernetes Service Object to spark driver role via the command:  
 
 Ensure to set `EMR_CONTAINERS_ROLE_SPARK_DRIVER` to Kubernetes role binded to driver pod's service account and `EMR_CONTAINERS_NAMESPACE` to Kubernetes namespace in which EMR on EKS is running.
 
