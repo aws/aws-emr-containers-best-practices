@@ -1656,9 +1656,12 @@
 
 
 <h1 id="connect-to-sparkui-without-port-fowarding"><strong>Connect to SparkUI without Port Fowarding</strong><a class="headerlink" href="#connect-to-sparkui-without-port-fowarding" title="Permanent link">&para;</a></h1>
-<p>This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. The flow of Spark UI access is as follows,<br />
-User's Browser --&gt; Kubernetes Ingress (ALB - Application Load Balancer) --&gt; Spark UI Reverse Proxy --&gt; Kubernetes Service --&gt; Spark Driver Pod</p>
-<p>The reverse proxy uses URI path to redirects the traffic to corresponding driver pod via Kubernetes service object. The name of the service should be <code>&lt;last-segment-of-URI-path&gt;-ui-svc</code> and following properties needs to be set in the spark configuration.</p>
+<p>This is an example of connecting to SparkUI running on Spark's driver pod via a reserve proxy solution, without an access to the kubectl tool or AWS console. </p>
+<div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
+  <strong>NOTE:</strong> We don't maintain the reverse proxy solution's docker image. 
+</div>
+
+<p>A reverse proxy sits between a single Ingress ALB and multiple driver pods. The ALB forwards all incoming traffic to the reverse proxy, which then directs requests to the appropriate driver pods based on the URI path in each request. This routing occurs via Kubernetes service objects, with one service object required for each driver pod. These service objects should be named using the format <code>&lt;last-segment-of-URI-path&gt;-ui-svc</code>. To complete this setup, the following properties must be configured in the Spark configuration:</p>
 <table>
 <thead>
 <tr>
@@ -1671,7 +1674,7 @@ User's Browser --&gt; Kubernetes Ingress (ALB - Application Load Balancer) --&gt
 <tr>
 <td>spark.ui.proxyBase</td>
 <td>/sparkui/my-spark-app</td>
-<td>The URI path on which to access the particular job's spark UI. This is divided into two parts, first is base URI (i.e. /sparkui) and second is the name used to redirect the traffic to corresponding service. e.g. if URI path is "/sparkui/my-spark-app" then reverse proxy redirects the traffic to service named "my-spark-app-ui-svc".  Note: Don't change the /sparkui/ base URI as its a default base URI used by Spark revserve proxy</td>
+<td>The URI path on which to access the particular job's spark UI. This is divided into two parts, first is base URI (i.e. /sparkui) and second is the name used to redirect the traffic to corresponding kubernetes service. e.g. if URI path is "/sparkui/my-spark-app" then reverse proxy redirects the traffic to Kubernetes service named "my-spark-app-ui-svc".  Note: Don't change the /sparkui/ base URI as its a default base URI used by Spark revserve proxy</td>
 </tr>
 <tr>
 <td>spark.ui.proxyRedirectUri</td>
@@ -1693,7 +1696,7 @@ e.g. http://k8s-default-sparkui-2d325c0434-124141735.us-west-2.elb.amazonaws.com
 </code></pre></div>
 
 <div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
-  <strong>NOTE:</strong> The example file is not production ready. The listen port 80 is not recommended. Make sure to stronger your Application Load Balance's security posture before deploy it to your production environment.
+  <strong>NOTE:</strong> The example file is not production ready. This solution doesn't have authenticate on spark UI in place. Also, the listen port 80 is not recommended. Make sure to strengthen your Application Load Balance's security posture before deploying it to your production environment.
 </div>
 
 <p>EKS Admin can provide the ALB endpoint address to users via the command: </p>
@@ -1731,7 +1734,7 @@ spark-ui<span class="w">   </span>alb-ingress-class<span class="w">   </span>*<s
 <span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">rb</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="o">-</span><span class="mi">1234567890</span><span class="o">-</span><span class="n">abcdefgh123456ijklmno7890prrst</span><span class="w">   </span><span class="n">Role</span><span class="o">/</span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">role</span><span class="o">-</span><span class="n">spark</span><span class="o">-</span><span class="n">driver</span><span class="w">   </span><span class="mi">46</span><span class="n">s</span>
 </code></pre></div>
 
-<p>EKS Admin can grant the list, create, update &amp; delete for Kubernetes Service Object to spark driver role via the command:  </p>
+<p>EKS Admin can grant the list, create, update, delete and patch for Kubernetes Service Object to spark driver role via the command:  </p>
 <p>Ensure to set <code>EMR_CONTAINERS_ROLE_SPARK_DRIVER</code> to Kubernetes role binded to driver pod's service account and <code>EMR_CONTAINERS_NAMESPACE</code> to Kubernetes namespace in which EMR on EKS is running.</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_ROLE_SPARK_DRIVER</span><span class="o">=</span>emr-containers-role-spark-driver
 <span class="nb">export</span><span class="w"> </span><span class="nv">EMR_CONTAINERS_NAMESPACE</span><span class="o">=</span>emr-on-eks
