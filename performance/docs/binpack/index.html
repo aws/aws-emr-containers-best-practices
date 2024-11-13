@@ -1577,6 +1577,17 @@ brew<span class="w"> </span>install<span class="w"> </span>eks-node-viewer
 <li><strong>Amazon EKS 1.28 image:</strong> public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest</li>
 <li><strong>Amazon EKS 1.29 image:</strong> public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.29.6-eks-1-29-18</li>
 </ul>
+<p>NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span>clientConnection:
+<span class="w">      </span>burst:<span class="w"> </span><span class="m">200</span>
+<span class="w">      </span>qps:<span class="w"> </span><span class="m">100</span>
+</code></pre></div>
+
+<p>An example of throttle error from the pod logs:</p>
+<div class="codehilite"><pre><span></span><code>I1030<span class="w"> </span><span class="m">23</span>:19:48.258159<span class="w">       </span><span class="m">1</span><span class="w"> </span>request.go:697<span class="o">]</span><span class="w"> </span>Waited<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">1</span>.93509847s<span class="w"> </span>due<span class="w"> </span>to<span class="w"> </span>client-side<span class="w"> </span>throttling,<span class="w"> </span>not<span class="w"> </span>priority<span class="w"> </span>and<span class="w"> </span>fairness,<span class="w"> </span>request:<span class="w"> </span>POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...vents
+I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="w">       </span><span class="m">1</span><span class="w"> </span>request.go:697<span class="o">]</span><span class="w"> </span>Waited<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">1</span>.905177346s<span class="w"> </span>due<span class="w"> </span>to<span class="w"> </span>client-side<span class="w"> </span>throttling,<span class="w"> </span>not<span class="w"> </span>priority<span class="w"> </span>and<span class="w"> </span>fairness,<span class="w"> </span>request:<span class="w"> </span>POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...
+</code></pre></div>
+
 <p>Run the following command against <strong>EKS v1.28</strong>:</p>
 <div class="codehilite"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
 <span class="s">apiVersion: v1</span>
@@ -1823,6 +1834,9 @@ brew<span class="w"> </span>install<span class="w"> </span>eks-node-viewer
 <span class="s">      leaderElect: true</span>
 <span class="s">      resourceNamespace: kube-system</span>
 <span class="s">      resourceName: my-scheduler</span>
+<span class="s">    clientConnection:</span>
+<span class="s">      burst: 200</span>
+<span class="s">      qps: 100</span>
 <span class="s">---</span>
 <span class="s">apiVersion: apps/v1</span>
 <span class="s">kind: Deployment</span>
