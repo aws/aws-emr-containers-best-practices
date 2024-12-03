@@ -8,9 +8,7 @@ These recommendations are only guidelines, we recommend monitoring cluster activ
 
 * For these benchmark, we tuned following settings for EKS:
     * EKS cluster version: 1.30
-    * EKS control plane components:
-        * API server sizing: `bundle-96cpu-768gb`
-        * etcd sizing: `bundle-96cpu-768gb`
+    * Pre-warm the EKS control plane
     * `vpc-cni` add-on settings:
         * `livenessProbeTimeoutSeconds` : 60 seconds
         * `readinessProbeTimeoutSeconds` : 60 seconds
@@ -30,7 +28,7 @@ The benchmark results show the different configurations we ran with to mimic cus
 
 * EMR on EKS Job submission rate
 * Spark Job Driver retries configuration
-* Custom Webhook latency
+* Mutating Webhook latency
 * Duration of the EMR on EKS job run time
 * Total runtime for the test
 * Image pull policy
@@ -42,7 +40,7 @@ There are also some other factors that will affect the EMR job submission throug
 Based on these factors if we examine our results below we notice the following trends:
 
 * If we enable retries on the Spark driver, we have to subsequently reduce the EMR on EKS job submission rate as adding retries also creates more K8s job objects and hence cause an increase in etcd database size and etcd requests latency due to higher number of database objects - increasing overall strain to etcd database.
-* Custom Webhook latency directly impacts Kubernetes API server latencies and the scalability of EKS control plane, increasing the webhook latency leads to backpressure propagated to and leads to delays in running the EMR on EKS job. 
+* Mutating Webhook latency directly impacts Kubernetes API server latencies and the scalability of EKS control plane, increasing the webhook latency leads to backpressure propagated to and leads to delays in running the EMR on EKS job. 
 * `vpc-cni` add-on becomes a bottleneck during high CPU utilization. This may result in job failures due to network timeouts. 
     * **Issue 1:** `vpc-cni` experiences liveness/readiness probe failures due to high node CPU utilization. When these probes fail the nodes are marked as `NotReady` which can cause jobs to be re-scheduled on another node and fail. The settings for these we recommend to update are `livenessProbeTimeoutSeconds` and `readinessProbeTimeoutSeconds.`
     * **Issue 2:** `vpc-cni` by default maintains a pool of IP addresses for 1 ENI. For x24large this is 50 IP addresses, when these IP addresses are all used `vpc-cni` will request a 2nd ENI to be attached, this can cause some immediate issues with running out of IP addresses locally on the Node. The setting that we recommend to update to maintain a warm IP pool is `WARM_IP_TARGET.` This will instruct `vpc-cni` to always have a fixed number of IP’s as available. `vpc-cni` will automatically request new ENI to maintain a constant pool of `WARM_IP_TARGET`
@@ -54,22 +52,19 @@ Based on these factors if we examine our results below we notice the following t
 * The Job churn rate is the operations by the job controller. If the churn rate is high, then the Job queue can’t be processed in time which lead to latency in the EKS cluster. The job churn rate is affected by the job submissions and when the jobs are terminated. It can happen when etcd requests are seeing higher latency and thereby affecting job churn rate.
 
 |Test Scenario	|Job submission mode	|Job Type	|**EMR EKS Job Submission Rate**
- (per EKS cluster) (not finalized)	|Jobs/VC/Min	|Runtime for the test	|Max Number of Active EMR EKS Jobs	|Weighted Avg Job Duration	|Executors/job	|# of Nodes	|# of EMR jobs	|# of Concurrent pods	|**# of Pod / Node** (m5.24xlarge)	|etcd slow apply	|**API Server Request Latency - p99**
-(for create Pod calls) ****	|
-|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
-|Job with default configurations (no spark driver retries and no webhook)	|StartJobRun	|batch	|150 jobs/min	|1	|165 mins	|1996	|10 mins	|10 pods	|351	|24556	|23007	|65	|613	|0.918	|
-|Job with default configurations (no spark driver retries and no webhook, 2x executors)	|StartJobRun	|batch	|80 jobs/min	|1	|200 mins	|1066	|10 mins	|20 pods	|351	|15928	|21997	|62	|165	|0.092	|
-|Job with default configurations (no spark driver retries and no webhook, 10x jobs per VC)	|StartJobRun	|batch	|150 jobs/min	|10	|60 mins	|1953	|10 mins	|10 pods	|351	|23953	|22092	|62	|1547	|0.387	|
-|Job with spark driver retries and no webhook	|StartJobRun	|batch	|140 jobs/min	|1	|60 mins	|1747	|10 mins	|10 pods	|251	|8270	|20014	|79	|435	|0.14	|
-|Job with webhook (up to max 2 sec delay) and retries	|StartJobRun	|batch	|140 jobs/min	|1	|200 mins	|1827	|10 mins	|10 pods	|351	|21848	|21498	|61	|546	|2.91	|
+ (per EKS cluster) (not finalized)	|Jobs/VC/Min	|Runtime for the test	|Max Number of Active EMR EKS Jobs	|Weighted Avg Job Duration	|Executors/job	|# of Nodes	|# of EMR jobs	|# of Concurrent pods	|**# of Pod / Node** (m5.24xlarge)	|
+|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
+|Job with default configurations (no spark driver retries and no webhook)	|StartJobRun	|batch	|150 jobs/min	|1	|165 mins	|1996	|10 mins	|10 pods	|351	|24556	|23007	|65	|
+|Job with default configurations (no spark driver retries and no webhook, 2x executors)	|StartJobRun	|batch	|80 jobs/min	|1	|200 mins	|1066	|10 mins	|20 pods	|351	|15928	|21997	|62	|
+|Job with default configurations (no spark driver retries and no webhook, 10x jobs per VC)	|StartJobRun	|batch	|150 jobs/min	|10	|60 mins	|1953	|10 mins	|10 pods	|351	|23953	|22092	|62	|
+|Job with spark driver retries and no webhook	|StartJobRun	|batch	|140 jobs/min	|1	|60 mins	|1747	|10 mins	|10 pods	|251	|8270	|20014	|79	|
+|Job with webhook (up to max 2 sec delay) and retries	|StartJobRun	|batch	|140 jobs/min	|1	|200 mins	|1827	|10 mins	|10 pods	|351	|21848	|21498	|61	|
 |Job with default retries
 * webhook of 2 seconds
 * 4500+ streaming jobs
-* 4500+ batch jobs	|StartJobRun	|Streaming	|140 jobs/min	|1	|30 mins	|4080	|N/A	|3 pods	|351	|4079	|22660	|65	|855	|0.05	|
-|StartJobRun	|Batch	|110 jobs/min	|1	|200 mins	|1436	|10 mins	|10 pods	|351	|21861	|15366	|44	|0.13	|
-|	|	|	|	|	|	|	|	|	|	|	|	|	|	|	|
-
-
+* 4500+ batch jobs	|StartJobRun	|Streaming	|140 jobs/min	|1	|30 mins	|4080	|N/A	|3 pods	|351	|4079	|22660	|65	|
+|StartJobRun	|Batch	|110 jobs/min	|1	|200 mins	|1436	|10 mins	|10 pods	|351	|21861	|15366	|
+|	|	|	|	|	|	|	|	|	|	|	|	|	|
 
 ## Recommendations to meet large-scale needs
 
