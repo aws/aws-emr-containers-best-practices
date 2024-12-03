@@ -1,0 +1,2412 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../known-factors-start-job-run/">
+      
+      
+        <link rel="next" href="../load-test-for-spark-operator/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.26">
+    
+    
+      
+        <title>Recommendation for StartJobRun - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#emr-eks-scale-recommendations-for-large-customers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Recommendation for StartJobRun
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+          
+  
+  Submit applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+          
+  
+  Storage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+          
+  
+  Metastore Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+          
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+          
+  
+  Node Placement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../performance/docs/dra/" class="md-tabs__link">
+          
+  
+  Performance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+          
+  
+  Cost Tracking and Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../scalaiblity-glossary/" class="md-tabs__link">
+          
+  
+  Scalability
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR on EKS(AWS Outposts)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Security
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Security
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Encryption
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Encryption
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Network Security
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Secrets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Submit applications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Submit applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pyspark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Build Multi-arch Docker Image
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Storage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EBS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FSx for Lustre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Instance Store
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Metastore Integration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Metastore Integration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive Metastore
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS Glue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Troubleshooting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Log Location in S3 and CloudWatch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change Log Level
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI via Reverse Proxy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Self Hosted SHS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RBAC Permissions error
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Cluster AutoScaler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/karpenter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Karpenter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Node Placement
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Node Placement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Node placement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Fargate Node placement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Performance
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Performance
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Resource Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/binpack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BinPacking
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Best Practices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cost Tracking and Optimization
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Cost Tracking and Optimization
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cost Optimization using EC2 Spot Instances
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Decommission
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-tracking/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cost Tracking
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Scalability
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Scalability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scalaiblity-glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary and Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../known-factors-spark-operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Known Factors for Spark Operator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../known-factors-start-job-run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Known Factors for StartJobRun API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Recommendation for StartJobRun
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Recommendation for StartJobRun
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#large-scale-load-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Scale Load Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Large Scale Load Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations-to-meet-large-scale-needs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations to meet large-scale needs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations to meet large-scale needs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workload-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workload distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-about-eks-cluster-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Details about EKS Cluster configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Details about EKS Cluster configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-instance-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node instance size
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-control-plane-scale-config-for-etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS Control plane scale config for Etcd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-api-server-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS API Server Latency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-pull-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image pull policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-job-driver-retry-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      EMR job driver retry strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-job-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      EMR job timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-version-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS Version Upgrade
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-insights-and-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Insights and Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../load-test-for-spark-operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recommendation for Spark Operator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphana-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Grafana Dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#large-scale-load-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Scale Load Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Large Scale Load Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendations-to-meet-large-scale-needs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations to meet large-scale needs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommendations to meet large-scale needs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workload-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workload distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-about-eks-cluster-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Details about EKS Cluster configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Details about EKS Cluster configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-instance-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node instance size
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-control-plane-scale-config-for-etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS Control plane scale config for Etcd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-api-server-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS API Server Latency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-pull-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image pull policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-job-driver-retry-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      EMR job driver retry strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emr-job-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      EMR job timeout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eks-version-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      EKS Version Upgrade
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-insights-and-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Insights and Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="emr-eks-scale-recommendations-for-large-customers">EMR EKS Scale Recommendations for Large customers<a class="headerlink" href="#emr-eks-scale-recommendations-for-large-customers" title="Permanent link">&para;</a></h1>
+<p>This recommendation is to be used by EMR on EKS customers to meet their high workload demands for their EMR on EKS migration. This includes recommendations for cluster farm sizing, EKS pod concurrency and EMR on EKS throughput. EMR on EKS job submission rate is defined at the maximum number of EMR on EKS jobs submitted per minute to a single EKS cluster. EMR on EKS job submission rate is defined at a cluster level and impacted by several factors including infrastructure, control plane, and data plane components.</p>
+<p>These recommendations are only guidelines, we recommend monitoring cluster activity to determine whether additional clusters or additional workload split across clusters is required. Lastly, both AWS EMR and EKS teams are constantly making improvements to support higher throughput. Customers can use these recommendations to continue onboarding their workloads to EMR on EKS. </p>
+<h2 id="large-scale-load-benchmark">Large Scale Load Benchmark<a class="headerlink" href="#large-scale-load-benchmark" title="Permanent link">&para;</a></h2>
+<ul>
+<li>For these benchmark, we tuned following settings for EKS:<ul>
+<li>EKS cluster version: 1.30</li>
+<li>Pre-warm the EKS control plane</li>
+<li><code>vpc-cni</code> add-on settings:<ul>
+<li><code>livenessProbeTimeoutSeconds</code> : 60 seconds</li>
+<li><code>readinessProbeTimeoutSeconds</code> : 60 seconds</li>
+<li><code>WARM_IP_TARGET</code> : 10</li>
+<li><code>AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG</code> : true with custom ENIConfigs (each AZ having custom subnet of 65536 IP addresses pool for pods)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Note that max number of active EMR on EKS jobs corresponds to maximum concurrently active jobs that have been submitted to the EKS cluster, and are not yet completed.</li>
+<li>Batch jobs were run with 10 executors </li>
+<li>We used default pod spec for our EMR jobs</li>
+<li>The streaming jobs scenario were tested by first submitting all streaming jobs before running the batch jobs</li>
+<li>The streaming jobs were tested with constant 3 executors</li>
+</ul>
+<h3 id="benchmark-results">Benchmark Results<a class="headerlink" href="#benchmark-results" title="Permanent link">&para;</a></h3>
+<p>The benchmark results show the different configurations we ran with to mimic customer workloads, achieving a near 100% job completion rate for EMR on EKS. The factors we tuned were the following:</p>
+<ul>
+<li>EMR on EKS Job submission rate</li>
+<li>Spark Job Driver retries configuration</li>
+<li>Mutating Webhook latency</li>
+<li>Duration of the EMR on EKS job run time</li>
+<li>Total runtime for the test</li>
+<li>Image pull policy</li>
+</ul>
+<p>There are also some other factors that will affect the EMR job submission throughput that we didn’t tune and used their default settings:</p>
+<ul>
+<li>Pod spec (the number of containers per pod)</li>
+</ul>
+<p>Based on these factors if we examine our results below we notice the following trends:</p>
+<ul>
+<li>If we enable retries on the Spark driver, we have to subsequently reduce the EMR on EKS job submission rate as adding retries also creates more K8s job objects and hence cause an increase in etcd database size and etcd requests latency due to higher number of database objects - increasing overall strain to etcd database.</li>
+<li>Mutating Webhook latency directly impacts Kubernetes API server latencies and the scalability of EKS control plane, increasing the webhook latency leads to backpressure propagated to and leads to delays in running the EMR on EKS job. </li>
+<li><code>vpc-cni</code> add-on becomes a bottleneck during high CPU utilization. This may result in job failures due to network timeouts. <ul>
+<li><strong>Issue 1:</strong> <code>vpc-cni</code> experiences liveness/readiness probe failures due to high node CPU utilization. When these probes fail the nodes are marked as <code>NotReady</code> which can cause jobs to be re-scheduled on another node and fail. The settings for these we recommend to update are <code>livenessProbeTimeoutSeconds</code> and <code>readinessProbeTimeoutSeconds.</code></li>
+<li><strong>Issue 2:</strong> <code>vpc-cni</code> by default maintains a pool of IP addresses for 1 ENI. For x24large this is 50 IP addresses, when these IP addresses are all used <code>vpc-cni</code> will request a 2nd ENI to be attached, this can cause some immediate issues with running out of IP addresses locally on the Node. The setting that we recommend to update to maintain a warm IP pool is <code>WARM_IP_TARGET.</code> This will instruct <code>vpc-cni</code> to always have a fixed number of IP’s as available. <code>vpc-cni</code> will automatically request new ENI to maintain a constant pool of <code>WARM_IP_TARGET</code></li>
+<li><strong>Issue 3</strong>: <code>vpc-cni</code> by default assigns IP addresses to pods from the subnet of the node. The number of IP addresses available in the node’s subnet becomes bottleneck if this number is not large enough, causing pod creation to start failing. We can change the behavior of <code>vpc-cni</code> to specify a subnet to be used to assign IP addresses to pods. This behavior can be enabled by creating custom ENIConfig in the cluster and then setting <code>AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG</code> variable. You can follow Steps 2 and 3 in this <a href="https://docs.aws.amazon.com/eks/latest/userguide/cni-custom-network-tutorial.html">EKS doc</a> for detailed instructions on enabling custom networking for pods. After that, you will need to recreate node-groups in EKS cluster for those changes to take effect.</li>
+<li>Reference: <a href="https://aws.github.io/aws-eks-best-practices/networking/vpc-cni/#handle-livenessreadiness-probe-failures">https://aws.github.io/aws-eks-best-practices/networking/vpc-cni/</a></li>
+</ul>
+</li>
+<li>The bottleneck in increasing the job submission rate is usually etcd db size and the number of objects in etcd db. <ul>
+<li>Etcd db has a db size limit of 8GB, beyond which db becomes readonly and you can lose access to your EKS cluster. Ideally, we recommend to not cross 7GB of etcd db size.</li>
+<li>As the number of objects in etcd db increase, this leads to increased load on Kubernetes API server, causing API server requests to fail, subsequently causing EMR jobs to fail and reducing EMR job success rate.</li>
+</ul>
+</li>
+<li>The Job churn rate is the operations by the job controller. If the churn rate is high, then the Job queue can’t be processed in time which lead to latency in the EKS cluster. The job churn rate is affected by the job submissions and when the jobs are terminated. It can happen when etcd requests are seeing higher latency and thereby affecting job churn rate.</li>
+</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Test Scenario</th>
+      <th>Job submission mode</th>
+      <th>Job Type</th>
+      <th><strong>EMR EKS Job Submission Rate</strong> (per EKS cluster)</th>
+      <th>Jobs/VC/Min</th>
+      <th>Max Number of Active EMR EKS Jobs</th>
+      <th>Weighted Avg Job Duration</th>
+      <th>Executors/job</th>
+      <th># of Nodes</th>
+      <th># of EMR jobs</th>
+      <th># of Concurrent pods</th>
+      <th><strong># of Pod / Node</strong> (m5.24xlarge)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>150 jobs/min</td>
+      <td>1</td>
+      <td>1996</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>24556</td>
+      <td>23007</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook, 2x executors)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>80 jobs/min</td>
+      <td>1</td>
+      <td>1066</td>
+      <td>10 mins</td>
+      <td>20 pods</td>
+      <td>351</td>
+      <td>15928</td>
+      <td>21997</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook, 10x jobs per VC)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>150 jobs/min</td>
+      <td>10</td>
+      <td>1953</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>23953</td>
+      <td>22092</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <td>Job with spark driver retries and no webhook</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>1747</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>251</td>
+      <td>8270</td>
+      <td>20014</td>
+      <td>79</td>
+    </tr>
+    <tr>
+      <td>Job with webhook (up to max 2 sec delay) and retries</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>1827</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>21848</td>
+      <td>21498</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Job with default retries with webhook of 2 seconds, 4500+ streaming jobs and 4500+ batch jobs</td>
+      <td>StartJobRun</td>
+      <td>Streaming</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>4080</td>
+      <td>N/A</td>
+      <td>3 pods</td>
+      <td>351</td>
+      <td>4079</td>
+      <td>22660</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>StartJobRun</td>
+      <td>Batch</td>
+      <td>110 jobs/min</td>
+      <td>1</td>
+      <td>1436</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>21861</td>
+      <td>15366</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="recommendations-to-meet-large-scale-needs">Recommendations to meet large-scale needs<a class="headerlink" href="#recommendations-to-meet-large-scale-needs" title="Permanent link">&para;</a></h2>
+<h3 id="workload-distribution">Workload distribution<a class="headerlink" href="#workload-distribution" title="Permanent link">&para;</a></h3>
+<p>If the overall workload is larger than an individual EKS cluster, the customer needs to distribute the workload across multiple EKS clusters. Each EKS cluster can handle a portion of the workload, which is required to handle a large volume of EMR on EKS jobs without impacting the performance of the EKS clusters. For more details on how to split clusters, see <a href="https://aws.github.io/aws-eks-best-practices/scalability/docs/scaling_theory/">here</a></p>
+<p>For estimating the number of clusters required to onboard all the expected workloads in the first 5 scenarios above, customers can use the following calculation:</p>
+<ul>
+<li><strong>Weighted average runtime (WAR):</strong> Total weighted average job runtime of EMR jobs</li>
+<li><strong>Number of pods per EMR on EKS job (NOE):</strong> This is the average number of pods for a single EMR on EKS job including executor pods, driver pod, job pods (2 in case of driver retries enabled).</li>
+<li><strong>The Peak Submission Rate (PSR):</strong> it is calculated by summing the peak state job submit volume rate across all services. </li>
+<li><strong>Recommended Concurrently Running EMR on EKS Pods (RCRP)</strong>:  This is the total number of concurrently running pods in a single EKS cluster. The recommendation is to keep RCRP below 20000. <em>RCRP = 20000</em>,  we came to this conclusion by using the findings from the benchmark where it was observed that having concurrent EMR on EKS pods more than 20000 led to more strain on the etcd database that could lead to job failures.  <ul>
+<li><strong>Note:</strong> EMR has made optimizations in its control plane and scale testing on the above number **** (RCRP) is in-progress. We plan to re-test these scenarios with the above mentioned optimization and share the updated number.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Formula:</strong></p>
+<div class="codehilite"><pre><span></span><code>Number of Clusters = (WAR <span class="gs">* PSR *</span> NOE) / RCRP
+</code></pre></div>
+
+<p><em>NOTE: For the streaming scenario, the recommendation is to look at the number of streaming jobs and the number of pods per one streaming job to estimate the number of clusters required.</em></p>
+<p>*NOTE: It is assumed the load is evenly distributed across all the shards.
+*</p>
+<h3 id="details-about-eks-cluster-configuration">Details about EKS Cluster configuration<a class="headerlink" href="#details-about-eks-cluster-configuration" title="Permanent link">&para;</a></h3>
+<h4 id="node-instance-size">Node instance size<a class="headerlink" href="#node-instance-size" title="Permanent link">&para;</a></h4>
+<p>In general, fewer large instances are recommended over many small instances. From other Spark on EKS customers we see 500-600 nodes for when they begin distributing load to additional clusters. Each instance requires API calls to the API server, so the more instances you have, the more load on the API server. For right sizing the node and pod cpu/memory requests for your application, please follow this guide https://aws.github.io/aws-eks-best-practices/scalability/docs/node_efficiency.</p>
+<h4 id="eks-control-plane-scale-config-for-etcd">EKS Control plane scale config for Etcd<a class="headerlink" href="#eks-control-plane-scale-config-for-etcd" title="Permanent link">&para;</a></h4>
+<p>EKS actively monitors the load on control plane instances and automatically scales them to ensure high performance. However, high EMR job submission rates (similar to experiments in this doc) can cause etcd requests seeing high latency/timeouts, even when Etcd control plane instances are not being used to their peak performance in terms of cpu/memory (and thus are not automatically scaled by EKS control plane autoscaler). This latency issue is caused due to high network activity by the large number of Etcd objects when you are pushing the EMR load (in terms of job submission rate and the number of concurrent pods) to the above mentioned test scenarios. In this case, you may need to ensure your EKS control plane instances for etcd are properly scaled up. </p>
+<h4 id="eks-api-server-latency">EKS API Server Latency<a class="headerlink" href="#eks-api-server-latency" title="Permanent link">&para;</a></h4>
+<p>It is important to minimize the EKS API server latencies. Webhooks can be one potential root cause for high API server latency. The recommendation is to improve the webhook latency to less than 50 milliseconds and monitor the latency to understand health of the cluster. <a href="https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#best-practices-and-warnings">K8s admission webhook best practice.</a></p>
+<h3 id="image-pull-policy">Image pull policy<a class="headerlink" href="#image-pull-policy" title="Permanent link">&para;</a></h3>
+<p>In an EKS cluster, the imagePullPolicy determines how the container images are pulled from the ECR registry. There are two commonly used imagePullPolicies: Always and IfNotPresent.</p>
+<p>EMR on EKS allows customers to set the image pull policy for Job runner, driver and executors.</p>
+<p>For image pull policy, please check it out <a href="https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy">Kubernetes Image pull policy</a>.</p>
+<h3 id="emr-job-driver-retry-strategy">EMR job driver retry strategy<a class="headerlink" href="#emr-job-driver-retry-strategy" title="Permanent link">&para;</a></h3>
+<p>In order to improve the EMR job throughput, disabling the EMR job driver retry strategy should be considered. This however, will shift the responsibility of managing retries to the customer if needed, but will reduce the number of EKS job events in the job controller queue and the number of etcd db objects.</p>
+<h3 id="emr-job-timeout">EMR job timeout<a class="headerlink" href="#emr-job-timeout" title="Permanent link">&para;</a></h3>
+<p>To enhance the success rate of EMR jobs, it is advisable that jobs that can withstand an increase in the EMR Job Timeout setting to consider doing so. This adjustment can lead to a higher probability of job completion, particularly when there is an accumulation of K8s Jobs pending in the Job Controller Queue. The EMR Job timeout setting can be configured by using the following Configuration Override while submitting the job</p>
+<div class="codehilite"><pre><span></span><code>{
+&quot;configurationOverrides&quot;: {
+  &quot;applicationConfiguration&quot;: [{
+      &quot;classification&quot;: &quot;emr-containers-defaults&quot;,
+      &quot;properties&quot;: {
+          &quot;job-start-timeout&quot;:&quot;1800&quot;
+      }
+  }]
+}
+</code></pre></div>
+
+<h3 id="eks-version-upgrade">EKS Version Upgrade<a class="headerlink" href="#eks-version-upgrade" title="Permanent link">&para;</a></h3>
+<p>It is recommended to keep EKS version upgraded since the enhancement of concurrency will be improved in future versions.</p>
+<h2 id="monitoring-insights-and-recommendations">Monitoring Insights and Recommendations<a class="headerlink" href="#monitoring-insights-and-recommendations" title="Permanent link">&para;</a></h2>
+<p>There are many metrics on EKS to understand the health of the cluster. Monitoring and debugging generally starts with high level big picture metrics, then getting progressively more granular or scoped in a specific resource/actions to identify root cause. The recommendation is to couple the above recommendations with the monitoring insights below while onboarding workloads and running in production. The metrics section in the appendix cover critical cluster metrics that impact EMR job completion throughput, how to plot them and general guidelines for thresholds. There can be other EKS metrics that can be useful on a case by case basis. We also recommend an EMR on EKS scalability review where we can review existing dashboards, thresholds and provide more details on the metrics. </p>
+<ul>
+<li>Appendix A - Monitoring metrics to determine overall health and utilization of EKS cluster from EMR jobs standpoint</li>
+<li>Appendix B - Documentation and best practices on scalability </li>
+</ul>
+<h1 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h1>
+<h3 id="appendix-a-monitoring-metrics-of-eks-cluster-from-emr-jobs-standpoint"><strong>Appendix A - Monitoring metrics of EKS cluster from EMR jobs standpoint</strong><a class="headerlink" href="#appendix-a-monitoring-metrics-of-eks-cluster-from-emr-jobs-standpoint" title="Permanent link">&para;</a></h3>
+<p>We list the metrics below that can be used to catch scaling issues proactively, especially the ones that are important for a high EMR job submission throughput as discovered in our load-test experiments.</p>
+<ul>
+<li><strong>API Server Request and Error counts total:</strong> These are the total number/rate of requests to API server that resulted in an error response code such as 4xx or 5xx. This metric helps monitoring API server health at a high level. Many different factors can be the root-cause for API server error count. Failures in API server requests will cause EMR job submission to fail or transition running EMR jobs to failed state. To resolve the API Server failures, you need to look at the underlying root-cause and resolve it.<ul>
+<li>
+<ul>
+<li>Prometheus query for number of API server request by return code by 5 mins duration:
+    <code>sum(rate``(apiserver_request_total[5m])) by (code) &gt; 0</code></li>
+</ul>
+</li>
+<li>If you find errors in the API server metrics. you can use audit logs to find more details about the errors and what client was involved.<ul>
+<li>Cloudwatch log insights query for finding 5xx error generators (loggroup: /aws/eks/<cluster_name>/cluster)<ul>
+<li>stats count(*) as count by requestURI, verb, responseStatus.code, userAgent
+    | filter @logStream =~ "kube-apiserver-audit"
+    | filter responseStatus.code &gt;= 500 
+    | sort count desc</li>
+</ul>
+</li>
+<li>Cloudwatch log insights query for finding 4xx error generators (loggroup: /aws/eks/<cluster_name>/cluster)<ul>
+<li>stats count(*) as count by requestURI, verb, responseStatus.code, userAgent
+    | filter @logStream =~ "kube-apiserver-audit"
+    | filter responseStatus.code &gt;= 400
+    | filter responseStatus.code &lt; 500
+    | sort count desc</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>API Request Latency by verb:</strong> This will help show which API calls are the slowest by verb and scope. This can help narrow down which actions or resources are impacted compared to overall latency. As the EMR job submission rate increases, number of objects per resource type increases in the EKS cluster. This will cause espcially LIST calls latency to increase and in turn cause strain to etcd database and API server. This can further affect other API latencies such as POST to increase and cause EMR jobs to fail.<ul>
+<li>Prometheus query for P99 latency values by verb and scope (ignoring long running connections like Watch and Connect as they run longer than normal API calls):<ul>
+<li><code>histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{verb!~"CONNECT|WATCH"}[5m])) by (verb, scope, le)) &gt; 0</code></li>
+</ul>
+</li>
+<li></li>
+<li>Adding the resource in the query can  give more granular information about latency by identifying when a single resource is slow or impacted:<ul>
+<li><code>histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{verb!~"CONNECT|WATCH"}[5m])) by (resource, verb, scope, le)) &gt; 0</code></li>
+</ul>
+</li>
+<li></li>
+</ul>
+</li>
+<li><strong>API → Etcd request latency by object/action :</strong> This metric can help to identify if the API Request latency is being driven by backend/etcd performance or if it’s being introduced at the API server. This metric increases when the strain on Etcd db is causing API server requests to experience higher latency especially when the number of objects in Etcd increases. As Etcd request latency increases, api server requests can start timing out causing EMR jobs to fail to submit or transition from running to failed state. To recover, you will need to back off by reducing the EMR job submission rate or stopping the new job submissions completely.<ul>
+<li>
+<ul>
+<li><code>histogram_quantile(0.99, sum(rate(etcd_request_duration_seconds_bucket[5m])) by (type, operation, le)) &gt; 0</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Etcd database size:</strong>  When you create a cluster, Amazon EKS provisions the <a href="https://etcd.io/docs/v3.3/dev-guide/limit/#storage-size-limit">maximum recommended database size</a> for etcd in Kubernetes, which is 8GB. When the database size limit is exceeded, etcd emits a no space alarm and stops taking further write requests. In other words, the cluster becomes read-only, and all requests to mutate objects such as creating new pods, scaling deployments, etc., will be rejected by the cluster’s API server. Further, users won’t be able to delete objects or object revisions to reclaim etcd storage space. This will cause all subsequent EMR jobs to fail. It is very important to monitor etcd database size to keep it under limit. If your Etcd db runs into no space alarm, EKS auto recovery workflow kicks in to recover some db space. Please check this <a href="https://aws.amazon.com/blogs/containers/managing-etcd-database-size-on-amazon-eks-clusters/">blog post</a> for more details on recovering Etcd db from no space alarm.<ul>
+<li>Etcd DB size metric<ul>
+<li>apiserver_storage_size_bytes</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Node utilization:</strong> The number of nodes, the instance types for those nodes, the EMR job submission rate combined with pods cpu/memory request limits will contribute to the node utilization going up or down. Ideally we need high node utilization for efficient EKS cluster compute usage. However, if you see all nodes in the cluster are being utilized near 100% in terms of cpu/memory, you may need to scale your EKS cluster further  by additional nodes (manually if not using an autoscaler).<ul>
+<li>node_cpu_seconds_total</li>
+<li>node_memory_MemFree_bytes</li>
+<li>node_memory_Cached_bytes</li>
+<li>node_memory_Buffers_bytes</li>
+<li>node_memory_MemTotal_bytes</li>
+<li>You need node_exporter addon for these metrics: https://aws-quickstart.github.io/cdk-eks-blueprints/addons/prometheus-node-exporter/</li>
+<li></li>
+<li>You can find queries for the above dashboard here: https://github.com/awslabs/data-on-eks/blob/main/analytics/terraform/emr-eks-karpenter/emr-grafana-dashboard/emr-eks-grafana-dashboard.json</li>
+</ul>
+</li>
+<li><strong><em>[Only if you are using admission webhooks]</em> Admission Webhook request Counts</strong> - This metric denotes the numbers of how many requests are hitting the admission webhooks by name. This can show a misconfiguration of webhooks if theres a single webhook that is both receiving a large number of requests. Misconfiguration of a webhook can cause unintended API server requests to see higher latency and cause slowness in job submission or even time-outs.<ul>
+<li>
+<ul>
+<li><code>sum(rate(apiserver_admission_webhook_request_total[5m])) by (name) &gt; 0</code></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>sum(rate(apiserver_admission_webhook_request_total{rejected="true"}[5m])) by (name) &gt; 0</code></li>
+</ul>
+</li>
+<li>You can also use the “operation” label to correlate by actions.</li>
+</ul>
+</li>
+<li><strong><em>[Only if you are using admission webhooks]</em> Admission Webhook request Latency</strong> This metric shows how long requests from the API servers to admission webhooks are taking. We can break that out by webhook name, success/failure, and operation.<ul>
+<li>This latency is useful in tandem with the API request latency metrics as the time it takes to handle webhook requests is included in the total latency. If the webhooks are taking ~3s to respond, we can expect ~3s of <em>additional</em> latency to those requests. High webhook latency can cause API server requests to time out causing EMR job failures.<ul>
+<li>Be wary on CPU throttling or overwhelming the Pods that are servicing webhooks. Delays or failures in admission can have a cluster wide performance impact (in worst cases it can grind a cluster to a halt) </li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>histogram_quantile(0.99, sum(rate(apiserver_admission_webhook_admission_duration_seconds_bucket[5m])) by (name, operation, le)) &gt; 0</code></li>
+</ul>
+</li>
+<li>You can add the rejected label to the output to also get an idea how often webhooks are allowing/rejecting requests. <ul>
+<li><code>histogram_quantile(0.99, sum(rate(apiserver_admission_webhook_admission_duration_seconds_bucket[5m])) by (name, operation, rejected, le)) &gt; 0</code></li>
+</ul>
+</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<p><strong>Dashboard that was demonstrated</strong>: https://github.com/RiskyAdventure/Troubleshooting-Dashboards/blob/main/api-troubleshooter.json</p>
+<p><strong>EKS Performance Overview Grafana Dashboard</strong>: https://grafana.com/grafana/dashboards/6775-kubernetes-performance-overview/</p>
+<p><strong>SLO / SLI reference from Upstream for baselines:  https://github.com/kubernetes/community/blob/master/sig-scalability/slos/api_call_latency.md</strong></p>
+<hr />
+<h3 id="appendix-b-documentation-and-best-practices-on-scalability"><strong>Appendix B - Documentation and best practices on scalability</strong><a class="headerlink" href="#appendix-b-documentation-and-best-practices-on-scalability" title="Permanent link">&para;</a></h3>
+<p>Below points link to several EKS scalability best practices documentation. Most of these references are for educational purpose on how to monitor, scale test, and autoscale EKS cluster and are not intended to be recommendations for EMR on EKS customers.</p>
+<ul>
+<li>Blog on how EKS does scalability testing https://aws.amazon.com/blogs/containers/deep-dive-into-amazon-eks-scalability-testing/<ul>
+<li>This best practices page dives deeper into the metrics and SLOs that K8s community measures https://aws.github.io/aws-eks-best-practices/scalability/docs/kubernetes_slos/</li>
+<li>We run 5,000 nodes and ~150k pods, churning at 50 pods/s in our load tests. But our node capacity is static and not autoscaling.</li>
+</ul>
+</li>
+<li>Kubernetes scalability thresholds https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md<ul>
+<li>These are where Kubernetes Scalability SIG would expect performance degradation in the cluster</li>
+</ul>
+</li>
+<li>Some of the AWS quotas and other limitations we've seen customers hit https://aws.github.io/aws-eks-best-practices/scalability/docs/quotas/</li>
+<li>Reference Prometheus configuration is the kube-prometheus-stack https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack though it collects a ton of metrics and may hit issues with large clusters.</li>
+<li>This best practices page has some of the key metrics to gather for your cluster https://aws-observability.github.io/observability-best-practices/guides/containers/oss/eks/best-practices-metrics-collection/#control-plane-metrics</li>
+<li>This page discusses the prometheus metrics available from the AWS VPC CNI https://github.com/aws/amazon-vpc-cni-k8s/blob/master/cmd/cni-metrics-helper/README.md <ul>
+<li>You don’t need to use the metrics helper application unless you want these available in CloudWatch. The prometheus endpoint should be available to your DataDog agents.</li>
+<li>You can annotate pods to use the autoscrape config https://github.com/aws/amazon-vpc-cni-k8s/issues/327#issuecomment-466913046</li>
+</ul>
+</li>
+<li>We also discussed that Kubernetes clients can impact the performance of the cluster with spammy or expensive API calls. Cloud Watch Log Insights is a powerful tool to query the audit events in your EKS clusters and can provide details like “Which userAgent is sending the slowest LIST calls in the cluster? and what are they listing?” <ul>
+<li>The queries i use to troubleshoot and deep dive are listed here https://github.com/aws-samples/specialist-tam-container-dashboards/blob/main/troubleshooting-queries/CloudWatch-Logs-Troubleshooting-Queries.md</li>
+</ul>
+</li>
+<li>OpenAI has done a couple of blogs discussing their journey on huge K8s clusters: <ul>
+<li>https://openai.com/research/scaling-kubernetes-to-2500-nodes</li>
+<li>https://openai.com/research/scaling-kubernetes-to-7500-nodes</li>
+</ul>
+</li>
+<li>Kubernetes Fail stories, scale often plays a role in some of the nastier outages: https://k8s.af/</li>
+<li>Metrics to watch on CoreDNS https://www.datadoghq.com/blog/coredns-metrics/#metrics-to-watch-coredns_dns_responses_total-coredns_forward_responses_total</li>
+<li>EKS Blog on Managing and monitoring etcd DB size and Defrag: https://aws.amazon.com/blogs/containers/managing-etcd-database-size-on-amazon-eks-clusters/</li>
+<li>Shane’s API server Dashboard https://aws.amazon.com/blogs/containers/troubleshooting-amazon-eks-api-servers-with-prometheus/</li>
+<li>EKS scaling theory: https://aws.github.io/aws-eks-best-practices/scalability/docs/scaling_theory/</li>
+<li>Kubernetes recommendations on scalability thresholds: https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md</li>
+</ul>
+<h3 id="appendix-c-load-testing-cluster-configurations"><strong>Appendix C -  Load Testing Cluster Configurations</strong><a class="headerlink" href="#appendix-c-load-testing-cluster-configurations" title="Permanent link">&para;</a></h3>
+<p>The EKS cluster setup and EMR release are maintained across the different scenarios while performing the load test</p>
+<ul>
+<li>Number of nodes: 351</li>
+<li>Instance type: m5.24xlarge</li>
+<li>Instance number of cores: 16</li>
+<li>Instance memory: 128 Gb</li>
+<li>EMR Relaese: emr-7.0.0-latest</li>
+<li>Eks version: 1.30</li>
+<li>Region: us-west-2</li>
+<li>Number of executors: 10</li>
+<li>Executor Memory: 512M</li>
+<li>Executor Core: 1</li>
+<li>Driver Core: 1</li>
+<li>Driver Memory: 512</li>
+<li>Total number of configmaps per job: 7</li>
+</ul>
+<h3 id="appendix-d-image-pull-policies-and-proscons"><strong>Appendix D - Image Pull Policies and pros/cons</strong><a class="headerlink" href="#appendix-d-image-pull-policies-and-proscons" title="Permanent link">&para;</a></h3>
+<p>Here are the advantages and disadvantages of each: </p>
+<h4 id="imagepullpolicy-always-default">ImagePullPolicy: Always  (Default)<a class="headerlink" href="#imagepullpolicy-always-default" title="Permanent link">&para;</a></h4>
+<p>Advantages: </p>
+<ul>
+<li>Consistent behavior: Always pulling the latest image ensures consistent behavior across deployments, as all nodes will have the same version of the image. </li>
+<li>Easy to manage: With Always, you don't need to worry about image versions or caching, as the latest image will always be pulled. </li>
+</ul>
+<p>Disadvantages: </p>
+<ul>
+<li>Increased network traffic: Always pulling the latest image can result in increased network traffic, as the entire image is downloaded every time.</li>
+<li>Longer deployment times: Pulling the latest image can take longer, especially for large images, which can increase deployment times. </li>
+</ul>
+<h4 id="imagepullpolicy-ifnotpresent">ImagePullPolicy: IfNotPresent<a class="headerlink" href="#imagepullpolicy-ifnotpresent" title="Permanent link">&para;</a></h4>
+<p>Advantages: </p>
+<ul>
+<li>Faster deployments: IfNotPresent can lead to faster deployments, as the image is only pulled if it's not already present in the node's cache. </li>
+<li>Reduced network traffic: By only pulling the image when it's not present, you can reduce network traffic and save on data transfer costs. </li>
+<li>Improved performance: IfNotPresent can improve performance, as the image is cached on the node, reducing the need for subsequent pulls. </li>
+</ul>
+<p>Disadvantages: </p>
+<ul>
+<li>Inconsistent behavior: With IfNotPresent, nodes may have different versions of the image, leading to inconsistent behavior across deployments. </li>
+<li>More complex management: IfNotPresent requires more complex management, as you need to ensure that the image is properly cached and updated. </li>
+<li>Potential for outdated images: If an image is not properly updated, nodes may end up with outdated versions, leading to potential issues. </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>

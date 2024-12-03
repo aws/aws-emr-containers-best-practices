@@ -1,0 +1,2733 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../load-test-for-start-job-run-api/">
+      
+      
+        <link rel="next" href="../graphana-dashboard/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.26">
+    
+    
+      
+        <title>Recommendation for Spark Operator - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#run-large-scale-jobs-by-emr-on-eks-spark-operator" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Recommendation for Spark Operator
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+          
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+          
+  
+  Submit applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+          
+  
+  Storage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+          
+  
+  Metastore Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+          
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+          
+  
+  Node Placement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../performance/docs/dra/" class="md-tabs__link">
+          
+  
+  Performance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+          
+  
+  Cost Tracking and Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../scalaiblity-glossary/" class="md-tabs__link">
+          
+  
+  Scalability
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EMR on EKS(AWS Outposts)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Security
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Security
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Encryption
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Encryption
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Network Security
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Secrets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Submit applications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Submit applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pyspark
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Build Multi-arch Docker Image
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Storage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EBS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FSx for Lustre
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Instance Store
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Metastore Integration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Metastore Integration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hive Metastore
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AWS Glue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Troubleshooting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spark Log Location in S3 and CloudWatch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change Log Level
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connect to Spark UI via Reverse Proxy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Self Hosted SHS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RBAC Permissions error
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Cluster AutoScaler
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/karpenter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Karpenter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Node Placement
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Node Placement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Node placement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Fargate Node placement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Performance
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Performance
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dynamic Resource Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/binpack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BinPacking
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    EKS Best Practices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Cost Tracking and Optimization
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Cost Tracking and Optimization
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cost Optimization using EC2 Spot Instances
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Decommission
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-tracking/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cost Tracking
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Scalability
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Scalability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scalaiblity-glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary and Terms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../known-factors-spark-operator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Known Factors for Spark Operator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../known-factors-start-job-run/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Known Factors for StartJobRun API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../load-test-for-start-job-run-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recommendation for StartJobRun
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Recommendation for Spark Operator
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Recommendation for Spark Operator
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#large-scale-load-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Scale Load Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Large Scale Load Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metrics Explanation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-about-the-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes about the Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice-recommendation-to-use-spark-operator-on-eks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best practice / recommendation to use Spark Operator on EKS:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best practice / recommendation to use Spark Operator on EKS:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-spark-operator-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Spark Operator numbers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Spark Operator numbers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-use-multiple-spark-operators-for-high-volume-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Use Multiple Spark Operators for High-Volume Tasks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-balancing-operator-numbers-for-long-running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Balancing Operator Numbers for Long-Running Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-do-not-use-too-small-operators-for-large-volume-of-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Do not use too small Operators for large volume of workload.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-system-health-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 System Health Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-formula-to-determine-the-number-of-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Formula to determine the number of Operators :
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-instance-sizes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Instance Sizes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-spark-operator-configuration-best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Spark Operator Configuration best practice:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Spark Operator Configuration best practice:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-to-isolate-the-operational-services-and-spark-application-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 To Isolate the Operational services and Spark application pods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-to-set-up-controllerthreads-with-higher-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 To set up controllerThreads with higher number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-for-spark-job-drivers-and-executor-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 For spark job drivers and executor pods:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-implementing-retry-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Implementing Retry Mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-eks-cluster-scaler-scheduler-set-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. EKS cluster scaler &amp; scheduler set up
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. EKS cluster scaler & scheduler set up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-autoscaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Autoscaler
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Karpenter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-binpacking-custom-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Binpacking Custom Scheduler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-ip-address-utilisation-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. IP address utilisation &amp; settings:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. IP address utilisation & settings:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-with-eks-autoscaluer" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 With EKS AutoScaluer:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-with-karpenter-node-provisioner" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 With Karpenter Node Provisioner:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-minimise-the-config-maps-and-initcontainers-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Minimise the Config Maps and initContainers spec
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-appendix" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Appendix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Appendix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-artifact-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Artifact Reference
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphana-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Grafana Dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#large-scale-load-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Scale Load Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Large Scale Load Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics-explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metrics Explanation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes-about-the-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes about the Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice-recommendation-to-use-spark-operator-on-eks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best practice / recommendation to use Spark Operator on EKS:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best practice / recommendation to use Spark Operator on EKS:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-spark-operator-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Spark Operator numbers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Spark Operator numbers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-use-multiple-spark-operators-for-high-volume-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Use Multiple Spark Operators for High-Volume Tasks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-balancing-operator-numbers-for-long-running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Balancing Operator Numbers for Long-Running Tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-do-not-use-too-small-operators-for-large-volume-of-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Do not use too small Operators for large volume of workload.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-system-health-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 System Health Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-formula-to-determine-the-number-of-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Formula to determine the number of Operators :
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-instance-sizes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Instance Sizes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-spark-operator-configuration-best-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Spark Operator Configuration best practice:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Spark Operator Configuration best practice:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-to-isolate-the-operational-services-and-spark-application-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 To Isolate the Operational services and Spark application pods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-to-set-up-controllerthreads-with-higher-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 To set up controllerThreads with higher number
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-for-spark-job-drivers-and-executor-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 For spark job drivers and executor pods:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-implementing-retry-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Implementing Retry Mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-eks-cluster-scaler-scheduler-set-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. EKS cluster scaler &amp; scheduler set up
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. EKS cluster scaler & scheduler set up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-autoscaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1 Autoscaler
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2 Karpenter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-binpacking-custom-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3 Binpacking Custom Scheduler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-ip-address-utilisation-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. IP address utilisation &amp; settings:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. IP address utilisation & settings:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-with-eks-autoscaluer" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 With EKS AutoScaluer:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-with-karpenter-node-provisioner" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 With Karpenter Node Provisioner:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-minimise-the-config-maps-and-initcontainers-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Minimise the Config Maps and initContainers spec
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-appendix" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Appendix
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Appendix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-artifact-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Artifact Reference
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="run-large-scale-jobs-by-emr-on-eks-spark-operator"><strong>Run Large Scale Jobs by EMR on EKS Spark Operator</strong><a class="headerlink" href="#run-large-scale-jobs-by-emr-on-eks-spark-operator" title="Permanent link">&para;</a></h1>
+<p>This scalability recommendation is focused on EMR on EKS's Spark Operator performance in a large-scale environment. It offers insights derived from extensive benchmarking and testing across various configurations and workloads. The study explores key factors influencing Spark Operator efficiency, including cluster setup, resource allocation, and job submission patterns.</p>
+<p>Our findings provide a valuable reference for optimizing EMR Spark Operator workloads on Amazon EKS, addressing challenges unique to high-volume, distributed computing environments. The recommendations outlined here aim to help customers achieve a balance between performance, scalability, and resource utilization. By considering these best practices, organizations can enhance their EMR on EKS deployments, ensuring robust and efficient Spark job processing while managing infrastructure costs effectively. This overview serves as a foundation for IT professionals and data engineers seeking to maximize the potential of their Spark applications in cloud-native Kubernetes environments.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#large-scale-load-benchmark">Large Scale Load Benchmark</a><ul>
+<li><a href="#benchmark-results">Benchmark Results</a></li>
+<li><a href="#metrics-explanation">Metrics Explanation</a></li>
+<li><a href="#notes-about-the-limitations">Notes about the Limitations</a></li>
+</ul>
+</li>
+<li><a href="#best-practice--recommendation-to-use-spark-operator-on-eks">Best Practice / Recommendation</a><ul>
+<li><a href="#1-spark-operator-numbers">1. Spark Operator Numbers</a></li>
+<li><a href="#2-instance-sizes">2. Instance Sizes</a></li>
+<li><a href="#3-spark-operator-configuration-best-practice">3. Spark Operator Configuration</a></li>
+<li><a href="#4-eks-cluster-scaler--scheduler-set-up">4. EKS Cluster Scaler &amp; Scheduler</a><ul>
+<li><a href="#41-autoscaler">4.1 Autoscaler</a></li>
+<li><a href="#42-karpenter">4.2 Karpenter</a></li>
+<li><a href="#43-binpacking-custom-scheduler">4.3 Binpacking Custom Scheduler</a></li>
+<li><a href="#44-implementing-retry-mechanisms">4.4 Implementing Retry Mechanisms</a></li>
+</ul>
+</li>
+<li><a href="#5-ip-address-utilisation--settings">5. IP Address Utilization &amp; Settings</a><ul>
+<li><a href="#51-with-eks-autoscaluer">5.1 With EKS AutoScaler</a></li>
+<li><a href="#52-with-karpenter-node-provisioner">5.2 With Karpenter Node Provisioner</a></li>
+</ul>
+</li>
+<li><a href="#6-minimise-the-config-maps-and-initcontainers-spec">6. Config Maps and initContainers</a></li>
+</ul>
+</li>
+<li><a href="#7-appendix">Appendix</a><ul>
+<li><a href="#71-artifact-reference">7.1 Artifact Reference</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="large-scale-load-benchmark">Large Scale Load Benchmark<a class="headerlink" href="#large-scale-load-benchmark" title="Permanent link">&para;</a></h2>
+<ul>
+<li>For these benchmark, we tuned following settings for EKS:<ul>
+<li><strong>EKS cluster version</strong>: 1.30</li>
+<li><strong>SparkOperator version:</strong> <code>emr-6.11.0 (v1beta2-1.3.8-3.1.1)</code><ul>
+<li>The current version of EMR Spark Operator has limited API exposed for users to tune the performance, in this article, we keen to use the below set up for Spark Operators:</li>
+</ul>
+</li>
+<li><strong>Pre-warm the EKS control plane</strong></li>
+<li>Isolated the Operational services and Spark application pods.<ul>
+<li><code>controllerThreads=30</code> , Higher operator worker than default 10.</li>
+<li>To minimise the impacts caused by other services, eg.: spark job pods, prometheus pods, etc, we allocated the Spark Operator(s), Prometheus operators in the dedicated operational node groups accordingly.</li>
+<li>Please see details for Spark Operator(s) and Spark Job Set up in the following best practice section.</li>
+</ul>
+</li>
+<li>To utilize the cluster resources, we have tested the following techniques and settings.<ul>
+<li>EKS Autoscaler or Karpenter</li>
+<li>Binpacking strategy is enabled and accompany with either Autoscaler and Karpenter accordingly. </li>
+</ul>
+</li>
+<li>The cluster resides in a VPC with 6 subnets (2 public subnets and 4 private subnets with S3 endpoint attached):<ul>
+<li>The 4 private subnets are allocated into 2 AZs evenly.</li>
+<li>All Node groups are created in the 4 private subnets, and for each NodeGroup, the subnets associated are in the same AZ, e.g: NodeGroup-AZ1, NodeGroup-AZ2.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The benchmark results are based on the Spark Testing job with spec as below;<ul>
+<li>Driver: 1 Core, 512mb</li>
+<li>Executor: 1 Core 512mb each, for 10 executors. <ul>
+<li><em>Due to default value of <code>spark.scheduler.minRegisteredResourcesRatio</code> = 0.8, then Spark job will start to run with min of 8 executors are allocated. Ref Document: <a href="https://spark.apache.org/docs/3.5.1/configuration.html#kubernetes:~:text=spark.scheduler.minRegisteredResourcesRatio">link</a></em></li>
+</ul>
+</li>
+<li>Each Spark Job is expected to run between 12 ~ 16 mins, which does NOT include the spark submission &amp; pod scheduling time consume.</li>
+<li>Testing Job Script is stored in S3, the code submitted with <code>hadoopConf</code> and <code>sparkConf</code> configmaps.</li>
+<li>Enabled <code>nodeSelector</code> to ensure the Spark Jobs will be assigned into Worker Node Groups.</li>
+</ul>
+</li>
+</ul>
+<h3 id="benchmark-results">Benchmark Results<a class="headerlink" href="#benchmark-results" title="Permanent link">&para;</a></h3>
+<p><img src="./resources/images/EMR_Spark_Operator_Benchmark.png" alt="EMR Spark Operator Benchmark Results" style="width: 100%; height: auto;"></p>
+<h3 id="metrics-explanation">Metrics Explanation<a class="headerlink" href="#metrics-explanation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Spark Operator Job Submission Rate (per EKS cluster):</strong><ul>
+<li>The average submitted jobs per minute, eg: Total jobs submitted / Test Time.</li>
+</ul>
+</li>
+<li><strong>Spark Operator Numbers:</strong>                                               <ul>
+<li>The number of spark operators to be used for the test.</li>
+</ul>
+</li>
+<li><strong>Max Number of Active Jobs / Driver Pods:</strong><ul>
+<li>The max number of Spark Driver pods running concurrently.</li>
+</ul>
+</li>
+<li><strong>Spark Job Running Time</strong><ul>
+<li>The time spent on the spark job execution, the time is vary due to testing spark job, to pick a random number within the time range, to mimic the real workloads.</li>
+</ul>
+</li>
+<li><strong>Number of Worker Nodes:</strong><ul>
+<li>The total worker instances created by EKS cluster, Operational Instances exclusive.</li>
+</ul>
+</li>
+<li><strong>Number of Spark jobs :</strong><ul>
+<li>The total job submitted from Client.</li>
+</ul>
+</li>
+<li><strong>Number of Concurrent pods</strong><ul>
+<li>The max number of spark job pods (Drivers &amp; Executors) running concurrently during the testing</li>
+</ul>
+</li>
+<li><strong>API Server Request Latency - p99 (for create Pod calls) :</strong><ul>
+<li>This metric provides the 99th percentile of API server response times for POST requests to create pods in an EKS cluster over the last 5 minutes.</li>
+</ul>
+</li>
+</ul>
+<h3 id="notes-about-the-limitations">Notes about the Limitations<a class="headerlink" href="#notes-about-the-limitations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Pod template is not available in the current version, this feature has been added into OSS Spark Operator <a href="https://github.com/kubeflow/spark-operator/issues/2193#:~:text=Pod%20template%20support%20(%5BFEATURE%5D%20Use%20pod%20template%20feature%20in%20spark%2Dsubmit%20for%20Spark%203.x%20applications%C2%A0%232101)">Roadmap</a>. Users can only put the configurations via spark job yaml file at the current stage. </li>
+<li>With property <code>spark.scheduler.minRegisteredResourcesRatio</code> has default value <code>0.8</code> for<a href="https://spark.apache.org/docs/3.5.1/configuration.html#:~:text=spark.scheduler.minRegisteredResourcesRatio">KUBERNETES mode</a>, then it would be hard to get the accurate numbers of how many spark jobs are running with sufficient executor pods without the code changes on Spark Operator internally or without Gang Scheduling enabled. Thus, from the benchmark results, for metrics <code>Max Jobs Concurrent Running</code>, we evalute this via how many drivers are running and also the ratio of <code>total_executor_pods_running</code>/<code>total_executor_pods_running</code>, if the ratio is greater than 8, then we collect the <code>Max Driver Pods Concurrent Running</code> as the <code>Max Jobs Concurrent Running</code>.</li>
+<li>Need to increase the bucket limit and the refill rate for <code>DescribeInstances</code> ,eg: Bucket size 140 and Refill rate 60. Have observed this issue in both CAS and Karpenter as the cluster scaler.</li>
+<li>There is limited performance tuning parameters are available on Spark Operator, eg: bucketQPS / bucketSize are hardcoded in the current version of Spark Operator</li>
+<li>The current EMR Spark Operator Version cannot handle, for a single operator to monitor the multiple specified job name spaces. Can only work as one operator one job namespaces or one operator for all namespaces. https://github.com/kubeflow/spark-operator/issues/2052, the limitation has been fixed at OSS V2.</li>
+</ul>
+<h2 id="best-practice-recommendation-to-use-spark-operator-on-eks">Best practice / recommendation to use Spark Operator on EKS:<a class="headerlink" href="#best-practice-recommendation-to-use-spark-operator-on-eks" title="Permanent link">&para;</a></h2>
+<h3 id="1-spark-operator-numbers">1. Spark Operator numbers<a class="headerlink" href="#1-spark-operator-numbers" title="Permanent link">&para;</a></h3>
+<p>The number of Spark Operator has significant impacts on the performance of submitting the jobs from client to eks cluster. Here are the recommendations when using multiple EMR Spark Operators on EKS cluster </p>
+<h4 id="11-use-multiple-spark-operators-for-high-volume-tasks">1.1 <strong>Use Multiple Spark Operators for High-Volume Tasks</strong><a class="headerlink" href="#11-use-multiple-spark-operators-for-high-volume-tasks" title="Permanent link">&para;</a></h4>
+<p>For large-scale workload, deploying multiple Spark Operators significantly improves performance. A single operator can handle about 20-30 task submissions per minute. Beyond this, you'll see better results with multiple operators, especially before the submission workload hitting the threshold of eks etcd or api server side.</p>
+<p>With our testing job set up, for submission rates between 250-270 tasks per minute, there is no significant performance difference between 10 or 15 Spark Operators in overall. However, lower operator number can provide better stability than higher operator number. This setup maintains high performance with minimal task failures (less than 0.1%). </p>
+<p><em>Be cautious when exceeding 270 submissions per minute.</em> <em>We've observed increased failure rates regardless of the number of operators in</em><em>(10, 15, or 20).</em></p>
+<p>The number of spark operator may be impacted by the submission rate and also the job configs, e.g.: The Spark job with initContainers enabled, will lead to more events will be submitted to API server from Spark Operators, and then the size of etcd database will be increased more faster than the jobs without initContainers enabled.</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="n">For</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">without</span><span class="w"> </span><span class="n">initContainers</span><span class="p">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Each</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">Operator</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">submit</span><span class="w"> </span><span class="mi">20</span><span class="o">~</span><span class="mi">30</span><span class="w"> </span><span class="n">jobs</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="nb">min</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">average</span><span class="o">.</span>
+<span class="o">*</span><span class="w"> </span><span class="n">For</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">initContainers</span><span class="p">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Each</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">Operator</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">submit</span><span class="w"> </span><span class="mi">12</span><span class="o">~</span><span class="mi">18</span><span class="w"> </span><span class="n">jobs</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="nb">min</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">average</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">vary</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">configs</span><span class="o">.</span>
+</code></pre></div>
+
+<h4 id="12-balancing-operator-numbers-for-long-running-tests">1.2 <strong>Balancing Operator Numbers for Long-Running Tests</strong><a class="headerlink" href="#12-balancing-operator-numbers-for-long-running-tests" title="Permanent link">&para;</a></h4>
+<p>For extended operations (e.g., 200-minute tests), slightly fewer operators could be beneficial. This is represented by the API request latency, which shows a slight increase with more operators, from the Spark Operator to the API server. This could be due to 10 operators placing less strain on the API server and etcd while maintaining good performance compared to 15 operators. We observed that the situation worsens further with 20 operators.</p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="13-do-not-use-too-small-operators-for-large-volume-of-workload">1.3 <strong>Do not use too small Operators for large volume of workload.</strong><a class="headerlink" href="#13-do-not-use-too-small-operators-for-large-volume-of-workload" title="Permanent link">&para;</a></h4>
+<p>Please aware, if the number of Spark Operators are too small for large workload, e.g.: 5 Operator for 250 min submission rate could cause the Spark Operator throttling internally. </p>
+<p>The symptoms of Spark Operator throttling could be either or both:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="k">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Jobs</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n n-Quoted">`New`</span><span class="w"> </span><span class="n">State</span><span class="w"> </span><span class="p">(</span><span class="n">also</span><span class="w"> </span><span class="n">known</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n n-Quoted">`Null`</span><span class="w"> </span><span class="n">State</span><span class="p">)</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Jobs</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n n-Quoted">`Succeeding`</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">increasing</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">jobs</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n n-Quoted">`Submitted`</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">reducing</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="k">In</span><span class="w"> </span><span class="n">addition</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">see</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">Operator</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="n">provides</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">wrong</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="o">:</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">application</span><span class="w"> </span><span class="k">number</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">much</span><span class="w"> </span><span class="k">less</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">Driver</span><span class="w"> </span><span class="n">Pods</span><span class="p">.</span>
+</code></pre></div>
+
+<h4 id="14-system-health-considerations">1.4 <strong>System Health Considerations</strong><a class="headerlink" href="#14-system-health-considerations" title="Permanent link">&para;</a></h4>
+<p>Based on the given testing job, to keep submission rates below 250 tasks per minute for optimal system health. Please aware, the number of 250/min submission rate is a reference, as it could be impacted by other factors, such as spark job config maps, the size of pods settings, etc.
+Please monitor etcd size closely, especially during high-volume operations. We've seen it exceed 7.4GB, risking going over the 8GB mark despite EKS's automatic compaction.</p>
+<p>Please note, these recommendations are based on our specific test environment - your optimal settings may vary slightly based on your unique infrastructure and workload characteristics.</p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="15-formula-to-determine-the-number-of-operators">1.5 <strong>Formula to determine  the number of Operators :</strong><a class="headerlink" href="#15-formula-to-determine-the-number-of-operators" title="Permanent link">&para;</a></h4>
+<p>The number of EKS cluster required for Spark Job is not relating to how many operators, as if set the right number of the operators, then the bottleneck will be on API Server &amp; etcd DB size. Please see the below formula as a reference to determine how many eks cluster needed for workload.</p>
+<ul>
+<li>Job Submission Rate (<strong>submission_rate</strong>) = Average number of jobs submitted per minute</li>
+<li>Average Job Duration (<strong>avg_job_runtime</strong>) = Average job runtime in minutes</li>
+<li>Pods per Job (<strong>avg_pods_per_job</strong>) = Average number of pods per job</li>
+<li>Max Concurrent Pods (<strong>max_concur_pods</strong>) = Maximum number of pods that can run concurrently in the cluster</li>
+</ul>
+<p><strong>Formula</strong></p>
+<div class="codehilite"><pre><span></span><code>Est<span class="nb">_</span>cluster<span class="nb">_</span>numbers = (submission<span class="nb">_</span>rate * avg<span class="nb">_</span>job<span class="nb">_</span>runtime * avg<span class="nb">_</span>pods<span class="nb">_</span>per<span class="nb">_</span>job) 
+                        / (max<span class="nb">_</span>concur<span class="nb">_</span>pods * (1 - buffer<span class="nb">_</span>ratio))
+</code></pre></div>
+
+<ul>
+<li><code>buffer_ratio</code> is recommended to decide the number of eks cluster to use. eg: <code>buffer_ratio</code> = 0.1, to ensure the cluster can reserve 10% of buffer for apiserver &amp; etcd DB to handle workloads, instead of hit the benchmark results.</li>
+<li><code>Est_cluster_numbers</code>, the number of eks clusters needed is vary in the pod sizes of spark jobs, the formula above is a starting point to have a roughly understanding.</li>
+</ul>
+<p><em>Please aware, this formula applies on the eks cluster environment as <a href="https://github.com/aws-samples/load-test-for-emr-on-eks">EMR Spark Operator on EKS Benchmark Utility</a> suggested. And all recommendation suggested in this article has been implemented.</em></p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h3 id="2-instance-sizes">2. Instance Sizes<a class="headerlink" href="#2-instance-sizes" title="Permanent link">&para;</a></h3>
+<p>Based on the testing benchmark results with the instance types as below:</p>
+<div class="codehilite"><pre><span></span><code>- m5.8xlarge  &amp; r5.8xlarge
+- m5.16xlarge
+- m5.24xlarge &amp; c5.metal
+</code></pre></div>
+
+<p>The experiment data reveals that medium-sized EC2 instances demonstrate more consistent and favorable performance in this Spark cluster configuration:</p>
+<ol>
+<li>These instances maintain a more stable Driver/Total Pods ratio, typically below 12.6%.</li>
+<li>They show consistent performance across key metrics such as submission rates, job concurrency, and latency.</li>
+</ol>
+<p>Compared to larger instance types, medium-sized instances exhibit a better balance of efficiency and stability in this specific setup, suggesting they are well-suited for the current cluster configuration.</p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h3 id="3-spark-operator-configuration-best-practice">3. Spark Operator Configuration best practice:<a class="headerlink" href="#3-spark-operator-configuration-best-practice" title="Permanent link">&para;</a></h3>
+<h4 id="31-to-isolate-the-operational-services-and-spark-application-pods">3.1 To Isolate the Operational services and Spark application pods<a class="headerlink" href="#31-to-isolate-the-operational-services-and-spark-application-pods" title="Permanent link">&para;</a></h4>
+<p>It is recommended to run the operational services onto the dedicate NodeGroups from both performance and operational consideration.</p>
+<ul>
+<li>
+<p>To minimise the impacts caused by other services, e.g.: spark job pods, prometheus pods, etc, we allocated the Spark Operator(s), Prometheus operators in the dedicated operational node groups accordingly.</p>
+<ul>
+<li>Operational NodeGroup for Spark Operator, we use <code>r5.4xlarge</code> for each spark Operator.</li>
+<li>Operational NodeGroup (<code>r5.8xlarge</code> ) for Monitoring tools, Binpackking, Karpenter (if applied).</li>
+</ul>
+</li>
+<li>
+<p>To use <code>podAntiAffinity</code> to ensure the multiple Spark Operations will <code>NOT</code> to be allocated in the same operational node:</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="nt">cluster-worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span>
+<span class="c1">## this label is managed on EKS Nodegroup side.</span>
+<span class="c1">## To define the nodeSelector label for Spark Operator pods,</span>
+<span class="c1">## Ensure all operators will be running on the operational Nodegroup.</span>
+
+
+<span class="c1">## Use pod affinity:</span>
+<span class="c1">## to ensure only one Spark Operator will be running on one Operational Node</span>
+<span class="nt">affinity</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">podAntiAffinity</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requiredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">labelSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.kubernetes.io/name</span>
+<span class="w">          </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Exists</span>
+<span class="w">      </span><span class="nt">topologyKey</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes.io/hostname&quot;</span>
+<span class="nt">webhook</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="c1">## To define the nodeSelector label for Spark Operator pods,</span>
+<span class="c1">## Ensure all operators will be running on the operational Nodegroup.</span>
+</code></pre></div>
+
+<p>Please aware, for other operational service like prometheus, Binpacking, Node Scaler (CAS), Karpenter, etc. We use the same approach as above to ensure the operational services will be running in the Operational Node group(s) only.</p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="32-to-set-up-controllerthreads-with-higher-number">3.2 To set up <code>controllerThreads</code> with higher number<a class="headerlink" href="#32-to-set-up-controllerthreads-with-higher-number" title="Permanent link">&para;</a></h4>
+<p>The default value of Spark Operator Worker number (<code>controllerThreads</code>) is 10, to increase it from 10 would increase performance.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># For workers of spark operator,</span>
+<span class="c1"># we found out the 30 seems can provide the better performance.</span>
+<span class="c1"># It would be vary in different spark jobmission object size.</span>
+<span class="c1"># We have also tested very large numbers, eg: 50/100, etc.</span>
+<span class="c1"># But it was not helpful for Operator performance, as the bucketSize and # qps was hard coded. Thus, with higher workers does not help on the performance.</span>
+
+<span class="nt">controllerThreads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="33-for-spark-job-drivers-and-executor-pods">3.3 For spark job drivers and executor pods:<a class="headerlink" href="#33-for-spark-job-drivers-and-executor-pods" title="Permanent link">&para;</a></h4>
+<p>Similar as operational pods, utilzing <code>nodeSelector</code> with label feature, to ensure the spark job pods will be allocated to worker NodeGroup or Karpenter nodepools.</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nt">driver</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cluster-worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span>
+<span class="c1">## This label needs to match with EKS nodegroup kubernetes label or kapenter nodepool</span>
+
+<span class="w">    </span><span class="nt">executor</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cluster-worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span>
+<span class="c1">## This label needs to match with EKS nodegroup kubernetes label or kapenter nodepool</span>
+</code></pre></div>
+
+<h4 id="34-implementing-retry-mechanisms">3.4 <strong>Implementing Retry Mechanisms</strong><a class="headerlink" href="#34-implementing-retry-mechanisms" title="Permanent link">&para;</a></h4>
+<p>Set up retry configurations to handle the small percentage of task failures that may occur. Different from EKS StartJobRun API, in spark operator, setting up retry does not impact the overall performance from the load testing. </p>
+<p>As a reference, we have below configs for test job:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="nt">hadoopConf</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># EMRFS filesystem</span>
+<span class="w">    </span><span class="nt">fs.s3.customAWSCredentialsProvider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com.amazonaws.auth.WebIdentityTokenCredentialsProvider</span>
+<span class="w">    </span><span class="nt">fs.s3.impl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com.amazon.ws.emr.hadoop.fs.EmrFileSystem</span>
+<span class="w">    </span><span class="nt">fs.AbstractFileSystem.s3.impl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.apache.hadoop.fs.s3.EMRFSDelegate</span>
+<span class="w">    </span><span class="nt">fs.s3.buffer.dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/s3</span>
+<span class="w">    </span><span class="nt">fs.s3.getObject.initialSocketTimeoutMilliseconds</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2000&quot;</span>
+<span class="w">    </span><span class="nt">mapreduce.fileoutputcommitter.algorithm.version.emr_internal_use_only.EmrFileSystem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<span class="w">    </span><span class="nt">mapreduce.fileoutputcommitter.cleanup-failures.ignored.emr_internal_use_only.EmrFileSystem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">  </span><span class="nt">sparkConf</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spark.executor.heartbeatInterval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000s</span>
+<span class="w">    </span><span class="nt">spark.scheduler.maxRegisteredResourcesWaitingTime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40s</span>
+<span class="w">    </span><span class="nt">spark.network.timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120000s</span>
+<span class="w">    </span><span class="c1"># Required for EMR Runtime</span>
+<span class="w">    </span><span class="nt">spark.driver.extraClassPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/lib/hadoop-lzo/lib/*:/usr/lib/hadoop/hadoop-aws.jar:/usr/share/aws/aws-java-sdk/*:/usr/share/aws/emr/emrfs/conf:/usr/share/aws/emr/emrfs/lib/*:/usr/share/aws/emr/emrfs/auxlib/*:/usr/share/aws/emr/security/conf:/usr/share/aws/emr/security/lib/*:/usr/share/aws/hmclient/lib/aws-glue-datacatalog-spark-client.jar:/usr/share/java/Hive-JSON-Serde/hive-openx-serde.jar:/usr/share/aws/sagemaker-spark-sdk/lib/sagemaker-spark-sdk.jar:/home/hadoop/extrajars/*</span>
+<span class="w">    </span><span class="nt">spark.driver.extraLibraryPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/lib/hadoop/lib/native:/usr/lib/hadoop-lzo/lib/native:/docker/usr/lib/hadoop/lib/native:/docker/usr/lib/hadoop-lzo/lib/native</span>
+<span class="w">    </span><span class="nt">spark.executor.extraClassPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/lib/hadoop-lzo/lib/*:/usr/lib/hadoop/hadoop-aws.jar:/usr/share/aws/aws-java-sdk/*:/usr/share/aws/emr/emrfs/conf:/usr/share/aws/emr/emrfs/lib/*:/usr/share/aws/emr/emrfs/auxlib/*:/usr/share/aws/emr/security/conf:/usr/share/aws/emr/security/lib/*:/usr/share/aws/hmclient/lib/aws-glue-datacatalog-spark-client.jar:/usr/share/java/Hive-JSON-Serde/hive-openx-serde.jar:/usr/share/aws/sagemaker-spark-sdk/lib/sagemaker-spark-sdk.jar:/home/hadoop/extrajars/*</span>
+<span class="w">    </span><span class="nt">spark.executor.extraLibraryPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/usr/lib/hadoop/lib/native:/usr/lib/hadoop-lzo/lib/native:/docker/usr/lib/hadoop/lib/native:/docker/usr/lib/hadoop-lzo/lib/native</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h3 id="4-eks-cluster-scaler-scheduler-set-up">4. EKS cluster scaler &amp; scheduler set up<a class="headerlink" href="#4-eks-cluster-scaler-scheduler-set-up" title="Permanent link">&para;</a></h3>
+<h4 id="41-autoscaler">4.1 <strong>Autoscaler</strong><a class="headerlink" href="#41-autoscaler" title="Permanent link">&para;</a></h4>
+<p>With Autoscaler, we’ve tested on the following worker node instances types, mixture the below patterns to avoid the EC2 capacity issue. The benchmark in this article is mainly focused on the CPU utilization, but not memory utilization on the worker instances.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">*</span> m5.8xlarge &amp; r5.8xlarge, each instance has 32 Cores.
+<span class="k">*</span> m5.16xlarge, each instance has 64 Cores.
+<span class="k">*</span> m5.24xlarge &amp; c5.metal, each instance has 96 Cores.
+</code></pre></div>
+
+<p>To minimise the impacts of job running slowness which may be caused due to the pods of one job are allocated into multiple nodes, or crossing AZs. </p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="k">Set</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">kubernetes</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">groups</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">AZs</span><span class="p">,</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">ensure</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`nodeSelector`</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">drivers</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">executors</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">specified</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">Job</span><span class="w"> </span><span class="n">yaml</span><span class="w"> </span><span class="k">file</span><span class="p">.</span><span class="w"> </span><span class="k">By</span><span class="w"> </span><span class="n">doing</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">up</span><span class="p">,</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">single</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">allocated</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="k">NodeGroup</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="o">:</span><span class="w"> </span><span class="k">NodeGroup</span><span class="o">-</span><span class="n">AZ1</span><span class="p">),</span><span class="w"> </span><span class="n">instead</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">allocated</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">AZs</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="k">Set</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n n-Quoted">`Binpacking Custom Scheduler `</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">prevent</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">being</span><span class="w"> </span><span class="n">spread</span><span class="w"> </span><span class="k">out</span><span class="p">.</span><span class="w"> </span><span class="n">Please</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`Bindpacking`</span><span class="w"> </span><span class="n">scheduler</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">details</span><span class="p">.</span>
+</code></pre></div>
+
+<p>To schedule the large volume of pods, need to increase the qps and burst for <code>NodeScaler</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="w"> </span><span class="c1">## Kubernetes label for pod allocation.</span>
+<span class="nt">podAnnotations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cluster-autoscaler.kubernetes.io/safe-to-evict</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;false&#39;</span>
+<span class="nn">...</span>
+<span class="nt">extraArgs</span><span class="p">:</span>
+<span class="nn">...</span>
+<span class="w">  </span><span class="nt">kube-client-qps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">  </span><span class="nt">kube-client-burst</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="42-karpenter">4.2 <strong>Karpenter</strong><a class="headerlink" href="#42-karpenter" title="Permanent link">&para;</a></h4>
+<p>With Karpenter cluster, we have the setting up as below:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="k">To</span><span class="w"> </span><span class="n">allocate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">operational</span><span class="w"> </span><span class="n">pods</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="o">:</span><span class="w"> </span><span class="n">Spark</span><span class="w"> </span><span class="n">Operator</span><span class="p">,</span><span class="w"> </span><span class="n">Prometheus</span><span class="p">,</span><span class="w"> </span><span class="n">Karpenter</span><span class="p">,</span><span class="w"> </span><span class="n">Binpacking</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Operational</span><span class="w"> </span><span class="n">EKS</span><span class="w"> </span><span class="k">NodeGroup</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">controlled</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Karpenter</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="k">set</span><span class="n">ting</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n n-Quoted">`nodeSelector`</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">operational</span><span class="w"> </span><span class="n">pods</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="n">Karpenter</span><span class="w"> </span><span class="n">Nodepool</span><span class="w"> </span><span class="n">configs</span><span class="o">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Utilize</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`provisioner`</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">separate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pods</span><span class="p">.</span><span class="w"> </span><span class="k">As</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">creating</span><span class="w"> </span><span class="n">earlier</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="n">executor</span><span class="w"> </span><span class="n">pods</span><span class="p">,</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">executors</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">improve</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pending</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">short</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="kt">time</span><span class="p">.</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="k">To</span><span class="w"> </span><span class="n">align</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">NodeGroup</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">CAS</span><span class="p">,</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">minimise</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">networking</span><span class="w"> </span><span class="k">level</span><span class="w"> </span><span class="n">noisy</span><span class="p">,</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">utilize</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`topology.kubernetes.io/zone`</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">submitting</span><span class="w"> </span><span class="n">karpenter</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">jobs</span><span class="p">,</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">ensure</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">single</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">allocated</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">AZ</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="n">We’ve</span><span class="w"> </span><span class="n">testing</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="k">instance</span><span class="w"> </span><span class="n">pattens</span><span class="o">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="k">Instance</span><span class="w"> </span><span class="n">family</span><span class="o">:</span><span class="w"> </span><span class="n">m5</span><span class="p">,</span><span class="w"> </span><span class="n">c5</span><span class="p">,</span><span class="w"> </span><span class="n">r5</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="k">Instance</span><span class="w"> </span><span class="n">size</span><span class="o">:</span><span class="w"> </span><span class="n">12xlarge</span><span class="p">,</span><span class="w"> </span><span class="n">16xlarge</span><span class="p">,</span><span class="w"> </span><span class="n">24xlarge</span><span class="p">,</span><span class="w"> </span><span class="n">metal</span><span class="p">.</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="k">In</span><span class="w"> </span><span class="n">terms</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">related</span><span class="w"> </span><span class="n">configuration</span><span class="p">,</span><span class="w"> </span><span class="n">please</span><span class="w"> </span><span class="n">see</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="n n-Quoted">`IP address utilisation &amp; settings`</span><span class="w">  </span><span class="n">→</span><span class="w"> </span><span class="n n-Quoted">`With Karpenter Scaler `</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="43-binpacking-custom-scheduler">4.3 <strong>Binpacking Custom Scheduler</strong><a class="headerlink" href="#43-binpacking-custom-scheduler" title="Permanent link">&para;</a></h4>
+<p>Setting up Binpacking will very helpful on the job execution especially beneficial on the pod allocation.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">*</span> We use the default <span class="sb">`MostAllocated strategy`</span> for Binpacking, has the below settings:
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="w">                </span><span class="nt">scoringStrategy</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu</span>
+<span class="w">                        </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory</span>
+<span class="w">                        </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MostAllocated</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n n-Quoted">`MostAllocated`</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="n">based</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">utilization</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">resources</span><span class="p">,</span><span class="w"> </span><span class="n">favoring</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">ones</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">higher</span><span class="w"> </span><span class="n">allocation</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="n">Binpacking</span><span class="w"> </span><span class="n">Custom</span><span class="w"> </span><span class="n">Scheduler</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">accompany</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">Autoscaler</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">Karpenter</span><span class="w"> </span><span class="n">accordingly</span><span class="p">.</span><span class="w"> </span><span class="n">Please</span><span class="w"> </span><span class="n">learn</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">about</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Scheduler</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="err">[</span><span class="n">link</span><span class="err">]</span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">aws</span><span class="p">.</span><span class="n">github</span><span class="p">.</span><span class="k">io</span><span class="o">/</span><span class="n">aws</span><span class="o">-</span><span class="n">emr</span><span class="o">-</span><span class="n">containers</span><span class="o">-</span><span class="n">best</span><span class="o">-</span><span class="n">practices</span><span class="o">/</span><span class="n">performance</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">binpack</span><span class="o">/</span><span class="p">).</span>
+<span class="o">*</span><span class="w"> </span><span class="k">When</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">large</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">test</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">cause</span><span class="w"> </span><span class="n">Binpacking</span><span class="w"> </span><span class="n">throttling</span><span class="p">.</span><span class="w"> </span><span class="k">To</span><span class="w"> </span><span class="n">solve</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">issue</span><span class="p">,</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">increase</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">rate</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="k">install</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Binpacking</span><span class="w"> </span><span class="n">scheduler</span><span class="o">:</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubescheduler.config.k8s.io/v1</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KubeSchedulerConfiguration</span>
+<span class="w">    </span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">....</span>
+<span class="w">    </span><span class="nt">clientConnection</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">burst</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+<span class="w">      </span><span class="nt">qps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h3 id="5-ip-address-utilisation-settings">5. IP address utilisation &amp; settings:<a class="headerlink" href="#5-ip-address-utilisation-settings" title="Permanent link">&para;</a></h3>
+<h4 id="51-with-eks-autoscaluer">5.1 With EKS AutoScaluer:<a class="headerlink" href="#51-with-eks-autoscaluer" title="Permanent link">&para;</a></h4>
+<p>When to use the worker instance type: <code>m5.24xlarge</code> and <code>c5.metal</code> which both have the 96 Cores and 50 IP address per ENI and 15 max ENIs. If to leave the following default settings unchanged: </p>
+<ul>
+<li><code>WARM_ENI_TARGET=1</code></li>
+<li><code>WARM_IP_TARGET=None</code></li>
+<li><code>MINIMUM_IP_TARGET=None</code></li>
+</ul>
+<p>If a single worker node only utilizes 50~100 IP address, then the node will reserve 150 IPs from the Subnet, and over 50 IP addresses will be wasted.</p>
+<p><strong>Best Practice:</strong> If we know the maximum number of IPs needed for each worker node, it is recommended to set the <code>MINIMUM_IP_TARGET</code> equal to the “maximum number of IPs”, to set <code>WARM_IP_TARGET</code> to 1~5 as a buffer. 
+Please note, you should alway keep <code>MINIMUM_IP_TARGET</code> + <code>WARM_IP_TARGET</code> &lt;= IP-address-per-ENI-number * integer, e.g.:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">WARM_IP_TARGET</span><span class="o">=</span><span class="m">5</span>
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">MINIMUM_IP_TARGET</span><span class="o">=</span><span class="m">95</span>
+</code></pre></div>
+
+<ul>
+<li><code>MINIMUM_IP_TARGET</code> will ensure for each instances of the eks cluster will reserve the number of the IP addresses while the node is ready to use by Kubernetes.</li>
+<li><code>WARM_IP_TARGET</code> will ensure the number of IP address specified is hot standby in a warm IP pool, and if any of the IP to be allocated to a Pod, then the pool will refill the IPs from Subnet to ensure the warm IP pool.</li>
+<li>Please check our <a href="https://github.com/aws/amazon-vpc-cni-k8s/tree/master?tab=readme-ov-file#warm_eni_target">document</a> for the Best Practice of the Targets for your own EKS workload.</li>
+<li>To find out the default IP address and ENI number of ec2 instances, please check document: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AvailableIpPerENI.html">Maximum IP addresses per network interface.</a></li>
+</ul>
+<p>The reason for setting <code>MINIMUM_IP_TARGET</code> to a large number, e.g.: equal to the “maximum IP usage per node” is to prevent/minimize the API calls to the EC2 service for getting IP addresses, as it may cause API throttling and impact performance. </p>
+<p><em>However, please note, it may not be the ideal solution for using Karpenter as the EKS Scaler, especially the Instance types of Karpenter NodePool are including small and large sizes, eg: The NodePool has 16 Cores and 96 Cores. If you are setting the both Targets as above, 95+5, which means for 16 Cores instance that created by Karpenter will also take 100 IPs. Please check Best Practice in Karpenter part.</em></p>
+<p>It is recommended to run a small load test with fewer nodes and concurrent jobs using default settings to get a clear picture of how the pods/IP usage will be on a node. Then, set up the <code>MINIMUM_IP_TARGET</code> and <code>WARM_IP_TARGET</code> accordingly.</p>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h4 id="52-with-karpenter-node-provisioner">5.2 With Karpenter Node Provisioner:<a class="headerlink" href="#52-with-karpenter-node-provisioner" title="Permanent link">&para;</a></h4>
+<p>With Karpenter eks cluster, it is recommend to follow one of the following options:</p>
+<ul>
+<li>Least IP wastage but limited on the instances Cores strategy. </li>
+</ul>
+<p>To select the instance types and sizes in the karpenter nodepools, with the same/close number of Cores.</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">:</span><span class="w"> </span><span class="n">Using</span><span class="w"> </span><span class="err">`</span><span class="n">m5</span><span class="o">.</span><span class="mi">16</span><span class="n">xlarge</span><span class="err">`</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="err">`</span><span class="n">r5</span><span class="o">.</span><span class="mi">16</span><span class="n">xlarge</span><span class="err">`</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">karpenter</span><span class="w"> </span><span class="n">nodepools</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">them</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="n">Cores</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="err">`</span><span class="mi">1</span><span class="o">-</span><span class="n">Core</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">pod</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">IP</span><span class="err">`</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">spark</span><span class="w"> </span><span class="n">job</span><span class="w"> </span><span class="n">sepc</span><span class="p">,</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nb">max</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">usage</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">around</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">leave</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">targets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">*</span><span class="n">please</span><span class="w"> </span><span class="n">aware</span><span class="p">,</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">few</span><span class="w"> </span><span class="n">operational</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">consume</span><span class="w"> </span><span class="n">IP</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="err">’</span><span class="n">s</span><span class="w"> </span><span class="n">vary</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="n">addons</span><span class="w"> </span><span class="n">setting</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">WARM_IP_TARGET</span><span class="o">=</span><span class="m">3</span>
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">MINIMUM_IP_TARGET</span><span class="o">=</span><span class="m">65</span>
+</code></pre></div>
+
+<ul>
+<li>Balanced in Cores and IP per ENI strategy, with more bundle of instance types and sized, may waste IPs slightly:</li>
+</ul>
+<p>To select the instance types and sizes, which the Cores of the instance are multiple of it’s IP per ENI:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="o">:</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n n-Quoted">`m5.24xlarge`</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n n-Quoted">`m5.12xlarge`</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n n-Quoted">`m5.24xlarge`</span><span class="o">:</span><span class="w"> </span><span class="mi">96</span><span class="w"> </span><span class="n">Cores</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">ENI</span><span class="p">.</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n n-Quoted">`m5.12xlarge`</span><span class="o">:</span><span class="w"> </span><span class="mi">48</span><span class="w"> </span><span class="n">Cores</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">ENI</span><span class="p">.</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="k">In</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">bundle</span><span class="p">,</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">unset</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">targets</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="k">enable</span><span class="w"> </span><span class="n n-Quoted">`MAX_ENI`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">:</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>WARM_IP_TARGET-
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>MINIMUM_IP_TARGET-
+
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">MAX_ENI</span><span class="o">=</span><span class="m">2</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="k">With</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">set</span><span class="n">ting</span><span class="p">,</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">instances</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nodepool</span><span class="o">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n n-Quoted">`m5.24xlarge`</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">reserve</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">ready</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">includes</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">one</span><span class="w"> </span><span class="k">active</span><span class="w"> </span><span class="n">ENI</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">one</span><span class="w"> </span><span class="n">WARM_ENI</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">consumed</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`MAX_ENI`</span><span class="w"> </span><span class="p">.</span><span class="w"> </span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n n-Quoted">`m5.12xlarge`</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">reserve</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">ready</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">includes</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">one</span><span class="w"> </span><span class="k">active</span><span class="w"> </span><span class="n">ENI</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">one</span><span class="w"> </span><span class="n">WARM_ENI</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">maximum</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">consumed</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`MAX_ENI`</span><span class="w"> </span><span class="p">.</span><span class="w"> </span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Thus</span><span class="p">,</span><span class="w"> </span><span class="n">almost</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">wastage</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n n-Quoted">`m5.24xlarge`</span><span class="w"> </span><span class="k">instance</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">It</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">99</span><span class="w"> </span><span class="n">pods</span><span class="p">.</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="n n-Quoted">`m5.12xlarge`</span><span class="w"> </span><span class="n">instances</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="n">running</span><span class="p">,</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">wasted</span><span class="p">.</span>
+<span class="o">*</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">balanced</span><span class="w"> </span><span class="n">strategy</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n n-Quoted">`m5.16xlarge`</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nodepool</span><span class="w"> </span><span class="k">instance</span><span class="o">:</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n n-Quoted">`m5.16xlarge`</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">reserve</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="n">IPs</span><span class="p">,</span><span class="w"> </span><span class="n">however</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="n">Cores</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">up</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">67</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">running</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">waste</span><span class="w"> </span><span class="k">over</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="k">instance</span><span class="p">.</span>
+</code></pre></div>
+
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h3 id="6-minimise-the-config-maps-and-initcontainers-spec">6. Minimise the Config Maps and initContainers spec<a class="headerlink" href="#6-minimise-the-config-maps-and-initcontainers-spec" title="Permanent link">&para;</a></h3>
+<p>When using Spark Operator on EKS, excessive use of <code>[initContainers](https://github.com/kubeflow/spark-operator/blob/f56ba30d5c36feeaaba5c89ddd48a3f663060f0d/docs/api-docs.md?plain=1#L3118)</code> and large sparkConf/hadoopConf configurations can increase API server events and pod object sizes, potentially impacting etcd performance. </p>
+<p>To optimize this situation, please try:</p>
+<ul>
+<li>To utilize other solutions to replace the <code>initContainers</code> when running the large volume workloads. e.g.: To mount disk in EKS cluster level when creating a new eks or updating the running eks.</li>
+<li>Minimize ConfigMap quantity and size, include only essential sparkConf/hadoopConf settings.</li>
+</ul>
+<p><a href="#table-of-contents">^ back to top</a></p>
+<h2 id="7-appendix">7. Appendix<a class="headerlink" href="#7-appendix" title="Permanent link">&para;</a></h2>
+<h3 id="71-artifact-reference">7.1 Artifact Reference<a class="headerlink" href="#71-artifact-reference" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/aws-samples/load-test-for-emr-on-eks">Load Test Set up Guide for EMR on EKS</a></li>
+<li><a href="https://github.com/aws-samples/load-test-for-emr-on-eks/tree/main/grafana">Grafana &amp; Prometheus Dashboard for monitoring</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+    
+  </body>
+</html>
