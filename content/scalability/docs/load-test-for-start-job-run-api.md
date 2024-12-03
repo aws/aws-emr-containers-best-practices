@@ -51,20 +51,124 @@ Based on these factors if we examine our results below we notice the following t
     * As the number of objects in etcd db increase, this leads to increased load on Kubernetes API server, causing API server requests to fail, subsequently causing EMR jobs to fail and reducing EMR job success rate.
 * The Job churn rate is the operations by the job controller. If the churn rate is high, then the Job queue can’t be processed in time which lead to latency in the EKS cluster. The job churn rate is affected by the job submissions and when the jobs are terminated. It can happen when etcd requests are seeing higher latency and thereby affecting job churn rate.
 
-|Test Scenario	|Job submission mode	|Job Type	|**EMR EKS Job Submission Rate**
- (per EKS cluster) (not finalized)	|Jobs/VC/Min	|Runtime for the test	|Max Number of Active EMR EKS Jobs	|Weighted Avg Job Duration	|Executors/job	|# of Nodes	|# of EMR jobs	|# of Concurrent pods	|**# of Pod / Node** (m5.24xlarge)	|
-|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
-|Job with default configurations (no spark driver retries and no webhook)	|StartJobRun	|batch	|150 jobs/min	|1	|165 mins	|1996	|10 mins	|10 pods	|351	|24556	|23007	|65	|
-|Job with default configurations (no spark driver retries and no webhook, 2x executors)	|StartJobRun	|batch	|80 jobs/min	|1	|200 mins	|1066	|10 mins	|20 pods	|351	|15928	|21997	|62	|
-|Job with default configurations (no spark driver retries and no webhook, 10x jobs per VC)	|StartJobRun	|batch	|150 jobs/min	|10	|60 mins	|1953	|10 mins	|10 pods	|351	|23953	|22092	|62	|
-|Job with spark driver retries and no webhook	|StartJobRun	|batch	|140 jobs/min	|1	|60 mins	|1747	|10 mins	|10 pods	|251	|8270	|20014	|79	|
-|Job with webhook (up to max 2 sec delay) and retries	|StartJobRun	|batch	|140 jobs/min	|1	|200 mins	|1827	|10 mins	|10 pods	|351	|21848	|21498	|61	|
-|Job with default retries
-* webhook of 2 seconds
-* 4500+ streaming jobs
-* 4500+ batch jobs	|StartJobRun	|Streaming	|140 jobs/min	|1	|30 mins	|4080	|N/A	|3 pods	|351	|4079	|22660	|65	|
-|StartJobRun	|Batch	|110 jobs/min	|1	|200 mins	|1436	|10 mins	|10 pods	|351	|21861	|15366	|
-|	|	|	|	|	|	|	|	|	|	|	|	|	|
+<table>
+  <thead>
+    <tr>
+      <th>Test Scenario</th>
+      <th>Job submission mode</th>
+      <th>Job Type</th>
+      <th><strong>EMR EKS Job Submission Rate</strong> (per EKS cluster)</th>
+      <th>Jobs/VC/Min</th>
+      <th>Max Number of Active EMR EKS Jobs</th>
+      <th>Weighted Avg Job Duration</th>
+      <th>Executors/job</th>
+      <th># of Nodes</th>
+      <th># of EMR jobs</th>
+      <th># of Concurrent pods</th>
+      <th><strong># of Pod / Node</strong> (m5.24xlarge)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>150 jobs/min</td>
+      <td>1</td>
+      <td>1996</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>24556</td>
+      <td>23007</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook, 2x executors)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>80 jobs/min</td>
+      <td>1</td>
+      <td>1066</td>
+      <td>10 mins</td>
+      <td>20 pods</td>
+      <td>351</td>
+      <td>15928</td>
+      <td>21997</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <td>Job with default configurations (no spark driver retries and no webhook, 10x jobs per VC)</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>150 jobs/min</td>
+      <td>10</td>
+      <td>1953</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>23953</td>
+      <td>22092</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <td>Job with spark driver retries and no webhook</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>1747</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>251</td>
+      <td>8270</td>
+      <td>20014</td>
+      <td>79</td>
+    </tr>
+    <tr>
+      <td>Job with webhook (up to max 2 sec delay) and retries</td>
+      <td>StartJobRun</td>
+      <td>batch</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>1827</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>21848</td>
+      <td>21498</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Job with default retries with webhook of 2 seconds, 4500+ streaming jobs and 4500+ batch jobs</td>
+      <td>StartJobRun</td>
+      <td>Streaming</td>
+      <td>140 jobs/min</td>
+      <td>1</td>
+      <td>4080</td>
+      <td>N/A</td>
+      <td>3 pods</td>
+      <td>351</td>
+      <td>4079</td>
+      <td>22660</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>StartJobRun</td>
+      <td>Batch</td>
+      <td>110 jobs/min</td>
+      <td>1</td>
+      <td>1436</td>
+      <td>10 mins</td>
+      <td>10 pods</td>
+      <td>351</td>
+      <td>21861</td>
+      <td>15366</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Recommendations to meet large-scale needs
 
