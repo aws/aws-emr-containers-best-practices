@@ -15,7 +15,6 @@ These recommendations are only guidelines, we recommend monitoring cluster activ
         * `WARM_IP_TARGET` : 10
         * `AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG` : true with custom ENIConfigs (each AZ having custom subnet of 65536 IP addresses pool for pods)
 * Note that max number of active EMR on EKS jobs corresponds to maximum concurrently active jobs that have been submitted to the EKS cluster, and are not yet completed.
-* Please see details around the additional Benchmarking setup in the following section [Appendix D - Load Testing Cluster Configurations](https://quip-amazon.com/7AFyAZQRMyZT#temp:C:KIV39e1c7bb993542ccab65b824a)
 * Batch jobs were run with 10 executors 
 * We used default pod spec for our EMR jobs
 * The streaming jobs scenario were tested by first submitting all streaming jobs before running the batch jobs
@@ -190,9 +189,6 @@ For estimating the number of clusters required to onboard all the expected workl
 Number of Clusters = (WAR * PSR * NOE) / RCRP
 ```
 
-
-*NOTE: The above formula holds correct for vanilla test settings as defined in  [Appendix C - Load Testing Cluster Configurations](https://quip-amazon.com/7AFyAZQRMyZT#temp:C:KIV39e1c7bb993542ccab65b824a). Changing settings such as additional configmaps per job or using Dynamic Resource Allocation can affect the formula above as the number of objects in etcd database will increase.*
-
 *NOTE: For the streaming scenario, the recommendation is to look at the number of streaming jobs and the number of pods per one streaming job to estimate the number of clusters required.*
 
 *NOTE: It is assumed the load is evenly distributed across all the shards.
@@ -211,7 +207,7 @@ EKS actively monitors the load on control plane instances and automatically scal
 
 #### EKS API Server Latency 
 
-It is important to minimize the[EKS API server latencies](https://quip-amazon.com/MwNDAG5gy8EZ/EMR-on-EKS-Scale-Recommendation-for-Salesforce#temp:C:EIca6f30b96911145518fbc53df8). Webhooks can be one potential root cause for high API server latency. The recommendation is to improve the webhook latency to less than 50 milliseconds and monitor latency by [the performance metrics](https://quip-amazon.com/MwNDAG5gy8EZ/EMR-on-EKS-Scale-Recommendation-for-Salesforce#temp:C:EIca6f30b96911145518fbc53df8) to understand health of the cluster. [K8s admission webhook best practice.](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#best-practices-and-warnings)
+It is important to minimize the EKS API server latencies. Webhooks can be one potential root cause for high API server latency. The recommendation is to improve the webhook latency to less than 50 milliseconds and monitor the latency to understand health of the cluster. [K8s admission webhook best practice.](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#best-practices-and-warnings)
 
 ### Image pull policy
 
@@ -219,7 +215,7 @@ In an EKS cluster, the imagePullPolicy determines how the container images are p
 
 EMR on EKS allows customers to set the image pull policy for Job runner, driver and executors.
 
-For image pull policy advantages and disadvantages go to [Appendix D - Image Pull Policies and pros/cons](https://quip-amazon.com/7AFyAZQRMyZT#temp:C:KIVf5c4bf635fac419ba7efc79ed).
+For image pull policy, please check it out [Kubernetes Image pull policy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy).
 
 ### EMR job driver retry strategy
 
@@ -311,9 +307,6 @@ We list the metrics below that can be used to catch scaling issues proactively, 
         * `histogram_quantile(0.99, sum(rate(apiserver_admission_webhook_admission_duration_seconds_bucket[5m])) by (name, operation, rejected, le)) > 0`
     * 
 
-
-Documentation and best practices links can be found [Appendix B - Documentation and best practices on scalability](https://quip-amazon.com/7AFyAZQRMyZT#temp:C:KIV804528e8011746b1bc13f9764)
-
 **Dashboard that was demonstrated**: https://github.com/RiskyAdventure/Troubleshooting-Dashboards/blob/main/api-troubleshooter.json
 
 **EKS Performance Overview Grafana Dashboard**: https://grafana.com/grafana/dashboards/6775-kubernetes-performance-overview/
@@ -330,7 +323,6 @@ Below points link to several EKS scalability best practices documentation. Most 
     * We run 5,000 nodes and ~150k pods, churning at 50 pods/s in our load tests. But our node capacity is static and not autoscaling.
 * Kubernetes scalability thresholds https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md
     * These are where Kubernetes Scalability SIG would expect performance degradation in the cluster
-    * This kubecon talk is *fantastic* background https://www.youtube.com/watch?v=t_Ww6ELKl4Q
 * Some of the AWS quotas and other limitations we've seen customers hit https://aws.github.io/aws-eks-best-practices/scalability/docs/quotas/
 * Reference Prometheus configuration is the kube-prometheus-stack https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack though it collects a ton of metrics and may hit issues with large clusters.
 * This best practices page has some of the key metrics to gather for your cluster https://aws-observability.github.io/observability-best-practices/guides/containers/oss/eks/best-practices-metrics-collection/#control-plane-metrics
@@ -348,7 +340,6 @@ Below points link to several EKS scalability best practices documentation. Most 
 * Shane’s API server Dashboard https://aws.amazon.com/blogs/containers/troubleshooting-amazon-eks-api-servers-with-prometheus/
 * EKS scaling theory: https://aws.github.io/aws-eks-best-practices/scalability/docs/scaling_theory/
 * Kubernetes recommendations on scalability thresholds: https://github.com/kubernetes/community/blob/master/sig-scalability/configs-and-limits/thresholds.md
-* [EKS Control Plane Monitoring - EMR on EKS Best Practices](https://quip-amazon.com/OoVyAaihGDOs)
 
 ### **Appendix C -  Load Testing Cluster Configurations**
 

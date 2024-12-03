@@ -150,7 +150,7 @@ Est_cluster_numbers = (submission_rate * avg_job_runtime * avg_pods_per_job)
 * `Est_cluster_numbers`, the number of eks clusters needed is vary in the pod sizes of spark jobs, the formula above is a starting point to have a roughly understanding.
 
 
-*Please aware, this formula applies on the eks cluster environment as [EMR on EKS Spark Operator Load Testing Env Setting up Manual](https://quip-amazon.com/MbH5AcPj4pIl) suggested. And all recommendation suggested in this article has been implemented.*
+*Please aware, this formula applies on the eks cluster environment as [EMR Spark Operator on EKS Benchmark Utility](https://github.com/aws-samples/load-test-for-emr-on-eks) suggested. And all recommendation suggested in this article has been implemented.*
 
 [^ back to top](#table-of-contents)
 
