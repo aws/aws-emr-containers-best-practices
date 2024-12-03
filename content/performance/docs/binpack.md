@@ -437,13 +437,13 @@ spec:
 Step3: Monitor via eks-node-viewer 
 
 -Before apply the change in pod template:-
-![](../resources/images/before-binpack.png)
+![](resources/images/before-binpack.png)
 
 -After the change:-
 
 *  Higher resource usage per node at pod scheduling time
 *  Over 50% of cost reduction since Karpenter was terminating idle EC2 nodes at the same time 
-![](../resources/images/after-binpack.png)
+![](resources/images/after-binpack.png)
 
 Consideration:
 
