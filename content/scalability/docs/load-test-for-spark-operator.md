@@ -8,7 +8,7 @@ Our findings provide a valuable reference for optimizing EMR Spark Operator work
 
 * For these benchmark, we tuned following settings for EKS:
     * **EKS cluster version**: 1.30
-    * **SparkOperator version:** `emr-6.11.0 (``v1beta2-1.3.8-3.1.1)`
+    * **SparkOperator version:** `emr-6.11.0 (v1beta2-1.3.8-3.1.1)`
         * The current version of EMR Spark Operator has limited API exposed for users to tune the performance, in this article, we keen to use the below set up for Spark Operators:
     * **Pre-warm the EKS control plane**
     * Isolated the Operational services and Spark application pods.
@@ -32,13 +32,12 @@ Our findings provide a valuable reference for optimizing EMR Spark Operator work
 
 ### Benchmark Results
 
-|Test Scenario	|Cluster Scaler	|job start time in utc	|Job Type	|**Spark Operator Job Submission Rate**
- (per EKS cluster)	|Spark Operator Numbers	|Runtime for the test	|Max Number of Active Jobs / Driver Pods	|Spark Job Running Time	|Avg Job Duration (Since Job submitted till completed)	|Executors/job	|# of Worker Nodes	|# of Spark jobs	|# of Concurrent pods	|
-|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
-|Job with default configurations (no spark driver retries and no initContainer)	|AutoScaler	|2024-10-31 14:10	|batch	|279 jobs/min	|13	|200 mins	|3710	|500 ~ 800s	|720 ~960s	|10 pods	|698	|55767	|38722	|
-|Job with default configurations (no spark driver retries and no initContainer)	|AutoScaler	|2024-11-06 13:21	|batch	|118 jobs/min	|10	|200 mins	|1511	|500 ~ 800s	|720 ~960s	|20 pods	|540	|23749	|30447	|
-|Job with default configurations (no spark driver retries and with **initContainers** enabled for 2s sleep for pods creation)	|AutoScaler	|2024-11-04 08:52	|batch	|212 jobs/min	|15	|200 mins	|2882	|500 ~ 800s	|720 ~960s	|10 pods	|532	|42926	|30329	|
-|Job with default configurations (no spark driver retries and no initContainer)	|Karpenter	|2024-10-28 07:06	|batch	|272 jobs/min	|10	|200 mins	|3490	|500 ~ 800s	|720 ~960s	|10 pods	|464	|54576	|35962	|
+|Test Scenario	|Cluster Scaler	|Job Type	|**Spark Operator Job Submission Rate** (per EKS cluster)	|Spark Operator Numbers	|Max Number of Active Jobs / Driver Pods	|Spark Job Running Time	|Avg Job Duration (Since Job submitted till completed)	|Executors/job	|# of Worker Nodes	|# of Spark jobs	|# of Concurrent pods	|
+|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
+|Job with default configurations (no spark driver retries and no initContainer)	|AutoScaler	|batch	|279 jobs/min	|13	|3710	|500 ~ 800s	|720 ~960s	|10 pods	|698	|55767	|38722	|
+|Job with default configurations (no spark driver retries and no initContainer)	|AutoScaler	|batch	|118 jobs/min	|10	|1511	|500 ~ 800s	|720 ~960s	|20 pods	|540	|23749	|30447	|
+|Job with default configurations (no spark driver retries and with **initContainers** enabled for 2s sleep for pods creation)	rAutoScaler	|2024-11-04 08:52	|batch	|212 jobs/min	|15 |2882	|500 ~ 800s	|720 ~960s	|10 pods	|532	|42926	|30329	|
+|Job with default configurations (no spark driver retries and no initContainer)	|Karpenter	|batch	|272 jobs/min	|10	|3490	|500 ~ 800s	|720 ~960s	|10 pods	|464	|54576	|35962	|
 
 
 ### Metrics Explanation 
