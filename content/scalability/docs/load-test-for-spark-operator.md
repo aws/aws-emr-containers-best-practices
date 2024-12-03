@@ -29,7 +29,7 @@ Our findings provide a valuable reference for optimizing EMR Spark Operator work
 
 * For these benchmark, we tuned following settings for EKS:
     * **EKS cluster version**: 1.30
-    * **SparkOperator version:** `emr-6.11.0 (``v1beta2-1.3.8-3.1.1)`
+    * **SparkOperator version:** `emr-6.11.0 (v1beta2-1.3.8-3.1.1)`
         * The current version of EMR Spark Operator has limited API exposed for users to tune the performance, in this article, we keen to use the below set up for Spark Operators:
     * **Pre-warm the EKS control plane**
     * Isolated the Operational services and Spark application pods.
@@ -54,7 +54,6 @@ Our findings provide a valuable reference for optimizing EMR Spark Operator work
 ### Benchmark Results
 
 <img src="./resources/images/EMR_Spark_Operator_Benchmark.png" alt="EMR Spark Operator Benchmark Results" style="width: 100%; height: auto;">
-
 
 ### Metrics Explanation 
 
