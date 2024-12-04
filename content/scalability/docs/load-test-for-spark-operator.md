@@ -53,7 +53,7 @@ Our findings provide a valuable reference for optimizing EMR Spark Operator work
 
 ### Benchmark Results
 
-<img src="./resources/images/EMR_Spark_Operator_Benchmark.png" alt="EMR Spark Operator Benchmark Results" style="width: 100%; height: auto;">
+<img src="https://github.com/aws/aws-emr-containers-best-practices/raw/main/content/scalability/docs/resources/images/EMR_Spark_Operator_Benchmark.png" alt="EMR Spark Operator Benchmark Results" style="width: 100%; height: auto;">
 
 ### Metrics Explanation 
 
