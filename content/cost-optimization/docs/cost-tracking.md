@@ -7,7 +7,7 @@ In this section we will show you how you can use the Data Exports data to track 
 
 ## Create Data Exports
 
-To create a Data Export report you can execute the following [shell script](), or you can create by following the [AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/dataexports-create-standard.html).
+To create a Data Export report you can execute the following [shell script](https://github.com/aws/aws-emr-containers-best-practices/blob/main/content/cost-optimization/docs/resources/scripts/create-bucket-data-export.sh), or you can create by following the [AWS documentation](https://docs.aws.amazon.com/cur/latest/userguide/dataexports-create-standard.html).
 
 
 ```sh
