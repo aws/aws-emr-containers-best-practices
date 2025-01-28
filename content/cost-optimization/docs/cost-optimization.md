@@ -139,6 +139,12 @@ More details on this can be found [here](./node-decommission.md)
 
 **PVC Reuse:**
 
+!!! warning "Warning"
+    Do not use PVC reuse with Dynamic Resource Allocation (DRA) when using EBS storage. This combination will cause 
+    Spark to attempt attaching the same EBS volume to multiple pods, resulting in application failure. For DRA workloads 
+    requiring PVC reuse, use storage solutions that support multi-attach like EFS / FSx for Lustre.
+
+
 A PersistentVolume is a Kubernetes feature to provide persistent storage to container Pods running stateful workloads, and PersistentVolumeClaim (PVC) is to request the above storage in the container Pod for storage by a user. Apache Spark 3.1.0 introduced the ability to dynamically generate, mount, and remove Persistent Volume Claims, [SPARK-29873](https://github.com/apache/spark/pull/29873) for Kubernetes workloads, which are basically volumes mounted into your Spark pods. This means Apache Spark does not have to pre-create any claims/volumes for executors and delete it during the executor decommissioning.
 
 Since Spark3.2, PVC reuse is introduced. In case of a Spark executor is killed due to EC2 Spot interruption or any other failure, then its PVC is not deleted but persisted throughtout the entire job lifetime. It will be reattached to a new executor for a faster recovery. If there are shuffle files on that volume, then they are reused. Without enabling this feature, the owner of dynamic PVCs is the executor pods. It means if a pod or a node became unavailable, the PVC would be terminated, resulting in all the shuffle data were lost, and the recompute would be triggered.
