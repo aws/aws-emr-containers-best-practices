@@ -112,3 +112,4 @@ rules:
   - list
   - delete
   - patch
+  - deletecollection
