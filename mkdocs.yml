@@ -18,6 +18,7 @@ nav:
   - Submit applications:
       - Pyspark: 'submit-applications/docs/spark/pyspark.md'
       - Build Multi-arch Docker Image: 'submit-applications/docs/spark/multi-arch-image.md'
+      - Chain IAM Roles: 'submit-applications/docs/spark/chain-role.md'
   - Storage:
       - EBS: 'storage/docs/spark/ebs.md'
       - FSx for Lustre: 'storage/docs/spark/fsx-lustre.md'
