@@ -1,4 +1,4 @@
-# Chaining IAM Roles
+# Chaining IAM Roles With AWS Profile
 
 AWS STS allows you assume one role and then use the temporary credentials to assume another role. You can continue from session to session. This is called **[role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#iam-term-role-chaining)**. 
 
