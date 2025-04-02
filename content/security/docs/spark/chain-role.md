@@ -2,16 +2,20 @@
 
 AWS STS allows you assume one role and then use the temporary credentials to assume another role. You can continue from session to session. This is called **[role chaining](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html#iam-term-role-chaining)**. 
 
-In Amazon EMR on EKS, role chaining technique helps us to simplify the following use cases:
+In Amazon EMR on EKS, role chaining technique helps us to simplify EKS authentication design for use cases like:
 
-**1. Cross-Account Access:** it allows pods to switch from AssumeRoleWithWebIdentity ( Job Execution role ) to a different user role in a different AWS account by chaining sts:AssumeRole calls, enabling cross-account access and secure credential management. 
+**1. Cross-Account Access:** it allows pods to switch from AssumeRoleWithWebIdentity ( Job Execution role ) to a different user role in another AWS account by chaining sts:AssumeRole calls, enabling cross-account access and secure credential management. 
 
-**2. Session Switching:** within a single Spark application, you can seamlessly switch from Spark to AWS SDK session, such as Boto3, by assuming a different role.
+**2. Session Switching:** within a Spark application, you can seamlessly switch from a Spark to an AWS SDK credential session, (like Boto3 session) by assuming a different role.
 
-The role chaining capability significantly enhances the scalability and flexibility in EMR on EKS submission type, while maintaining the best practices in security.
+Role chaining capability improves scalability and flexibility in EMR on EKS submission type while maintaining the best practices in security.
 
 <div style="border: 1px solid red; padding: 10px; background-color: #f8d7da;">
-  <strong>NOTE:</strong> Role chaining session is limited to a maximum of one hour. If you use the "DurationSeconds" parameter to provide a value greater than one hour, the operation fails. 
+  <strong>NOTE:</strong>
+  <br>
+  1. Role chaining session is limited to a maximum of one hour. If you use the "DurationSeconds" parameter to provide a value greater than one hour, the operation fails.
+  <br>
+  2. Java SDK v1 doesn't support role chaining. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. The workaround is either to upgrade to SDK v2 or check the <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">order of AWS Credentials Provider Chain</a> to trigger a CredentialsProvider before WebIdentityTokenFileCredentialsProvider is called.
 </div>
 
 ## Role Chaining Demonstration
@@ -29,7 +33,7 @@ Account B (Target Account):
     Trust Policy: Allows the "job-execution-role-1" from Account A to assume this role.
     Policy: S3 & SQS Permissions in Account B. 
 ```
-![](../../resources/images/role-chain.png)  
+![](../resources/images/role-chain.png)  
 
 ### 1. Prerequisites
 
@@ -49,9 +53,9 @@ Account B (Target Account):
     ]
 }
 ```
-* [full version of IAM policy](../../resources/job-exec-role-1-policy.json) in Role 1
+* [full version of IAM policy](../resources/job-exec-role-1-policy.json) in Role 1
 
-* [full version of trust policy](../../resources/job-exec-role-1-policy.json) in Role 1
+* [full version of trust policy](../resources/job-exec-role-1-policy.json) in Role 1
 
 ### 2. Setup Chain IAM Role
 
@@ -72,8 +76,8 @@ In this example, a Spark application in EKS Cluster of Account A needs to access
     ]
 }
 ```
-* [full version of IAM policy](../../resources/client-role-2-policy.json)
-* [full version of trust policy](../../resources/client-role-2-trust-policy.json) (as above)
+* [full version of IAM policy](../resources/client-role-2-policy.json)
+* [full version of trust policy](../resources/client-role-2-trust-policy.json) (as above)
 
 ### 3. Build a Custom Docker Image
 
@@ -88,11 +92,11 @@ role_arn=arn:aws:iam::$ACCOUNTB:role/client-role-2
 web_identity_token_file = /var/run/secrets/eks.amazonaws.com/serviceaccount/token
 role_arn=arn:aws:iam::$ACCOUNTA:role/job-execution-role-1
 ```
-**NOTE: profile name of `client-role-2` MUST be `default`. However, the job execution role's profile name is flexible.**
+**NOTE:** profile name of `client-role-2` MUST be `default`. However, the job execution role's profile name is flexible.
 
-To produce the profile file in each pod, we build a custom docker image containing the [custom-entrypoint.sh](../../resources/custom-entrypoint.sh) - a script to populate the AWS profiles. Ensure the entrypoint script is located to the same directory as your Dockerfile.
+To produce the profile file in each pod, we build a custom docker image containing the [custom-entrypoint.sh](../resources/custom-entrypoint.sh) - a script to populate the AWS profiles. Ensure the entrypoint script is located to the same directory as your Dockerfile.
 
-A sample [Dockerfile](../../resources/Dockerfile) looks like this:
+A sample [Dockerfile](../resources/Dockerfile) looks like this:
 ```bash
 FROM public.ecr.aws/emr-on-eks/spark/emr-6.15.0:latest
 
@@ -132,7 +136,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 **Case 1: Test pure Boto3 with cross-account access**
 
-- Download the sample [Boto3 application](../../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only.
+- Download the sample [Boto3 application](../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only.
 
 Partial SDK code - **only-boto3.py**:
 ```python
@@ -196,7 +200,7 @@ aws emr-containers start-job-run \
 ```
 **Case 2: Switch from Spark session to Boto3 session**
 
-- Download the sample [PySpark application](../../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-$ACCOUNTA-$REGION`, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.
+- Download the sample [PySpark application](../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-$ACCOUNTA-$REGION`, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.
 
 Partial code - **mix-spark-boto3.py**:
 ```python
