@@ -2585,7 +2585,7 @@ pip install conda-pack
 conda pack -f -o numpy_environment.tar.gz
 </code></pre></div>
 
-<p>Upload <code>numpy_environment.tar.gz</code> to a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_environment.tar.gz</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.Alternatively, S3 path for <code>numpy_environment.tar.gz</code> can also be passed using <a href="# List of .py files">--py-files</a>  </p>
+<p>Upload <code>numpy_environment.tar.gz</code> to a s3 location that is mapped to a FSx for Lustre cluster. <code>numpy_environment.tar.gz</code> can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.Alternatively, S3 path for <code>numpy_environment.tar.gz</code> can also be passed using <a href="#list-of-py-files">--py-files</a>  </p>
 <p><strong>Request:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark-python-in-s3-conda-fsx&quot;</span><span class="p">,</span><span class="w"> </span>
@@ -2854,7 +2854,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-Cli
 
 <p><strong>Configuration of interest:</strong><br />
 <code>--files s3://&lt;s3 prefix&gt;/libexample.so</code> distributes the <code>libexample.so</code> to the working directory of all executors.<br />
-Dynamic modules(.pyd, .so) can also be imported by bundling within  <a href="# Bundled as a .egg file">.egg</a> (<a href="https://issues.apache.org/jira/browse/SPARK-6764">SPARK-6764</a>), <a href="# Bundled as a .whl file">.whl</a> and <a href="# Bundled as a .pex file">.pex</a> files.</p>
+Dynamic modules(.pyd, .so) can also be imported by bundling within  <a href="#bundled-as-a-egg-file">.egg</a> (<a href="https://issues.apache.org/jira/browse/SPARK-6764">SPARK-6764</a>), <a href="#bundled-as-a-whl-file">.whl</a> and <a href="#bundled-as-a-pex-file">.pex</a> files.</p>
 
 
 

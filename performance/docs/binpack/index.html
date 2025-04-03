@@ -1359,6 +1359,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install Bin-packing custom scheduler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#helm-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helm deployment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1737,6 +1752,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install Bin-packing custom scheduler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#helm-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Helm deployment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1804,10 +1834,32 @@ brew<span class="w"> </span>install<span class="w"> </span>eks-node-viewer
 <p>In the <a href="https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins">scheduling-plugin</a> <code>NodeResourcesFit</code> of kube-scheduler, there are two scoring strategies that support the bin packing of resources:       <code>MostAllocated</code> and <code>RequestedToCapacityRatio</code>. We created a custom scheduler based on the <strong>MostAllocated strategy</strong>. See the K8s’s <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/resource-bin-packing/">Resource Bin Packing</a> documentation for more details.</p>
 <p>The following customer scheduler named “my-scheduler” is created for EKS version v1.28, as the “kube-scheduler” container image version is required to match with EKS version. The KubeSchedulerConfiguration API version is stable(v1) in Kubernetes 1.25, for those cluster prior to 1.25, should use kubescheduler.config.k8s.io/v1beta2. Please adjust them accordingly if your EKS version is different.  </p>
 <p>We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:</p>
-<ul>
-<li><strong>Amazon EKS 1.28 image:</strong> public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest</li>
-<li><strong>Amazon EKS 1.29 image:</strong> public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.29.6-eks-1-29-18</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>EKS version</th>
+<th>Image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.28</td>
+<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.28.13-eks-1-28-latest</td>
+</tr>
+<tr>
+<td>1.29</td>
+<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.29.8-eks-1-29-latest</td>
+</tr>
+<tr>
+<td>1.30</td>
+<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.30.4-eks-1-30-latest</td>
+</tr>
+<tr>
+<td>1.31</td>
+<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.31.0-eks-1-31-latest</td>
+</tr>
+</tbody>
+</table>
 <p>NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:</p>
 <div class="codehilite"><pre><span></span><code><span class="w">   </span>clientConnection:
 <span class="w">      </span>burst:<span class="w"> </span><span class="m">200</span>
@@ -1826,6 +1878,8 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s">metadata:</span>
 <span class="s">  name: my-scheduler</span>
 <span class="s">  namespace: kube-system</span>
+
+
 <span class="s">---</span>
 <span class="s">kind: ClusterRole</span>
 <span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
@@ -2000,19 +2054,23 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s">  - get</span>
 <span class="s">  - list</span>
 <span class="s">  - watch</span>
+
+
 <span class="s">---</span>
 <span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
 <span class="s">kind: ClusterRoleBinding</span>
 <span class="s">metadata:</span>
 <span class="s">  name: my-scheduler-as-kube-scheduler</span>
-<span class="s">roleRef:</span>
-<span class="s">  apiGroup: rbac.authorization.k8s.io</span>
-<span class="s">  kind: ClusterRole</span>
-<span class="s">  name: my-scheduler</span>
 <span class="s">subjects:</span>
 <span class="s">- kind: ServiceAccount</span>
 <span class="s">  name: my-scheduler</span>
 <span class="s">  namespace: kube-system</span>
+<span class="s">roleRef:</span>
+<span class="s">  apiGroup: rbac.authorization.k8s.io</span>
+<span class="s">  kind: ClusterRole</span>
+<span class="s">  name: my-scheduler</span>
+
+
 <span class="s">---</span>
 <span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
 <span class="s">kind: ClusterRoleBinding</span>
@@ -2026,6 +2084,8 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s">  kind: ClusterRole</span>
 <span class="s">  name: system:volume-scheduler</span>
 <span class="s">  apiGroup: rbac.authorization.k8s.io</span>
+
+
 <span class="s">---</span>
 <span class="s">apiVersion: v1</span>
 <span class="s">kind: ConfigMap</span>
@@ -2068,6 +2128,7 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s">    clientConnection:</span>
 <span class="s">      burst: 200</span>
 <span class="s">      qps: 100</span>
+
 <span class="s">---</span>
 <span class="s">apiVersion: apps/v1</span>
 <span class="s">kind: Deployment</span>
@@ -2139,6 +2200,16 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s">          configMap:</span>
 <span class="s">               name: my-scheduler-config</span>
 <span class="s">EOF</span>
+</code></pre></div>
+
+<h3 id="helm-deployment">Helm deployment<a class="headerlink" href="#helm-deployment" title="Permanent link">&para;</a></h3>
+<p><strong>1. Download the source code from the Github:</strong>*</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/aws/aws-emr-containers-best-practices
+<span class="nb">cd</span><span class="w"> </span>./chart/kube-scheduler
+</code></pre></div>
+
+<p><strong>2. Deploy Helm chart</strong></p>
+<div class="codehilite"><pre><span></span><code>helm<span class="w"> </span>install<span class="w"> </span>kube-scheduler<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>.
 </code></pre></div>
 
 <h2 id="validate-the-custom-scheduler">Validate the Custom Scheduler<a class="headerlink" href="#validate-the-custom-scheduler" title="Permanent link">&para;</a></h2>
