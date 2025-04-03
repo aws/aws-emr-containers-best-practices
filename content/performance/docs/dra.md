@@ -2,10 +2,20 @@
 
 DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling [shuffle tracking](https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation).
 
+**Spark DRA with storage configuration:**  
+
+When using [dynamic provisioning PVC/Volumes](../../storage/docs/spark/ebs.md#dynamic-provisioning) with Spark, you must disable PVC reuse to prevent multi-attach errors. The default configuration attempts to reuse PVCs, which causes EBS volumes to attach to multiple pods and leads to application failure. Set the following configurations:
+```
+"spark.kubernetes.driver.ownPersistentVolumeClaim": "false"
+"spark.kubernetes.driver.reusePersistentVolumeClaim": "false"
+"spark.kubernetes.driver.waitToReusePersistentVolumeClaim": "false"
+```
+For workloads requiring PVC reuse with DRA, use storage solutions supporting multi-attach like EFS / FSx for Lustre instead of EBS.
+
 **Spark DRA without external shuffle service:**  
 With DRA, the spark driver spawns the initial number of executors and then scales up the number until the specified maximum number of executors is met to process the pending tasks. Idle executors are terminated when there are no pending tasks, the executor idle time exceeds the idle timeout(`spark.dynamicAllocation.executorIdleTimeout)`and it doesn't have any cached or shuffle data.
 
- If the executor idle threshold is reached and it has cached data, then it has to exceed the cache data idle timeout(`spark.dynamicAllocation.cachedExecutorIdleTimeout) ` and if the executor doesn't have shuffle data, then the idle executor is terminated.
+If the executor idle threshold is reached and it has cached data, then it has to exceed the cache data idle timeout(`spark.dynamicAllocation.cachedExecutorIdleTimeout) ` and if the executor doesn't have shuffle data, then the idle executor is terminated.
 
 If the executor idle threshold is reached and it has shuffle data, then without external shuffle service the executor will never be terminated. These executors will be terminated when the job is completed. This behavior is enforced by `"spark.dynamicAllocation.shuffleTracking.enabled":"true" and "spark.dynamicAllocation.enabled":"true"`
 
