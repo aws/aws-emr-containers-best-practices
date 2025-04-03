@@ -15,6 +15,7 @@ nav:
       - Data Encryption: 'security/docs/spark/data-encryption.md'
       - Network Security: 'security/docs/spark/network-security.md'
       - Secrets: 'security/docs/spark/secrets.md'
+      - Chain IAM Roles: 'security/docs/spark/chain-role.md'
   - Submit applications:
       - Pyspark: 'submit-applications/docs/spark/pyspark.md'
       - Build Multi-arch Docker Image: 'submit-applications/docs/spark/multi-arch-image.md'
