@@ -15,7 +15,7 @@ Role chaining capability improves scalability and flexibility in EMR on EKS subm
   <br>
   1. Role chaining session is limited to a maximum of one hour. If you use the "DurationSeconds" parameter to provide a value greater than one hour, the operation fails.
   <br>
-  2. Java SDK v1 doesn't support role chaining. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. The workaround is either to upgrade to SDK v2 or check the <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">order of AWS Credentials Provider Chain</a> to trigger a CredentialsProvider before WebIdentityTokenFileCredentialsProvider is called.
+  2. Role chaining doesn't work with Java SDK based application running in EKS. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. The workaround is to check the <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">order of AWS Credentials Provider Chain</a> and use a CredentialsProvider in the chain before WebIdentityTokenFileCredentialsProvider is evaluated. Or force to use ProfileCredentialsProvider in Java code.
 </div>
 
 ## Role Chaining Demonstration
@@ -136,9 +136,11 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 **Case 1: Test pure Boto3 with cross-account access**
 
+
 - Download the sample [Boto3 application](../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only.
 
-Partial SDK code - **only-boto3.py**:
+The sample Python application lists S3 object name and size, then send the infomation to an SQS queue in a target Account. 
+Code Snippet for - **only-boto3.py**:
 ```python
 s3 = boto3.client('s3', region_name='us-east-1')
 objects = []
@@ -151,7 +153,7 @@ try:
             objects.append(obj['Key'])
 ......
 ```
-- Create an SQS queue if doesn't exists
+- Before we submit the EMR on EKS job, create an SQS queue if it doesn't exist.
 ```sh
 aws sqs create-queue --queue-name MyDeadLetterQueue
 
@@ -159,7 +161,7 @@ aws sqs create-queue --queue-name MyDeadLetterQueue
     "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue"
 }
 ```
-- Submit an EMR on EKS Job
+- Submit the boto3 Python job to validate the cross-account access permission.
 ```sh
 #!/bin/bash
 export ACCOUNTA=1111111111111
@@ -200,9 +202,9 @@ aws emr-containers start-job-run \
 ```
 **Case 2: Switch from Spark session to Boto3 session**
 
-- Download the sample [PySpark application](../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-$ACCOUNTA-$REGION`, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.
+- Download the sample [PySpark application](../resources/mix-spark-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.
 
-Partial code - **mix-spark-boto3.py**:
+Code Snippet for - **mix-spark-boto3.py**:
 ```python
 print("=== Starting Spark Session ===")
 spark = SparkSession.builder.appName("chain-role-test").getOrCreate()
@@ -227,7 +229,7 @@ def send_partition(partition):
             )
 ...........
 ```
-- Create an SQS queue if doesn't exists
+- Create an SQS queue if needed
 ```sh
 aws sqs create-queue --queue-name MyDeadLetterQueue
 
@@ -235,7 +237,7 @@ aws sqs create-queue --queue-name MyDeadLetterQueue
     "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue"
 }
 ```
-- Submit an EMR on EKS Job
+- Submit the EMR on EKS Job to validate the permission when switching from Spark to SDK credential session.
 ```bash
 #!/bin/bash
 export ACCOUNTA=1111111111111
