@@ -1,7 +1,7 @@
 import boto3,json,sys
 
 def list_s3_bucket_contents(bucket_name, prefix):
-    s3 = boto3.client('s3', region_name='us-west-2')
+    s3 = boto3.client('s3', region_name='us-east-1')
     objects = []
     try:
         response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
@@ -17,7 +17,7 @@ def list_s3_bucket_contents(bucket_name, prefix):
     return objects
 
 def send_s3_references_to_sqs(bucket_name, object_keys, sqs_queue_url):
-    sqs = boto3.client('sqs', region_name='us-west-2')
+    sqs = boto3.client('sqs', region_name='us-east-1')
     for key in object_keys:
         try:
             print(f"Sending S3 reference: {key}")

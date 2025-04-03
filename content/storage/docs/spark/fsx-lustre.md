@@ -26,7 +26,7 @@ To enable the spark application to write to the mounted file system, (UID - `999
 For S3 objects that already exists with no metadata tagging, there can be a process that recursively tags all the S3 objects with the required metadata.
 Below is an example:    
 1. Create FSx for Lustre file system to the S3 prefix.    
-2. [Create Persistent Volume and Persistent Volume claim for the created FSx for Lustre file system](#Provision a FSx for Lustre cluster)    
+2. [Create Persistent Volume and Persistent Volume claim for the created FSx for Lustre file system](#provision-a-fsx-for-lustre-cluster)    
 3. Run a pod as root user with FSx for Lustre mounted with the PVC created in Step 2.    
     
     ```
@@ -160,7 +160,7 @@ Response is as below
 4. Configure Persistent Volume and Persistent Volume Claim for FSx for Lustre
 
 
-FSx for Lustre file system is created as described above -[Provision a FSx for Lustre cluster](#Provision a FSx for Lustre cluster)  
+FSx for Lustre file system is created as described above -[Provision a FSx for Lustre cluster](#provision-a-fsx-for-lustre-cluster)  
 Once provisioned, a persistent volume - as specified below is created with a direct (hard-coded) reference to the created lustre file system. A Persistent Volume claim for this persistent volume will always use the same file system.
 
 ```
