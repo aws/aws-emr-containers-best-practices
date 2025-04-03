@@ -15,6 +15,7 @@ nav:
       - Data Encryption: 'security/docs/spark/data-encryption.md'
       - Network Security: 'security/docs/spark/network-security.md'
       - Secrets: 'security/docs/spark/secrets.md'
+      - Chain IAM Roles: 'security/docs/spark/chain-role.md'
   - Submit applications:
       - Pyspark: 'submit-applications/docs/spark/pyspark.md'
       - Build Multi-arch Docker Image: 'submit-applications/docs/spark/multi-arch-image.md'
@@ -41,9 +42,17 @@ nav:
       - Dynamic Resource Allocation: 'performance/docs/dra.md'
       - BinPacking: 'performance/docs/binpack.md'
       - EKS Best Practices: 'best-practices-and-recommendations/eks-best-practices.md'
-  - Cost Optimization:
+  - Cost Tracking and Optimization:
       - Cost Optimization using EC2 Spot Instances: 'cost-optimization/docs/cost-optimization.md'
       - Node Decommission: 'cost-optimization/docs/node-decommission.md'
+      - Cost Tracking: 'cost-optimization/docs/cost-tracking.md'
+  - Scalability:
+      - Glossary and Terms: 'scalability/docs/scalaiblity-glossary.md'
+      - Known Factors for Spark Operator: 'scalability/docs/known-factors-spark-operator.md'
+      - Known Factors for StartJobRun API: 'scalability/docs/known-factors-start-job-run.md'
+      - Recommendation for StartJobRun: 'scalability/docs/load-test-for-start-job-run-api.md'
+      - Recommendation for Spark Operator: 'scalability/docs/load-test-for-spark-operator.md'
+      - Grafana Dashboard: 'scalability/docs/graphana-dashboard.md'
 markdown_extensions:
   - toc:
       permalink: true

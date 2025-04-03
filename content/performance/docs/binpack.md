@@ -45,7 +45,6 @@ The following customer scheduler named “my-scheduler” is created for EKS ver
 
 We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:
 
-
 | EKS version | Image                                                                       |
 |-------------|-----------------------------------------------------------------------------|
 | 1.28        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.28.13-eks-1-28-latest |
@@ -53,7 +52,18 @@ We do not recommend build the kube-scheduler by yourself, you can leverage the e
 | 1.30        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.30.4-eks-1-30-latest  |
 | 1.31        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.31.0-eks-1-31-latest  |
 
-### Manual deployment
+
+NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:
+```bash
+   clientConnection:
+      burst: 200
+      qps: 100
+```
+An example of throttle error from the pod logs:
+```bash
+I1030 23:19:48.258159       1 request.go:697] Waited for 1.93509847s due to client-side throttling, not priority and fairness, request: POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...vents
+I1030 23:19:58.258457       1 request.go:697] Waited for 1.905177346s due to client-side throttling, not priority and fairness, request: POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...
+```
 
 Run the following command against **EKS v1.28**:
 
@@ -311,7 +321,9 @@ data:
       leaderElect: true
       resourceNamespace: kube-system
       resourceName: my-scheduler
-
+    clientConnection:
+      burst: 200
+      qps: 100
 
 ---
 apiVersion: apps/v1
@@ -452,13 +464,13 @@ spec:
 Step3: Monitor via eks-node-viewer 
 
 -Before apply the change in pod template:-
-![](../resources/images/before-binpack.png)
+![](resources/images/before-binpack.png)
 
 -After the change:-
 
 *  Higher resource usage per node at pod scheduling time
 *  Over 50% of cost reduction since Karpenter was terminating idle EC2 nodes at the same time 
-![](../resources/images/after-binpack.png)
+![](resources/images/after-binpack.png)
 
 Consideration:
 
