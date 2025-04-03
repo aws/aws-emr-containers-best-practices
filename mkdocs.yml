@@ -58,3 +58,4 @@ markdown_extensions:
       permalink: true
   - admonition
   - codehilite
+  - tables

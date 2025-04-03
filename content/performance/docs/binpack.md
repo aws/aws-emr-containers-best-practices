@@ -45,8 +45,13 @@ The following customer scheduler named “my-scheduler” is created for EKS ver
 
 We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:
 
-- **Amazon EKS 1.28 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest
-- **Amazon EKS 1.29 image:** public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.29.6-eks-1-29-18
+| EKS version | Image                                                                       |
+|-------------|-----------------------------------------------------------------------------|
+| 1.28        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.28.13-eks-1-28-latest |
+| 1.29        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.29.8-eks-1-29-latest  |
+| 1.30        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.30.4-eks-1-30-latest  |
+| 1.31        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.31.0-eks-1-31-latest  |
+
 
 NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:
 ```bash
@@ -69,6 +74,8 @@ kind: ServiceAccount
 metadata:
   name: my-scheduler
   namespace: kube-system
+
+
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -243,19 +250,23 @@ rules:
   - get
   - list
   - watch
+
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: my-scheduler-as-kube-scheduler
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: my-scheduler
 subjects:
 - kind: ServiceAccount
   name: my-scheduler
   namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: my-scheduler
+
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -269,6 +280,8 @@ roleRef:
   kind: ClusterRole
   name: system:volume-scheduler
   apiGroup: rbac.authorization.k8s.io
+
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -311,6 +324,7 @@ data:
     clientConnection:
       burst: 200
       qps: 100
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -384,6 +398,19 @@ spec:
 EOF
 ```
 
+
+### Helm deployment
+
+**1. Download the source code from the Github:***
+```shell
+git clone https://github.com/aws/aws-emr-containers-best-practices
+cd ./chart/kube-scheduler
+```
+
+**2. Deploy Helm chart**
+```shell
+helm install kube-scheduler -n <namespace> .
+```
 
 ## Validate the Custom Scheduler
 
