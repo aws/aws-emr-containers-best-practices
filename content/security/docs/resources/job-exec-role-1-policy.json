@@ -4,7 +4,7 @@
         {
             "Effect": "Allow",
             "Action": "sts:AssumeRole",
-            "Resource": "arn:aws:iam::$ACCOUNTB:role/client-role-2"
+            "Resource": "arn:aws:iam::${ACCOUNTB}:role/client-role-2"
         },
         {
             "Effect": "Allow",
@@ -14,14 +14,14 @@
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::emr-on-eks-test-$ACCOUNTA-$REGION/*"
+                "arn:aws:s3:::emr-on-eks-test-${ACCOUNTA}-$REGION}/*"
             ]
         },
         {
             "Effect": "Allow",
             "Action": "s3:ListBucket",
             "Resource": [
-                "arn:aws:s3:::emr-on-eks-test-$ACCOUNTA-$REGION"
+                "arn:aws:s3:::emr-on-eks-test-${ACCOUNTA}-${REGION}"
             ]
         },
         {

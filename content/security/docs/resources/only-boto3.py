@@ -1,7 +1,7 @@
 import boto3,json,sys
 
 def list_s3_bucket_contents(bucket_name, prefix):
-    s3 = boto3.client('s3', region_name='us-east-1')
+    s3 = boto3.client('s3', region_name='us-west-2')
     objects = []
     try:
         response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)

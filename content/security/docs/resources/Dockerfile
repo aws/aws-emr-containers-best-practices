@@ -1,5 +1,5 @@
-FROM public.ecr.aws/emr-on-eks/spark/emr-6.15.0:latest
-
+ARG EMR_VERSION=emr-6.15.0
+FROM public.ecr.aws/emr-on-eks/spark/${EMR_VERSION}
 USER root
 
 RUN mkdir -p /usr/lib/poc
