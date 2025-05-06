@@ -703,9 +703,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4submit-sample-job" class="md-nav__link">
+  <a href="#4validate-with-sample-jobs" class="md-nav__link">
     <span class="md-ellipsis">
-      4.Submit Sample Job
+      4.Validate with sample jobs
     </span>
   </a>
   
@@ -1786,9 +1786,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4submit-sample-job" class="md-nav__link">
+  <a href="#4validate-with-sample-jobs" class="md-nav__link">
     <span class="md-ellipsis">
-      4.Submit Sample Job
+      4.Validate with sample jobs
     </span>
   </a>
   
@@ -1828,7 +1828,7 @@
   <br>
   1. Role chaining session is limited to a maximum of one hour. If you use the "DurationSeconds" parameter to provide a value greater than one hour, the operation fails.
   <br>
-  2. Role chaining doesn't work with Java SDK based application running in EKS. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. The workaround is to check the <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">order of AWS Credentials Provider Chain</a> and use a CredentialsProvider in the chain before WebIdentityTokenFileCredentialsProvider is evaluated. Or force to use ProfileCredentialsProvider in Java code.
+  2. Role chaining is not compatible with Java SDK applications or combined Spark/SDK applications running in EKS. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. Following the  <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">AWS Default Credential provider Chain order</a>, add a line of code `.withCredentials(new ProfileCredentialsProvider())` to bypass WebIdentity credential evaluation, or force profile credential evaluation via our workaround when code modifications aren't possible.
 </div>
 
 <h2 id="role-chaining-demonstration">Role Chaining Demonstration<a class="headerlink" href="#role-chaining-demonstration" title="Permanent link">&para;</a></h2>
@@ -1871,11 +1871,11 @@
 <p><a href="../../resources/job-exec-role-1-policy.json">full version of IAM policy</a> in Role 1</p>
 </li>
 <li>
-<p><a href="../../resources/job-exec-role-1-policy.json">full version of trust policy</a> in Role 1</p>
+<p><a href="../../resources/job-exec-role-1-trust-policy.json">full version of trust policy</a> in Role 1</p>
 </li>
 </ul>
 <h3 id="2-setup-chain-iam-role">2. Setup Chain IAM Role<a class="headerlink" href="#2-setup-chain-iam-role" title="Permanent link">&para;</a></h3>
-<p>In this example, a Spark application in EKS Cluster of Account A needs to access resources (S3 and SQS) in Account B. The <code>Job-Execution-Role-1</code> in Account A has a policy that allows it to assume the <code>client-role-2</code> in Account B (using sts:AssumeRole), which is a chained role. </p>
+<p>In this example, a Spark application in an EKS Cluster of Account A requires access to resources (S3 and SQS) in Account B. <code>Job-Execution-Role-1</code> in Account A has a policy that allows it to assume <code>client-role-2</code> in Account B through<code>sts:AssumeRole</code>, creating a role chain. </p>
 <ul>
 <li><strong>Add Trust Policy</strong>: client-role-2 in Account B needs a trust policy that allows Job-Execution-Role-1 in Account A to assume it. </li>
 </ul>
@@ -1898,19 +1898,27 @@
 <li><a href="../../resources/client-role-2-trust-policy.json">full version of trust policy</a> (as above)</li>
 </ul>
 <h3 id="3-build-a-custom-docker-image">3. Build a Custom Docker Image<a class="headerlink" href="#3-build-a-custom-docker-image" title="Permanent link">&para;</a></h3>
-<p>After the role 1 and role 2 are fully setup, now we need to create a chained profile file <code>~/.aws/config</code> in each Spark pod, so our jobs can assume chained roles with zero code change. 
-The "AWS Profile" format looks like this:</p>
-<div class="codehilite"><pre><span></span><code><span class="o">[</span>profile<span class="w"> </span>default<span class="o">]</span>
-<span class="nv">source_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>irsa-role-1
-<span class="nv">role_arn</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTB</span>:role/client-role-2
+<p>After the role 1 and role 2 are fully setup, now we need to create AWS profile files <code>~/.aws/config</code> and <code>~/.aws/credentials</code> in each Spark pod, so our jobs can assume client role with zero code change. </p>
+<p><code>~/.aws/config</code> looks like this:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span>default<span class="o">]</span>
+<span class="nv">region</span><span class="o">=</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span>
+<span class="nv">source_profile</span><span class="o">=</span>irsa-role
+<span class="nv">role_arn</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTB</span><span class="si">}</span>:role/client-role-2
 
-<span class="o">[</span>profile<span class="w"> </span>irsa-role-1<span class="o">]</span>
-<span class="nv">web_identity_token_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/var/run/secrets/eks.amazonaws.com/serviceaccount/token
-<span class="nv">role_arn</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTA</span>:role/job-execution-role-1
+<span class="o">[</span>profile<span class="w"> </span>irsa-role<span class="o">]</span>
+<span class="nv">region</span><span class="o">=</span><span class="si">${</span><span class="nv">REGION</span><span class="si">}</span>
+<span class="nv">web_identity_token_file</span><span class="o">=</span>/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+<span class="nv">role_arn</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>:role/job-execution-role-1
 </code></pre></div>
 
-<p><strong>NOTE:</strong> profile name of <code>client-role-2</code> MUST be <code>default</code>. However, the job execution role's profile name is flexible.</p>
-<p>To produce the profile file in each pod, we build a custom docker image containing the <a href="../../resources/custom-entrypoint.sh">custom-entrypoint.sh</a> - a script to populate the AWS profiles. Ensure the entrypoint script is located to the same directory as your Dockerfile.</p>
+<p>The profile name for <code>client-role-2</code> MUST be set as <code>default</code>. The profile name for the job execution role can be flexible as needed.</p>
+<p>To produce AWS profile files in each pod, we build a custom docker image containing the <a href="../../resources/custom-entrypoint.sh">custom-entrypoint.sh</a> - a script to populate the required profile files. Ensure your entrypoint script is located to the same directory as your Dockerfile.</p>
+<p>The custom-entrypoint.sh script is crucial for this security setup. It generates the <code>~/.aws/config</code> file in each pod, enabling role chaining with automatic token refresh.</p>
+<p>NOTE: Role chaining isn't compatible with Java SDK or Spark/SDK apps in EKS. To workaround it, generate the <code>~/.aws/credentials</code> file instead. Additionally, reset the IRSA environment variable "AWS_ROLE_ARN" to a role without the "AssumeRoleWithWebIdentity" permission, such as "ROLE_2_ARN". This forces apps to use the Profile Credential Provider in the AWS DefaultCredentialChain.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ROLE_ARN</span><span class="o">=</span><span class="nv">$ROLE_2_ARN</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_WEB_IDENTITY_TOKEN_FILE</span><span class="o">=</span>/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+</code></pre></div>
+
 <p>A sample <a href="../../resources/Dockerfile">Dockerfile</a> looks like this:</p>
 <div class="codehilite"><pre><span></span><code>FROM<span class="w"> </span>public.ecr.aws/emr-on-eks/spark/emr-6.15.0:latest
 
@@ -1929,30 +1937,29 @@ ENTRYPOINT<span class="w"> </span><span class="o">[</span><span class="s2">&quot
 <div class="codehilite"><pre><span></span><code><span class="c1"># login to public ECR first</span>
 aws<span class="w"> </span>ecr-public<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span>us-east-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span>public.ecr.aws
 <span class="c1"># login to a private ECR</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-east-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span>us-west-2
 <span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNT_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">ECR_URL</span><span class="o">=</span><span class="nv">$ACCOUNT_ID</span>.dkr.ecr.<span class="nv">$AWS_REGION</span>.amazonaws.com
-
 aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span><span class="nv">$AWS_REGION</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$ECR_URL</span>
-
-<span class="c1"># one-off: create a new ECR repo</span>
+<span class="c1"># one-off task: create a new ECR repo</span>
 aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span>spark<span class="w"> </span>--image-scanning-configuration<span class="w"> </span><span class="nv">scanOnPush</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 
 <p>Finally, build and publish the image supporting x86 &amp; arm64 both. Refer to the <a href="https://aws.github.io/aws-emr-containers-best-practices/submit-applications/docs/spark/multi-arch-image/">Build Multi-arch Docker Image</a> section if you don't have buildx enabled in your environment.</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span><span class="se">\</span>
--t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark/emr6.15_custom<span class="w"> </span><span class="se">\</span>
+-t<span class="w"> </span><span class="nv">$ECR_URL</span>/spark:emr7.2_custom<span class="w"> </span><span class="se">\</span>
+--build-arg<span class="w"> </span><span class="nv">EMR_VERSION</span><span class="o">=</span>emr-7.2.0
 --push<span class="w"> </span>.
 </code></pre></div>
 
-<h3 id="4submit-sample-job">4.Submit Sample Job<a class="headerlink" href="#4submit-sample-job" title="Permanent link">&para;</a></h3>
+<h3 id="4validate-with-sample-jobs">4.Validate with sample jobs<a class="headerlink" href="#4validate-with-sample-jobs" title="Permanent link">&para;</a></h3>
 <p><strong>Case 1: Test pure Boto3 with cross-account access</strong></p>
 <ul>
-<li>Download the sample <a href="../../resources/only-boto3.py">Boto3 application</a> to Account A S3 bucket <code>emr-on-eks-test-AccountA-us-east-1</code>, which stores library dependecies, logs and source code only.</li>
+<li>Download the sample <a href="../../resources/only-boto3.py">Boto3 application</a> to AccountB's S3 bucket, which stores client's source code and data.</li>
 </ul>
-<p>The sample Python application lists S3 object name and size, then send the infomation to an SQS queue in a target Account. 
+<p>The sample Python application lists S3 objects, then send the infomation to an SQS queue in a target Account. 
 Code Snippet for - <strong>only-boto3.py</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-east-1&#39;</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-west-2&#39;</span><span class="p">)</span>
 <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
@@ -1970,64 +1977,57 @@ Code Snippet for - <strong>only-boto3.py</strong>:</p>
 <div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>sqs<span class="w"> </span>create-queue<span class="w"> </span>--queue-name<span class="w"> </span>MyDeadLetterQueue
 
 <span class="o">{</span>
-<span class="w">    </span><span class="s2">&quot;QueueUrl&quot;</span>:<span class="w"> </span><span class="s2">&quot;https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue&quot;</span>
+<span class="w">    </span><span class="s2">&quot;QueueUrl&quot;</span>:<span class="w"> </span><span class="s2">&quot;https://sqs.us-east-1.amazonaws.com/2222222222/MyDeadLetterQueue&quot;</span>
 <span class="o">}</span>
 </code></pre></div>
 
 <ul>
-<li>Submit the boto3 Python job to validate the cross-account access permission.</li>
+<li>Submit the boto3 Python job to validate the cross-account access permission. Ensure replace all the placeholder values by your own parameters.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTA</span><span class="o">=</span><span class="m">1111111111111</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTB</span><span class="o">=</span><span class="m">2222222222222</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>us-east-1
-<span class="nb">export</span><span class="w"> </span><span class="nv">S3BUCKET</span><span class="o">=</span>emr-on-eks-test-<span class="nv">$ACCOUNTA</span>-<span class="nv">$REGION</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_ROLE_ARN</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTA</span>:role/job-execution-role-1
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTA</span><span class="o">=</span><span class="m">1111111111</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTB</span><span class="o">=</span><span class="m">2222222222</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_1_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>:role/job-execution-role-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_2_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTB</span><span class="si">}</span>:role/client-role-2
+<span class="nb">export</span><span class="w"> </span><span class="nv">ECR_URL</span><span class="o">=</span><span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>.dkr.ecr.<span class="nv">$REGION</span>.amazonaws.com
 
 aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>pure-boto3<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--execution-role-arn<span class="w"> </span><span class="nv">$EMR_ROLE_ARN</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--release-label<span class="w"> </span>emr-6.15.0-latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--execution-role-arn<span class="w"> </span><span class="nv">$ROLE_1_ARN</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--release-label<span class="w"> </span>emr-7.2.0-latest<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--job-driver<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
-<span class="s1">      &quot;entryPoint&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/only-boto3.py&quot;,</span>
-<span class="s1">      &quot;entryPointArguments&quot;:[&quot;datalake-&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;-&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;,&quot;YOUR_FILE_PATH&quot;,&quot;https://sqs.&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;.amazonaws.com/&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;/MyDeadLetterQueue&quot;],</span>
-<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.cores=1 --conf spark.executor.instances=1&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="s1">    &quot;entryPoint&quot;: &quot;s3://YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;/only-boto3.py&quot;,</span>
+<span class="s1">    &quot;entryPointArguments&quot;: [&quot;YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;, &quot;YOUR_S3_FILE_PATH&quot;, &quot;YOUR_SQS_NAME_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;],</span>
+<span class="s1">    &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.cores=1 --conf spark.executor.instances=1&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--configuration-overrides<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">    &quot;applicationConfiguration&quot;: [</span>
 <span class="s1">      {</span>
 <span class="s1">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
 <span class="s1">        &quot;properties&quot;: {</span>
-<span class="s1">          &quot;spark.kubernetes.container.image&quot;: &quot;YOUR_PRIVATE_ECR/emr6.15_custom&quot;,</span>
-
-<span class="s1">          &quot;spark.kubernetes.driverEnv.CLIENT_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;,</span>
-<span class="s1">          &quot;spark.executorEnv.CLIENT_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;,</span>
-<span class="s1">          &quot;spark.kubernetes.driverEnv.WEB_IDENTITY_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;:role/job-execution-role-1&quot;,</span>
-<span class="s1">          &quot;spark.executorEnv.WEB_IDENTITY_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;:role/job-execution-role-1&quot;</span>
-<span class="s1">      }}</span>
-<span class="s1">    ], </span>
-<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
-<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;/logs/emr-containers&quot;},</span>
-<span class="s1">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
-<span class="s1">        &quot;logGroupName&quot;: &quot;/emr-on-eks/chain-role-test&quot;,</span>
-<span class="s1">        &quot;logStreamNamePrefix&quot;: &quot;pure-boto3&quot;}</span>
-<span class="s1">    }}&#39;</span>
+<span class="s1">          &quot;spark.kubernetes.container.image&quot;: &quot;&#39;</span><span class="nv">$ECR_URL</span><span class="s1">&#39;/spark:emr7.2_custom&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="err">&#39;</span><span class="s2">&quot;</span>
+<span class="s2">      }}</span>
+<span class="s2">    ]</span>
+<span class="s2">......</span>
 </code></pre></div>
 
 <p><strong>Case 2: Switch from Spark session to Boto3 session</strong></p>
 <ul>
-<li>Download the sample <a href="../../resources/mix-spark-boto3.py">PySpark application</a> to Account A S3 bucket <code>emr-on-eks-test-AccountA-us-east-1</code>, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.</li>
+<li>Download the sample <a href="../../resources/mix-spark-boto3.py">PySpark application</a> to AccountB's S3 bucket, which stores client's source code and data. The application combines PySpark with AWS SDK code.</li>
+<li>Download the sample pod templates <a href="../../resources/driver-pod-template.yaml">driver-pod-template.yaml</a>,<a href="../../resources/executor-pod-template.yaml">exeutor-pod-template.yaml</a> to AccountA's S3 bucket, which centralizes job assets, such as the pod templates and job logs.</li>
 </ul>
 <p>Code Snippet for - <strong>mix-spark-boto3.py</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Starting Spark Session ===&quot;</span><span class="p">)</span>
-<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;chain-role-test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<div class="codehilite"><pre><span></span><code><span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;chain-role-test&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 <span class="c1"># Read data from S3 via Spark</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="n">S3_FILE</span><span class="p">)</span>
-
 <span class="c1"># Convert each row to JSON string</span>
 <span class="n">json_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">to_json</span><span class="p">(</span><span class="n">struct</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">))</span>
-
 <span class="c1"># Send to SQS via Boto3 client</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">json_df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">send_partition</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 
@@ -2041,62 +2041,125 @@ aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<s
                 <span class="n">QueueUrl</span><span class="o">=</span><span class="n">SQS_URL</span><span class="p">,</span>
                 <span class="n">MessageBody</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">value</span>
             <span class="p">)</span>
-<span class="o">...........</span>
+<span class="o">......</span>
 </code></pre></div>
 
 <ul>
 <li>Create an SQS queue if needed</li>
 </ul>
 <div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>sqs<span class="w"> </span>create-queue<span class="w"> </span>--queue-name<span class="w"> </span>MyDeadLetterQueue
-
 <span class="o">{</span>
-<span class="w">    </span><span class="s2">&quot;QueueUrl&quot;</span>:<span class="w"> </span><span class="s2">&quot;https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue&quot;</span>
+<span class="w">    </span><span class="s2">&quot;QueueUrl&quot;</span>:<span class="w"> </span><span class="s2">&quot;https://sqs.us-east-1.amazonaws.com/2222222222/MyDeadLetterQueue&quot;</span>
 <span class="o">}</span>
 </code></pre></div>
 
 <ul>
 <li>Submit the EMR on EKS Job to validate the permission when switching from Spark to SDK credential session.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTA</span><span class="o">=</span><span class="m">1111111111111</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTB</span><span class="o">=</span><span class="m">2222222222222</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>us-east-1
-<span class="nb">export</span><span class="w"> </span><span class="nv">S3BUCKET</span><span class="o">=</span>emr-on-eks-test-<span class="nv">$ACCOUNTA</span>-<span class="nv">$REGION</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">EMR_ROLE_ARN</span><span class="o">=</span>arn:aws:iam::<span class="nv">$ACCOUNTA</span>:role/job-execution-role-1
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTA</span><span class="o">=</span><span class="m">1111111111</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTB</span><span class="o">=</span><span class="m">2222222222</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>us-west-2
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_1_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>:role/job-execution-role-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_2_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTB</span><span class="si">}</span>:role/client-role-2
+<span class="nb">export</span><span class="w"> </span><span class="nv">ECR_URL</span><span class="o">=</span><span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>.dkr.ecr.<span class="nv">$REGION</span>.amazonaws.com
 
 aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>emr615-mix-spark-boto3<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--execution-role-arn<span class="w"> </span><span class="nv">$EMR_ROLE_ARN</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--release-label<span class="w"> </span>emr-6.15.0-latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>mix-spark-boto3-podtemplate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--execution-role-arn<span class="w"> </span><span class="nv">$ROLE_1_ARN</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--release-label<span class="w"> </span>emr-7.2.0-latest<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--job-driver<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
-<span class="s1">      &quot;entryPoint&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/mix-spark-boto3.py&quot;,</span>
-<span class="s1">      &quot;entryPointArguments&quot;:[&quot;s3://datalake-&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;-&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;/YOUR_FILE_PATH&quot;,&quot;https://sqs.&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;.amazonaws.com/&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;/MyDeadLetterQueue&quot;],</span>
-<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.cores=1 --conf spark.executor.instances=1&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="s1">      &quot;entryPoint&quot;:  &quot;s3://YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;/mix-spark-boto3.py&quot;,</span>
+<span class="s1">      &quot;entryPointArguments&quot;: [&quot;s3://YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;, &quot;YOUR_S3_FILE_PATH&quot;, &quot;YOUR_SQS_NAME_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;],</span>
+<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--conf spark.executor.core=1 --conf spark.executor.instances=1&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--configuration-overrides<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">    &quot;applicationConfiguration&quot;: [</span>
 <span class="s1">      {</span>
 <span class="s1">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
 <span class="s1">        &quot;properties&quot;: {</span>
-<span class="s1">          &quot;spark.kubernetes.container.image&quot;: &quot;YOUR_PRIVATE_ECR/emr6.15_custom&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.container.image&quot;: &quot;&#39;</span><span class="nv">$ECR_URL</span><span class="s1">&#39;/spark/emr7.2_custom&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;,</span>
 
-<span class="s1">          &quot;spark.kubernetes.driverEnv.CLIENT_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;,</span>
-<span class="s1">          &quot;spark.executorEnv.CLIENT_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;,</span>
-<span class="s1">          &quot;spark.kubernetes.driverEnv.WEB_IDENTITY_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;:role/job-execution-role-1&quot;,</span>
-<span class="s1">          &quot;spark.executorEnv.WEB_IDENTITY_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;:role/job-execution-role-1&quot;</span>
+<span class="s1">          &quot;spark.kubernetes.driver.podTemplateFile&quot;: &quot;s3://&#39;</span><span class="nv">$ACCOUNTA</span><span class="s1">&#39;_S3_BUCKET/driver-pod-template.yaml&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.executor.podTemplateFile&quot;: &quot;s3://&#39;</span><span class="nv">$ACCOUNTA</span><span class="err">&#39;</span>_S3_BUCKET/executor-pod-template.yaml<span class="s2">&quot;</span>
+<span class="s2">      }}</span>
+<span class="s2">......</span>
+</code></pre></div>
 
-<span class="s1">          &quot;spark.hadoop.fs.s3.bucket.datalake-&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;-&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;.customAWSCredentialsProvider&quot;: &quot;com.amazonaws.emr.AssumeRoleAWSCredentialsProvider&quot;, </span>
-<span class="s1">          &quot;spark.kubernetes.driverEnv.ASSUME_ROLE_CREDENTIALS_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;,</span>
-<span class="s1">          &quot;spark.executorEnv.ASSUME_ROLE_CREDENTIALS_ROLE_ARN&quot;: &quot;arn:aws:iam::&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;:role/client-role-2&quot;</span>
-<span class="s1">      }}</span>
-<span class="s1">    ], </span>
-<span class="s1">    &quot;monitoringConfiguration&quot;: {</span>
-<span class="s1">      &quot;s3MonitoringConfiguration&quot;: {&quot;logUri&quot;: &quot;s3://&#39;</span><span class="nv">$S3BUCKET</span><span class="s1">&#39;/logs/emr-containers&quot;},</span>
-<span class="s1">      &quot;cloudWatchMonitoringConfiguration&quot;: {</span>
-<span class="s1">        &quot;logGroupName&quot;: &quot;/emr-on-eks/chain-role-test&quot;,</span>
-<span class="s1">        &quot;logStreamNamePrefix&quot;: &quot;mix-spark-boto3&quot;}</span>
-<span class="s1">    }}&#39;</span>
+<p><strong>Case 3: Run Java SDK Application with EMR on EKS</strong></p>
+<ul>
+<li>Download the sample <a href="../../resources/S3ListObjects_v1.jar">Java SDKv1 application</a> to AccountB's S3 bucket. The application simply lists AccountB S3 bucket's objects.</li>
+</ul>
+<p>Code Snippet for - <strong>S3ListObjects_v1.jar</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AmazonS3</span><span class="w"> </span><span class="n">s3Client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">createS3Client</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">AmazonS3</span><span class="w"> </span><span class="nf">createS3Client</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\nCreating S3 Client:&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">standard</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">withRegion</span><span class="p">(</span><span class="n">Regions</span><span class="p">.</span><span class="na">US_WEST_2</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">err</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Error creating S3 client: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">            </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">......</span>
+</code></pre></div>
+
+<ul>
+<li>To use chained role based on <code>/.aws/credentials</code>, add the Profile Credentials Provider to the java code like this:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\nCreating S3 Client:&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">AmazonS3ClientBuilder</span><span class="p">.</span><span class="na">standard</span><span class="p">()</span>
+<span class="w">            </span><span class="c1">// add the extra line</span>
+<span class="w">            </span><span class="p">.</span><span class="na">withCredentials</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ProfileCredentialsProvider</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="na">withRegion</span><span class="p">(</span><span class="n">Regions</span><span class="p">.</span><span class="na">US_WEST_2</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></pre></div>
+
+<ul>
+<li>Submit the Job to validate the cross-account access. Replace the placeholder values with your own parameters.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTA</span><span class="o">=</span><span class="m">1111111111</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ACCOUNTB</span><span class="o">=</span><span class="m">2222222222</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">REGION</span><span class="o">=</span>us-west-2
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_1_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>:role/job-execution-role-1
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROLE_2_ARN</span><span class="o">=</span>arn:aws:iam::<span class="si">${</span><span class="nv">ACCOUNTB</span><span class="si">}</span>:role/client-role-2
+<span class="nb">export</span><span class="w"> </span><span class="nv">ECR_URL</span><span class="o">=</span><span class="si">${</span><span class="nv">ACCOUNTA</span><span class="si">}</span>.dkr.ecr.<span class="nv">$REGION</span>.amazonaws.com
+
+aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>S3ListObjects_java_v1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--execution-role-arn<span class="w"> </span><span class="nv">$ROLE_1_ARN</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--release-label<span class="w"> </span>emr-6.15.0-latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--job-driver<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s1">      &quot;entryPoint&quot;:  &quot;s3://YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;/S3ListObjects_v1.jar&quot;,</span>
+<span class="s1">      &quot;entryPointArguments&quot;:[&quot;YOUR_S3_BUCKET_&#39;</span><span class="nv">$ACCOUNTB</span><span class="s1">&#39;&quot;,&quot;YOUR_S3_FILE_PATH&quot;],</span>
+<span class="s1">      &quot;sparkSubmitParameters&quot;: &quot;--class com.sf.S3ListObjects --conf spark.executor.cores=1 --conf spark.executor.instances=1&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--configuration-overrides<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;applicationConfiguration&quot;: [</span>
+<span class="s1">      {</span>
+<span class="s1">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="s1">        &quot;properties&quot;: {</span>
+<span class="s1">          &quot;spark.kubernetes.container.image&quot;: &quot;&#39;</span><span class="nv">$ECR_URL</span><span class="s1">&#39;/spark/emr6.15_custom&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_2_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_2_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.ROLE_1_ARN&quot;: &quot;&#39;</span><span class="nv">$ROLE_1_ARN</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.kubernetes.driverEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="s1">&#39;&quot;,</span>
+<span class="s1">          &quot;spark.executorEnv.REGION&quot;: &quot;&#39;</span><span class="nv">$REGION</span><span class="err">&#39;</span><span class="s2">&quot;</span>
+<span class="s2">      }}</span>
+<span class="s2">    ]</span>
+<span class="s2">......</span>
 </code></pre></div>
 
 

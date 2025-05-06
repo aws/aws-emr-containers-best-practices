@@ -4,7 +4,7 @@
         {
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::$ACCOUNTA:role/job-execution-role-1"
+                "AWS": "arn:aws:iam::${ACCOUNTA}:role/job-execution-role-1"
             },
             "Action": "sts:AssumeRole"
         }

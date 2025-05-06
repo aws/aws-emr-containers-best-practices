@@ -21,7 +21,7 @@
         {
             "Effect": "Allow",
             "Principal": {
-                "Federated": "arn:aws:iam::$ACCOUNTA:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/YOUR_OIDC_ID"
+                "Federated": "arn:aws:iam::${ACCOUNTA}:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/YOUR_OIDC_ID"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
