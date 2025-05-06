@@ -15,7 +15,7 @@ Role chaining capability improves scalability and flexibility in EMR on EKS subm
   <br>
   1. Role chaining session is limited to a maximum of one hour. If you use the "DurationSeconds" parameter to provide a value greater than one hour, the operation fails.
   <br>
-  2. Role chaining doesn't work with Java SDK based application running in EKS. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. The workaround is to check the <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">order of AWS Credentials Provider Chain</a> and use a CredentialsProvider in the chain before WebIdentityTokenFileCredentialsProvider is evaluated. Or force to use ProfileCredentialsProvider in Java code.
+  2. Role chaining is not compatible with Java SDK applications or combined Spark/SDK applications running in EKS. This is <a href="https://github.com/aws/aws-sdk-java/issues/2602">a well-known issue</a>. Following the  <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-default">AWS Default Credential provider Chain order</a>, add a line of code `.withCredentials(new ProfileCredentialsProvider())` to bypass WebIdentity credential evaluation, or force profile credential evaluation via our workaround when code modifications aren't possible.
 </div>
 
 ## Role Chaining Demonstration
@@ -55,11 +55,11 @@ Account B (Target Account):
 ```
 * [full version of IAM policy](../resources/job-exec-role-1-policy.json) in Role 1
 
-* [full version of trust policy](../resources/job-exec-role-1-policy.json) in Role 1
+* [full version of trust policy](../resources/job-exec-role-1-trust-policy.json) in Role 1
 
 ### 2. Setup Chain IAM Role
 
-In this example, a Spark application in EKS Cluster of Account A needs to access resources (S3 and SQS) in Account B. The `Job-Execution-Role-1` in Account A has a policy that allows it to assume the `client-role-2` in Account B (using sts:AssumeRole), which is a chained role. 
+In this example, a Spark application in an EKS Cluster of Account A requires access to resources (S3 and SQS) in Account B. `Job-Execution-Role-1` in Account A has a policy that allows it to assume `client-role-2` in Account B through`sts:AssumeRole`, creating a role chain. 
 
 - **Add Trust Policy**: client-role-2 in Account B needs a trust policy that allows Job-Execution-Role-1 in Account A to assume it. 
 ```bash
@@ -81,20 +81,32 @@ In this example, a Spark application in EKS Cluster of Account A needs to access
 
 ### 3. Build a Custom Docker Image
 
-After the role 1 and role 2 are fully setup, now we need to create a chained profile file `~/.aws/config` in each Spark pod, so our jobs can assume chained roles with zero code change. 
-The "AWS Profile" format looks like this:
+After the role 1 and role 2 are fully setup, now we need to create AWS profile files `~/.aws/config` and `~/.aws/credentials` in each Spark pod, so our jobs can assume client role with zero code change. 
+
+`~/.aws/config` looks like this:
 ```bash
-[profile default]
-source_profile = irsa-role-1
-role_arn=arn:aws:iam::$ACCOUNTB:role/client-role-2
+[default]
+region=${REGION}
+source_profile=irsa-role
+role_arn=arn:aws:iam::${ACCOUNTB}:role/client-role-2
 
-[profile irsa-role-1]
-web_identity_token_file = /var/run/secrets/eks.amazonaws.com/serviceaccount/token
-role_arn=arn:aws:iam::$ACCOUNTA:role/job-execution-role-1
+[profile irsa-role]
+region=${REGION}
+web_identity_token_file=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+role_arn=arn:aws:iam::${ACCOUNTA}:role/job-execution-role-1
 ```
-**NOTE:** profile name of `client-role-2` MUST be `default`. However, the job execution role's profile name is flexible.
+The profile name for `client-role-2` MUST be set as `default`. The profile name for the job execution role can be flexible as needed.
 
-To produce the profile file in each pod, we build a custom docker image containing the [custom-entrypoint.sh](../resources/custom-entrypoint.sh) - a script to populate the AWS profiles. Ensure the entrypoint script is located to the same directory as your Dockerfile.
+To produce AWS profile files in each pod, we build a custom docker image containing the [custom-entrypoint.sh](../resources/custom-entrypoint.sh) - a script to populate the required profile files. Ensure your entrypoint script is located to the same directory as your Dockerfile.
+
+The custom-entrypoint.sh script is crucial for this security setup. It generates the `~/.aws/config` file in each pod, enabling role chaining with automatic token refresh.
+
+NOTE: Role chaining isn't compatible with Java SDK or Spark/SDK apps in EKS. To workaround it, generate the `~/.aws/credentials` file instead. Additionally, reset the IRSA environment variable "AWS_ROLE_ARN" to a role without the "AssumeRoleWithWebIdentity" permission, such as "ROLE_2_ARN". This forces apps to use the Profile Credential Provider in the AWS DefaultCredentialChain.
+```bash
+export AWS_ROLE_ARN=$ROLE_2_ARN
+export AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
+```
+
 
 A sample [Dockerfile](../resources/Dockerfile) looks like this:
 ```bash
@@ -116,33 +128,31 @@ Let's build the custom image:
 # login to public ECR first
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 # login to a private ECR
-export AWS_REGION=us-east-1
+export AWS_REGION=us-west-2
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 export ECR_URL=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
-
-# one-off: create a new ECR repo
+# one-off task: create a new ECR repo
 aws ecr create-repository --repository-name spark --image-scanning-configuration scanOnPush=true
 ```
 Finally, build and publish the image supporting x86 & arm64 both. Refer to the [Build Multi-arch Docker Image](https://aws.github.io/aws-emr-containers-best-practices/submit-applications/docs/spark/multi-arch-image/) section if you don't have buildx enabled in your environment.
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
--t $ECR_URL/spark/emr6.15_custom \
+-t $ECR_URL/spark:emr7.2_custom \
+--build-arg EMR_VERSION=emr-7.2.0
 --push .
 ```
 
-### 4.Submit Sample Job
+### 4.Validate with sample jobs
 
 **Case 1: Test pure Boto3 with cross-account access**
 
+- Download the sample [Boto3 application](../resources/only-boto3.py) to AccountB's S3 bucket, which stores client's source code and data.
 
-- Download the sample [Boto3 application](../resources/only-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only.
-
-The sample Python application lists S3 object name and size, then send the infomation to an SQS queue in a target Account. 
+The sample Python application lists S3 objects, then send the infomation to an SQS queue in a target Account. 
 Code Snippet for - **only-boto3.py**:
 ```python
-s3 = boto3.client('s3', region_name='us-east-1')
+s3 = boto3.client('s3', region_name='us-west-2')
 objects = []
 try:
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
@@ -158,62 +168,55 @@ try:
 aws sqs create-queue --queue-name MyDeadLetterQueue
 
 {
-    "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue"
+    "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222/MyDeadLetterQueue"
 }
 ```
-- Submit the boto3 Python job to validate the cross-account access permission.
+- Submit the boto3 Python job to validate the cross-account access permission. Ensure replace all the placeholder values by your own parameters.
 ```sh
-#!/bin/bash
-export ACCOUNTA=1111111111111
-export ACCOUNTB=2222222222222
-export REGION=us-east-1
-export S3BUCKET=emr-on-eks-test-$ACCOUNTA-$REGION
-export EMR_ROLE_ARN=arn:aws:iam::$ACCOUNTA:role/job-execution-role-1
+export ACCOUNTA=1111111111
+export ACCOUNTB=2222222222
+export ROLE_1_ARN=arn:aws:iam::${ACCOUNTA}:role/job-execution-role-1
+export ROLE_2_ARN=arn:aws:iam::${ACCOUNTB}:role/client-role-2
+export ECR_URL=${ACCOUNTA}.dkr.ecr.$REGION.amazonaws.com
 
 aws emr-containers start-job-run \
   --virtual-cluster-id $VIRTUAL_CLUSTER_ID \
   --name pure-boto3 \
-  --execution-role-arn $EMR_ROLE_ARN \
-  --release-label emr-6.15.0-latest \
+  --execution-role-arn $ROLE_1_ARN \
+  --release-label emr-7.2.0-latest \
   --job-driver '{
   "sparkSubmitJobDriver": {
-      "entryPoint": "s3://'$S3BUCKET'/only-boto3.py",
-      "entryPointArguments":["datalake-'$ACCOUNTB'-'$REGION'","YOUR_FILE_PATH","https://sqs.'$REGION'.amazonaws.com/'$ACCOUNTB'/MyDeadLetterQueue"],
-      "sparkSubmitParameters": "--conf spark.executor.cores=1 --conf spark.executor.instances=1"}}' \
+    "entryPoint": "s3://YOUR_S3_BUCKET_'$ACCOUNTB'"/only-boto3.py",
+    "entryPointArguments": ["YOUR_S3_BUCKET_'$ACCOUNTB'", "YOUR_S3_FILE_PATH", "YOUR_SQS_NAME_'$ACCOUNTB'"],
+    "sparkSubmitParameters": "--conf spark.executor.cores=1 --conf spark.executor.instances=1"}}' \
   --configuration-overrides '{
     "applicationConfiguration": [
       {
         "classification": "spark-defaults", 
         "properties": {
-          "spark.kubernetes.container.image": "YOUR_PRIVATE_ECR/emr6.15_custom",
-
-          "spark.kubernetes.driverEnv.CLIENT_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2",
-          "spark.executorEnv.CLIENT_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2",
-          "spark.kubernetes.driverEnv.WEB_IDENTITY_ROLE_ARN": "arn:aws:iam::'$ACCOUNTA':role/job-execution-role-1",
-          "spark.executorEnv.WEB_IDENTITY_ROLE_ARN": "arn:aws:iam::'$ACCOUNTA':role/job-execution-role-1"
+          "spark.kubernetes.container.image": "'$ECR_URL'/spark:emr7.2_custom",
+          "spark.kubernetes.driverEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.executorEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.kubernetes.driverEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.executorEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.kubernetes.driverEnv.REGION": "'$REGION'",
+          "spark.executorEnv.REGION": "'$REGION'"
       }}
-    ], 
-    "monitoringConfiguration": {
-      "s3MonitoringConfiguration": {"logUri": "s3://'$ACCOUNTA'/logs/emr-containers"},
-      "cloudWatchMonitoringConfiguration": {
-        "logGroupName": "/emr-on-eks/chain-role-test",
-        "logStreamNamePrefix": "pure-boto3"}
-    }}'
+    ]
+......
 ```
 **Case 2: Switch from Spark session to Boto3 session**
 
-- Download the sample [PySpark application](../resources/mix-spark-boto3.py) to Account A S3 bucket `emr-on-eks-test-AccountA-us-east-1`, which stores library dependecies, logs and source code only. It mixes PySpark with AWS SDK code.
+- Download the sample [PySpark application](../resources/mix-spark-boto3.py) to AccountB's S3 bucket, which stores client's source code and data. The application combines PySpark with AWS SDK code.
+- Download the sample pod templates [driver-pod-template.yaml](../resources/driver-pod-template.yaml),[exeutor-pod-template.yaml](../resources/executor-pod-template.yaml) to AccountA's S3 bucket, which centralizes job assets, such as the pod templates and job logs.
 
 Code Snippet for - **mix-spark-boto3.py**:
 ```python
-print("=== Starting Spark Session ===")
 spark = SparkSession.builder.appName("chain-role-test").getOrCreate()
 # Read data from S3 via Spark
 df = spark.read.parquet(S3_FILE)
-
 # Convert each row to JSON string
 json_df = df.select(to_json(struct("*")).alias("value"))
-
 # Send to SQS via Boto3 client
 results = json_df.rdd.mapPartitions(send_partition).collect()
 
@@ -227,57 +230,116 @@ def send_partition(partition):
                 QueueUrl=SQS_URL,
                 MessageBody=row.value
             )
-...........
+......
 ```
 - Create an SQS queue if needed
 ```sh
 aws sqs create-queue --queue-name MyDeadLetterQueue
-
 {
-    "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222222/MyDeadLetterQueue"
+    "QueueUrl": "https://sqs.us-east-1.amazonaws.com/2222222222/MyDeadLetterQueue"
 }
 ```
 - Submit the EMR on EKS Job to validate the permission when switching from Spark to SDK credential session.
 ```bash
-#!/bin/bash
-export ACCOUNTA=1111111111111
-export ACCOUNTB=2222222222222
-export REGION=us-east-1
-export S3BUCKET=emr-on-eks-test-$ACCOUNTA-$REGION
-export EMR_ROLE_ARN=arn:aws:iam::$ACCOUNTA:role/job-execution-role-1
+export ACCOUNTA=1111111111
+export ACCOUNTB=2222222222
+export REGION=us-west-2
+export ROLE_1_ARN=arn:aws:iam::${ACCOUNTA}:role/job-execution-role-1
+export ROLE_2_ARN=arn:aws:iam::${ACCOUNTB}:role/client-role-2
+export ECR_URL=${ACCOUNTA}.dkr.ecr.$REGION.amazonaws.com
 
 aws emr-containers start-job-run \
   --virtual-cluster-id $VIRTUAL_CLUSTER_ID \
-  --name emr615-mix-spark-boto3 \
-  --execution-role-arn $EMR_ROLE_ARN \
-  --release-label emr-6.15.0-latest \
+  --name mix-spark-boto3-podtemplate \
+  --execution-role-arn $ROLE_1_ARN \
+  --release-label emr-7.2.0-latest \
   --job-driver '{
   "sparkSubmitJobDriver": {
-      "entryPoint": "s3://'$S3BUCKET'/mix-spark-boto3.py",
-      "entryPointArguments":["s3://datalake-'$ACCOUNTB'-'$REGION'"/YOUR_FILE_PATH","https://sqs.'$REGION'.amazonaws.com/'$ACCOUNTB'/MyDeadLetterQueue"],
-      "sparkSubmitParameters": "--conf spark.executor.cores=1 --conf spark.executor.instances=1"}}' \
+      "entryPoint":  "s3://YOUR_S3_BUCKET_'$ACCOUNTB'/mix-spark-boto3.py",
+      "entryPointArguments": ["s3://YOUR_S3_BUCKET_'$ACCOUNTB'", "YOUR_S3_FILE_PATH", "YOUR_SQS_NAME_'$ACCOUNTB'"],
+      "sparkSubmitParameters": "--conf spark.executor.core=1 --conf spark.executor.instances=1"}}' \
   --configuration-overrides '{
     "applicationConfiguration": [
       {
         "classification": "spark-defaults", 
         "properties": {
-          "spark.kubernetes.container.image": "YOUR_PRIVATE_ECR/emr6.15_custom",
+          "spark.kubernetes.container.image": "'$ECR_URL'/spark/emr7.2_custom",
+          "spark.kubernetes.driverEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.executorEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.kubernetes.driverEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.executorEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.kubernetes.driverEnv.REGION": "'$REGION'",
+          "spark.executorEnv.REGION": "'$REGION'",
 
-          "spark.kubernetes.driverEnv.CLIENT_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2",
-          "spark.executorEnv.CLIENT_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2",
-          "spark.kubernetes.driverEnv.WEB_IDENTITY_ROLE_ARN": "arn:aws:iam::'$ACCOUNTA':role/job-execution-role-1",
-          "spark.executorEnv.WEB_IDENTITY_ROLE_ARN": "arn:aws:iam::'$ACCOUNTA':role/job-execution-role-1"
-
-          "spark.hadoop.fs.s3.bucket.datalake-'$ACCOUNTB'-'$REGION'.customAWSCredentialsProvider": "com.amazonaws.emr.AssumeRoleAWSCredentialsProvider", 
-          "spark.kubernetes.driverEnv.ASSUME_ROLE_CREDENTIALS_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2",
-          "spark.executorEnv.ASSUME_ROLE_CREDENTIALS_ROLE_ARN": "arn:aws:iam::'$ACCOUNTB':role/client-role-2"
+          "spark.kubernetes.driver.podTemplateFile": "s3://'$ACCOUNTA'_S3_BUCKET/driver-pod-template.yaml",
+          "spark.kubernetes.executor.podTemplateFile": "s3://'$ACCOUNTA'_S3_BUCKET/executor-pod-template.yaml"
       }}
-    ], 
-    "monitoringConfiguration": {
-      "s3MonitoringConfiguration": {"logUri": "s3://'$S3BUCKET'/logs/emr-containers"},
-      "cloudWatchMonitoringConfiguration": {
-        "logGroupName": "/emr-on-eks/chain-role-test",
-        "logStreamNamePrefix": "mix-spark-boto3"}
-    }}'
+......
+```
+**Case 3: Run Java SDK Application with EMR on EKS**
 
+- Download the sample [Java SDKv1 application](../resources/S3ListObjects_v1.jar) to AccountB's S3 bucket. The application simply lists AccountB S3 bucket's objects.
+
+Code Snippet for - **S3ListObjects_v1.jar**:
+```java
+    private static final AmazonS3 s3Client = createS3Client();
+    private static AmazonS3 createS3Client() {
+        try {
+            System.out.println("\nCreating S3 Client:");
+            return AmazonS3ClientBuilder.standard()
+                    .withRegion(Regions.US_WEST_2)
+                    .build();
+
+        } catch (Exception e) {
+            System.err.println("Error creating S3 client: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+......
+```
+- To use chained role based on `/.aws/credentials`, add the Profile Credentials Provider to the java code like this:
+```java
+    System.out.println("\nCreating S3 Client:");
+    return AmazonS3ClientBuilder.standard()
+            // add the extra line
+            .withCredentials(new ProfileCredentialsProvider())
+            .withRegion(Regions.US_WEST_2)
+            .build();
+
+```
+- Submit the Job to validate the cross-account access. Replace the placeholder values with your own parameters.
+```bash
+export ACCOUNTA=1111111111
+export ACCOUNTB=2222222222
+export REGION=us-west-2
+export ROLE_1_ARN=arn:aws:iam::${ACCOUNTA}:role/job-execution-role-1
+export ROLE_2_ARN=arn:aws:iam::${ACCOUNTB}:role/client-role-2
+export ECR_URL=${ACCOUNTA}.dkr.ecr.$REGION.amazonaws.com
+
+aws emr-containers start-job-run \
+  --virtual-cluster-id $VIRTUAL_CLUSTER_ID \
+  --name S3ListObjects_java_v1 \
+  --execution-role-arn $ROLE_1_ARN \
+  --release-label emr-6.15.0-latest \
+  --job-driver '{
+  "sparkSubmitJobDriver": {
+      "entryPoint":  "s3://YOUR_S3_BUCKET_'$ACCOUNTB'/S3ListObjects_v1.jar",
+      "entryPointArguments":["YOUR_S3_BUCKET_'$ACCOUNTB'","YOUR_S3_FILE_PATH"],
+      "sparkSubmitParameters": "--class com.sf.S3ListObjects --conf spark.executor.cores=1 --conf spark.executor.instances=1"}}' \
+  --configuration-overrides '{
+    "applicationConfiguration": [
+      {
+        "classification": "spark-defaults", 
+        "properties": {
+          "spark.kubernetes.container.image": "'$ECR_URL'/spark/emr6.15_custom",
+          "spark.kubernetes.driverEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.executorEnv.ROLE_2_ARN": "'$ROLE_2_ARN'",
+          "spark.kubernetes.driverEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.executorEnv.ROLE_1_ARN": "'$ROLE_1_ARN'",
+          "spark.kubernetes.driverEnv.REGION": "'$REGION'",
+          "spark.executorEnv.REGION": "'$REGION'"
+      }}
+    ]
+......
 ```
