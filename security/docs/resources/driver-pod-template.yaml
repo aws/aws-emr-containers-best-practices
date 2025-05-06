@@ -7,6 +7,6 @@ spec:
   - name: spark-kubernetes-driver
     env:
     - name: AWS_ROLE_ARN
-      value: "arn:aws:iam::ACCOUNTA:role/emr-on-eks-client-a-role"
+      value: "arn:aws:iam::ACCOUNTB:role/emr-on-eks-client-a-role"
     - name: AWS_WEB_IDENTITY_TOKEN_FILE
       value: "/var/run/secrets/eks.amazonaws.com/serviceaccount/token"
