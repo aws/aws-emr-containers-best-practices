@@ -111,3 +111,5 @@ rules:
   - create
   - list
   - delete
+  - patch
+  - deletecollection

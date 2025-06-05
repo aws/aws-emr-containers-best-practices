@@ -629,7 +629,7 @@ conda pack -f -o numpy_environment.tar.gz
 
 ```
 
-Upload `numpy_environment.tar.gz` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_environment.tar.gz` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.Alternatively, S3 path for ``numpy_environment.tar.gz`` can also be passed using [--py-files](# List of .py files)  
+Upload `numpy_environment.tar.gz` to a s3 location that is mapped to a FSx for Lustre cluster. `numpy_environment.tar.gz` can be placed on any Kubernetes persistent volume and mounted to the driver pod and executor pod.Alternatively, S3 path for ``numpy_environment.tar.gz`` can also be passed using [--py-files](#list-of-py-files)  
 
 **Request:**
 
@@ -929,5 +929,5 @@ aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-Cli
 
 **Configuration of interest:**  
 `--files s3://<s3 prefix>/libexample.so` distributes the `libexample.so` to the working directory of all executors.  
-Dynamic modules(.pyd, .so) can also be imported by bundling within  [.egg](# Bundled as a .egg file) ([SPARK-6764](https://issues.apache.org/jira/browse/SPARK-6764)), [.whl](# Bundled as a .whl file) and [.pex](# Bundled as a .pex file) files.
+Dynamic modules(.pyd, .so) can also be imported by bundling within  [.egg](#bundled-as-a-egg-file) ([SPARK-6764](https://issues.apache.org/jira/browse/SPARK-6764)), [.whl](#bundled-as-a-whl-file) and [.pex](#bundled-as-a-pex-file) files.
 
