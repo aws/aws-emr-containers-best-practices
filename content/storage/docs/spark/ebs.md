@@ -150,7 +150,12 @@ Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executor
 
 #### EKS Admin Tasks
 
-Create a new "gp3" EBS Storage Class or use an existing one:
+!!! warning "Warning"
+    When enabling PVC for your Spark, the default Kubernetes role `emr-containers` may not have the required PVC permissions and job submission may fail. Please follow [AWS Troubleshooting Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/permissions-for-pvc.html) 
+    to troubleshoot and add the required PVC permissions.
+
+To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one. When using `WaitForFirstConsumer` mode, you don't need to specify the Availability Zone. 
+Here's an example:
 
 ```
 cat >demo-gp3-sc.yaml << EOF
