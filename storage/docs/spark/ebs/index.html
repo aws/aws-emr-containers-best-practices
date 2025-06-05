@@ -2031,7 +2031,13 @@ When the job gets started, the pre-provisioned EBS volume is mounted to driver p
 <h3 id="dynamic-provisioning">Dynamic Provisioning<a class="headerlink" href="#dynamic-provisioning" title="Permanent link">&para;</a></h3>
 <p>Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executors for EMR versions &gt;= 6.3.0.</p>
 <h4 id="eks-admin-tasks_1">EKS Admin Tasks<a class="headerlink" href="#eks-admin-tasks_1" title="Permanent link">&para;</a></h4>
-<p>Create a new "gp3" EBS Storage Class or use an existing one:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When enabling PVC for your Spark, the default Kubernetes role <code>emr-containers</code> may not have the required PVC permissions and job submission may fail. Please follow <a href="https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/permissions-for-pvc.html">AWS Troubleshooting Guide</a> 
+to troubleshoot and add the required PVC permissions.</p>
+</div>
+<p>To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one. When using <code>WaitForFirstConsumer</code> mode, you don't need to specify the Availability Zone. 
+Here's an example:</p>
 <div class="codehilite"><pre><span></span><code><span class="nx">cat</span><span class="w"> </span><span class="p">&gt;</span><span class="nx">demo</span><span class="o">-</span><span class="nx">gp3</span><span class="o">-</span><span class="nx">sc</span><span class="p">.</span><span class="nx">yaml</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="nx">EOF</span>
 <span class="nx">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="nx">storage</span><span class="p">.</span><span class="nx">k8s</span><span class="p">.</span><span class="nx">io</span><span class="o">/</span><span class="nx">v1</span>
 <span class="nx">kind</span><span class="p">:</span><span class="w"> </span><span class="nx">StorageClass</span>

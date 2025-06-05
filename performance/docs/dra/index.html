@@ -1679,6 +1679,14 @@
 
 <h1 id="dynamic-resource-allocation"><strong>Dynamic Resource Allocation</strong><a class="headerlink" href="#dynamic-resource-allocation" title="Permanent link">&para;</a></h1>
 <p>DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling <a href="https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation">shuffle tracking</a>.</p>
+<p><strong>Spark DRA with storage configuration:</strong>  </p>
+<p>When using <a href="../../../storage/docs/spark/ebs/#dynamic-provisioning">dynamic provisioning PVC/Volumes</a> with Spark, you must disable PVC reuse to prevent multi-attach errors. The default configuration attempts to reuse PVCs, which causes EBS volumes to attach to multiple pods and leads to application failure. Set the following configurations:</p>
+<div class="codehilite"><pre><span></span><code>&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;: &quot;false&quot;
+&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;: &quot;false&quot;
+&quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;: &quot;false&quot;
+</code></pre></div>
+
+<p>For workloads requiring PVC reuse with DRA, use storage solutions supporting multi-attach like EFS / FSx for Lustre instead of EBS.</p>
 <p><strong>Spark DRA without external shuffle service:</strong><br />
 With DRA, the spark driver spawns the initial number of executors and then scales up the number until the specified maximum number of executors is met to process the pending tasks. Idle executors are terminated when there are no pending tasks, the executor idle time exceeds the idle timeout(<code>spark.dynamicAllocation.executorIdleTimeout)</code>and it doesn't have any cached or shuffle data.</p>
 <p>If the executor idle threshold is reached and it has cached data, then it has to exceed the cache data idle timeout(<code>spark.dynamicAllocation.cachedExecutorIdleTimeout)</code> and if the executor doesn't have shuffle data, then the idle executor is terminated.</p>
