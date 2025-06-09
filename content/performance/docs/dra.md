@@ -4,7 +4,7 @@ DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle s
 
 **Spark DRA with storage configuration:**  
 
-When using [dynamic provisioning PVC/Volumes](../../storage/docs/spark/ebs.md#dynamic-provisioning) with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the `WaitForFirstConsumer` mode and reclaim policy is `Retain`. See the exmaple below:
+When using [dynamic provisioning PVC/Volumes](../../storage/docs/spark/ebs.md#dynamic-provisioning) with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the `WaitForFirstConsumer` mode and the reclaim policy is `Retain`. See the exmaple below:
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -15,7 +15,7 @@ parameters:
   type: gp3
 provisioner: kubernetes.io/aws-ebs
 reclaimPolicy: Retain # for pvc reuse
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingMode: WaitForFirstConsumer # avoid multi-attach
 ```
 
 Then enable PVC reuse by setting the following configurations in Spark. If your Spark version is lower than 3.4, don't enable the PVC reuse:
@@ -24,7 +24,7 @@ Then enable PVC reuse by setting the following configurations in Spark. If your 
 "spark.kubernetes.driver.reusePersistentVolumeClaim": "true"
 "spark.kubernetes.driver.waitToReusePersistentVolumeClaim": "true"
 ```
-Importantly,to enable shuffle data recovery feature and avoid the "Shuffle Fetch Failures", leverage Spark's built-in plugin:
+Importantly, to enable shuffle data recovery feature and avoid the "Shuffle Fetch Failures", leverage Spark's built-in plugin:
 ```yaml
 "spark.shuffle.sort.io.plugin.class": "org.apache.spark.shuffle.KubernetesLocalDiskShuffleDataIO"
 ```
