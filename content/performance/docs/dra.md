@@ -18,7 +18,7 @@ reclaimPolicy: Retain # for pvc reuse
 volumeBindingMode: WaitForFirstConsumer # avoid multi-attach
 ```
 
-Then enable PVC reuse by setting the following configurations in Spark. If your Spark version is lower than 3.4, don't enable the PVC reuse:
+Then enable PVC reuse by setting the following configurations in Spark. If your EMR version is lower than EMR 6.12.0 ( lower than Spark 3.4), don't enable the PVC reuse:
 ```yaml
 "spark.kubernetes.driver.ownPersistentVolumeClaim": "true"
 "spark.kubernetes.driver.reusePersistentVolumeClaim": "true"
@@ -124,7 +124,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-dra-pvc-demo.jso
 **Observed Behavior:**
 When the job gets started, the driver pod gets created and 10 executors are initially created due to the default batch size by `spark.kubernetes.allocation.batch.size`. The maximun number of executors will reach to 50 (`"spark.dynamicAllocation.maxExecutors":"50"`).
 
-When using `OnDemand` claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the `Retain` claim policy in the storage class gp3, these PVCs persist and cannot be dynamically reduced, even if some executors were removed. The PVCs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when planning storage resources and costs.
+When using `OnDemand` claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the `Retain` claim policy in the storage class gp3, these PVCs persist and cannot be dynamically reduced, even if some executors were removed. The PVCs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.
 
 **Configurations to note:**   
 
