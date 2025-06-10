@@ -154,7 +154,8 @@ Dynamic Provisioning PVC/Volumes is supported for both Spark driver and executor
     When enabling PVC for your Spark, the default Kubernetes role `emr-containers` may not have the required PVC permissions and job submission may fail. Please follow [AWS Troubleshooting Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/permissions-for-pvc.html) 
     to troubleshoot and add the required PVC permissions.
 
-To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one. When using `WaitForFirstConsumer` mode, you don't need to specify the Availability Zone. 
+To set up storage, you can create a new "gp3" EBS Storage Class or use an existing one. When using `Immidaite` volumeBindingMode, PVC will be bound or provisioned without knowledge of the Pod's scheduling requirements, so we should use the `WaitForFirstConsumer` mode to delay volume provisioning until the pod is scheduled, and avoiding availability zone conflicts.
+
 Here's an example:
 
 ```
@@ -166,11 +167,11 @@ metadata:
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp3
-reclaimPolicy: Retain
+reclaimPolicy: Retain   # Preserve data on EBS for PVC reuse
 allowVolumeExpansion: true
 mountOptions:
   - debug
-volumeBindingMode: Immediate
+volumeBindingMode: WaitForFirstConsumer  # Critical for multi-attach prevention
 EOF
 
 kubectl apply -f demo-gp3-sc.yaml
