@@ -1680,66 +1680,122 @@
 <h1 id="dynamic-resource-allocation"><strong>Dynamic Resource Allocation</strong><a class="headerlink" href="#dynamic-resource-allocation" title="Permanent link">&para;</a></h1>
 <p>DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling <a href="https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation">shuffle tracking</a>.</p>
 <p><strong>Spark DRA with storage configuration:</strong>  </p>
-<p>When using <a href="../../../storage/docs/spark/ebs/#dynamic-provisioning">dynamic provisioning PVC/Volumes</a> with Spark, you must disable PVC reuse to prevent multi-attach errors. The default configuration attempts to reuse PVCs, which causes EBS volumes to attach to multiple pods and leads to application failure. Set the following configurations:</p>
-<div class="codehilite"><pre><span></span><code>&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;: &quot;false&quot;
-&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;: &quot;false&quot;
-&quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;: &quot;false&quot;
+<p>When using <a href="../../../storage/docs/spark/ebs/#dynamic-provisioning">dynamic provisioning PVC/Volumes</a> with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the <code>WaitForFirstConsumer</code> mode and the reclaim policy is <code>Retain</code>. See the exmaple below:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gp3</span>
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">fsType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext4</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gp3</span>
+<span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/aws-ebs</span>
+<span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span><span class="w"> </span><span class="c1"># for pvc reuse</span>
+<span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span><span class="w"> </span><span class="c1"># avoid multi-attach</span>
 </code></pre></div>
 
-<p>For workloads requiring PVC reuse with DRA, use storage solutions supporting multi-attach like EFS / FSx for Lustre instead of EBS.</p>
-<p><strong>Spark DRA without external shuffle service:</strong><br />
-With DRA, the spark driver spawns the initial number of executors and then scales up the number until the specified maximum number of executors is met to process the pending tasks. Idle executors are terminated when there are no pending tasks, the executor idle time exceeds the idle timeout(<code>spark.dynamicAllocation.executorIdleTimeout)</code>and it doesn't have any cached or shuffle data.</p>
-<p>If the executor idle threshold is reached and it has cached data, then it has to exceed the cache data idle timeout(<code>spark.dynamicAllocation.cachedExecutorIdleTimeout)</code> and if the executor doesn't have shuffle data, then the idle executor is terminated.</p>
-<p>If the executor idle threshold is reached and it has shuffle data, then without external shuffle service the executor will never be terminated. These executors will be terminated when the job is completed. This behavior is enforced by <code>"spark.dynamicAllocation.shuffleTracking.enabled":"true" and "spark.dynamicAllocation.enabled":"true"</code></p>
-<p>If <code>"spark.dynamicAllocation.shuffleTracking.enabled":"false"and "spark.dynamicAllocation.enabled":"true"</code> then the spark application will error out since external shuffle service is not available.</p>
-<p><strong>Request:</strong></p>
-<div class="codehilite"><pre><span></span><code>cat &gt;spark-python-in-s3-dra.json &lt;&lt; EOF
+<p>Then enable PVC reuse by setting the following configurations in Spark. If your EMR version is lower than EMR 6.12.0 ( lower than Spark 3.4), don't enable the PVC reuse:</p>
+<div class="codehilite"><pre><span></span><code><span class="s">&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="s">&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="s">&quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+</code></pre></div>
+
+<p>Importantly, to enable shuffle data recovery feature and avoid the "Shuffle Fetch Failures", leverage Spark's built-in plugin:</p>
+<div class="codehilite"><pre><span></span><code><span class="s">&quot;spark.shuffle.sort.io.plugin.class&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;org.apache.spark.shuffle.KubernetesLocalDiskShuffleDataIO&quot;</span>
+</code></pre></div>
+
+<p><strong>Spark DRA without External Shuffle Service:</strong><br />
+With DRA enabled (<code>spark.dynamicAllocation.enabled</code>), Spark driver spawns the initial number of executors and gradually scales them up to meet processing demands. This scaling continues until reaching the maximum number of executors specified by <code>spark.dynamicAllocation.maxExecutors</code>. Spark intelligently manages compute resources by terminating idle executors, but only under the following specific conditions:</p>
+<ol>
+<li>An executor becomes eligible for termination when it has no pending tasks and exceeds the configured idle timeout (<code>spark.dynamicAllocation.executorIdleTimeout</code>) without any cached or shuffle data. </li>
+<li>For executors holding cached data, termination occurs only after exceeding both the executor idle timeout and an additional cached data idle timeout (<code>spark.dynamicAllocation.cachedExecutorIdleTimeout</code>). </li>
+<li>A crucial consideration is the shuffle data handling by Spark. Without relying on an External Shuffle Service (ESS), Spark tracks shuffle data via the setting <code>spark.dynamicAllocation.shuffleTracking.enabled</code> to achieve the DRA. To avoid losing shuffle files, executors cannot be scale down during the job's execution, even if they remain idle. They will only be removed once the shuffle data tracking exeeds configured timeout (<code>spark.dynamicAllocation.shuffleTracking.timeout</code>) or until job completion. </li>
+</ol>
+<p>If shuffleTracking is disabeld but DRA is enabled, Spark applications will error out since External Shuffle Service is not available.</p>
+<p><strong>DRA Example:</strong></p>
+<div class="codehilite"><pre><span></span><code>cat <span class="p">&gt;</span>spark-python-in-s3-dra.json <span class="p">&lt;</span>&lt; EOF
 {
-  &quot;name&quot;: &quot;spark-python-in-s3-dra&quot;, 
-  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, 
-  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, 
-  &quot;releaseLabel&quot;: &quot;emr-6.2.0-latest&quot;, 
-  &quot;jobDriver&quot;: {
-    &quot;sparkSubmitJobDriver&quot;: {
-      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, 
-       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=5 --conf spark.executor.memory=20G --conf spark.driver.memory=15G --conf spark.executor.cores=6&quot;
+  <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;spark-python-in-s3-dra&quot;</span>, 
+  <span class="s2">&quot;virtualClusterId&quot;</span>: <span class="s2">&quot;&lt;virtual-cluster-id&gt;&quot;</span>, 
+  <span class="s2">&quot;executionRoleArn&quot;</span>: <span class="s2">&quot;&lt;execution-role-arn&gt;&quot;</span>, 
+  <span class="s2">&quot;releaseLabel&quot;</span>: <span class="s2">&quot;emr-6.15.0-latest&quot;</span>, 
+  <span class="s2">&quot;jobDriver&quot;</span>: {
+    <span class="s2">&quot;sparkSubmitJobDriver&quot;</span>: {
+      <span class="s2">&quot;entryPoint&quot;</span>: <span class="s2">&quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;</span>, 
+       <span class="s2">&quot;sparkSubmitParameters&quot;</span>: <span class="s2">&quot;--conf spark.driver.cores=2 --conf spark.executor.memory=10G --conf spark.driver.memory=5G --conf spark.executor.cores=6&quot;</span>
     }
   }, 
-  &quot;configurationOverrides&quot;: {
-    &quot;applicationConfiguration&quot;: [
+  <span class="s2">&quot;configurationOverrides&quot;</span>: {
+    <span class="s2">&quot;applicationConfiguration&quot;</span>: [
       {
-        &quot;classification&quot;: &quot;spark-defaults&quot;, 
-        &quot;properties&quot;: {
-          &quot;spark.dynamicAllocation.enabled&quot;:&quot;true&quot;,
-          &quot;spark.dynamicAllocation.shuffleTracking.enabled&quot;:&quot;true&quot;,
-          &quot;spark.dynamicAllocation.minExecutors&quot;:&quot;5&quot;,
-          &quot;spark.dynamicAllocation.maxExecutors&quot;:&quot;100&quot;,
-          &quot;spark.dynamicAllocation.initialExecutors&quot;:&quot;10&quot;
+        <span class="s2">&quot;classification&quot;</span>: <span class="s2">&quot;spark-defaults&quot;</span>, 
+        <span class="s2">&quot;properties&quot;</span>: {
+          <span class="s2">&quot;spark.dynamicAllocation.enabled&quot;</span>:<span class="s2">&quot;true&quot;</span>,
+          <span class="s2">&quot;spark.dynamicAllocation.shuffleTracking.enabled&quot;</span>:<span class="s2">&quot;true&quot;</span>,
+          <span class="s2">&quot;spark.dynamicAllocation.minExecutors&quot;</span>:<span class="s2">&quot;0&quot;</span>,
+          <span class="s2">&quot;spark.dynamicAllocation.maxExecutors&quot;</span>:<span class="s2">&quot;50&quot;</span>,
+          <span class="s2">&quot;spark.dynamicAllocation.executorIdleTimeout&quot;</span>:<span class="s2">&quot;30s&quot;</span>
          }
       }
-    ], 
-    &quot;monitoringConfiguration&quot;: {
-      &quot;cloudWatchMonitoringConfiguration&quot;: {
-        &quot;logGroupName&quot;: &quot;/emr-containers/jobs&quot;, 
-        &quot;logStreamNamePrefix&quot;: &quot;demo&quot;
-      }, 
-      &quot;s3MonitoringConfiguration&quot;: {
-        &quot;logUri&quot;: &quot;s3://joblogs&quot;
-      }
-    }
+    ]
   }
 }
 EOF
+
+aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dra.json
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code>aws emr-containers start-job-run --cli-input-json file:///spark-python-in-s3-dra.json
+<p><strong>DRA + PVC reuse Example:</strong></p>
+<div class="codehilite"><pre><span></span><code>cat<span class="w"> </span>&gt;spark-dra-pvc-demo.json<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">{</span>
+<span class="s">  &quot;name&quot;: &quot;spark-dra-pvc-demo&quot;, </span>
+<span class="s">  &quot;virtualClusterId&quot;: &quot;&lt;virtual-cluster-id&gt;&quot;, </span>
+<span class="s">  &quot;executionRoleArn&quot;: &quot;&lt;execution-role-arn&gt;&quot;, </span>
+<span class="s">  &quot;releaseLabel&quot;: &quot;emr-6.15.0-latest&quot;, </span>
+<span class="s">  &quot;jobDriver&quot;: {</span>
+<span class="s">    &quot;sparkSubmitJobDriver&quot;: {</span>
+<span class="s">      &quot;entryPoint&quot;: &quot;s3://&lt;s3 prefix&gt;/trip-count.py&quot;, </span>
+<span class="s">       &quot;sparkSubmitParameters&quot;: &quot;--conf spark.driver.cores=2 --conf spark.executor.memory=10G --conf spark.driver.memory=5G --conf spark.executor.cores=6&quot;</span>
+<span class="s">    }</span>
+<span class="s">  }, </span>
+<span class="s">  &quot;configurationOverrides&quot;: {</span>
+<span class="s">    &quot;applicationConfiguration&quot;: [</span>
+<span class="s">      {</span>
+<span class="s">        &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
+<span class="s">        &quot;properties&quot;: {</span>
+<span class="s">          &quot;spark.dynamicAllocation.enabled&quot;:&quot;true&quot;,</span>
+<span class="s">          &quot;spark.dynamicAllocation.shuffleTracking.enabled&quot;:&quot;true&quot;,</span>
+<span class="s">          &quot;spark.dynamicAllocation.minExecutors&quot;:&quot;0&quot;,</span>
+<span class="s">          &quot;spark.dynamicAllocation.maxExecutors&quot;:&quot;50&quot;,</span>
+<span class="s">          &quot;spark.dynamicAllocation.executorIdleTimeout&quot;:&quot;30s&quot;</span>
+
+<span class="s">          &quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;:&quot;true&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;:&quot;true&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;:&quot;true&quot;,</span>
+
+<span class="s">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName&quot;:&quot;OnDemand&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit&quot;: &quot;5Gi&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass&quot;:&quot;gp3&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path&quot;:&quot;/data1&quot;,</span>
+<span class="s">          &quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly&quot;:&quot;false&quot;,</span>
+
+<span class="s">          &quot;spark.shuffle.sort.io.plugin.class&quot;:&quot;org.apache.spark.shuffle.KubernetesLocalDiskShuffleDataIO&quot;</span>
+<span class="s">         }</span>
+<span class="s">      }</span>
+<span class="s">    ]</span>
+<span class="s">  }</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span>--cli-input-json<span class="w"> </span>file:///spark-dra-pvc-demo.json
 </code></pre></div>
 
 <p><strong>Observed Behavior:</strong>
-When the job gets started, the driver pod gets created and 10 executors are initially created. (<code>"spark.dynamicAllocation.initialExecutors":"10"</code>) Then the number of executors can scale up to a maximum of 100 (<code>"spark.dynamicAllocation.maxExecutors":"100"</code>). <br />
-<strong>Configurations to note:</strong>   </p>
+When the job gets started, the driver pod gets created and 10 executors are initially created due to the default batch size by <code>spark.kubernetes.allocation.batch.size</code>. The maximun number of executors will reach to 50 (<code>"spark.dynamicAllocation.maxExecutors":"50"</code>).</p>
+<p>When using <code>OnDemand</code> claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the <code>Retain</code> claim policy in the storage class gp3, these PVCs persist and cannot be dynamically reduced, even if some executors were removed. The PVCs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.</p>
+<p><strong>Configurations to note:</strong>   </p>
 <p><code>spark.dynamicAllocation.shuffleTracking.enabled</code> - <code>**</code>Experimental<code>**</code>. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.</p>
 <p><code>spark.dynamicAllocation.shuffleTracking.timeout</code> - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.</p>
+<p><code>spark.dynamicAllocation.executorIdleTimeout</code> - If dynamic allocation is enabled and an executor has been idle for more than this duration, the executor will be removed.</p>
 
 
 
