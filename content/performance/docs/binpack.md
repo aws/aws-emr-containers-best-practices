@@ -37,7 +37,7 @@ Quick Start:
 eks-node-viewer --resources cpu,memory
 ```
 
-## Install Bin-packing custom scheduler via Helm chart
+## Helm install Binpacking Custom Scheduler
 
 In the [scheduling-plugin](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins) ` NodeResourcesFit` of kube-scheduler, there are two scoring strategies that support the bin packing of resources:       `MostAllocated` and `RequestedToCapacityRatio`. We created a custom scheduler based on the **MostAllocated strategy**. See the K8s’s [Resource Bin Packing](https://kubernetes.io/docs/concepts/scheduling-eviction/resource-bin-packing/) documentation for more details.
 
