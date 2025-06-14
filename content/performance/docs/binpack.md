@@ -37,23 +37,20 @@ Quick Start:
 eks-node-viewer --resources cpu,memory
 ```
 
-## Install Bin-packing custom scheduler
+## Install Bin-packing custom scheduler via Helm chart
 
 In the [scheduling-plugin](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins) ` NodeResourcesFit` of kube-scheduler, there are two scoring strategies that support the bin packing of resources:       `MostAllocated` and `RequestedToCapacityRatio`. We created a custom scheduler based on the **MostAllocated strategy**. See the K8s’s [Resource Bin Packing](https://kubernetes.io/docs/concepts/scheduling-eviction/resource-bin-packing/) documentation for more details.
 
-The following customer scheduler named “my-scheduler” is created for EKS version v1.28, as the “kube-scheduler” container image version is required to match with EKS version. The KubeSchedulerConfiguration API version is stable(v1) in Kubernetes 1.25, for those cluster prior to 1.25, should use kubescheduler.config.k8s.io/v1beta2. Please adjust them accordingly if your EKS version is different.  
+Run the following command to install the custom scheduler:
+```bash
+# download the project
+git clone https://github.com/aws-samples/custom-scheduler-eks
+cd custom-scheduler-eks/deploy
+# install
+helm install my-scheduler charts/custom-scheduler-eks --set eksVersion=1.33 --set schedulerName=my-scheduler -n kube-system
+```
 
-We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:
-
-| EKS version | Image                                                                       |
-|-------------|-----------------------------------------------------------------------------|
-| 1.28        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.28.13-eks-1-28-latest |
-| 1.29        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.29.8-eks-1-29-latest  |
-| 1.30        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.30.4-eks-1-30-latest  |
-| 1.31        | public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.31.0-eks-1-31-latest  |
-
-
-NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:
+NOTE: If your binpacking pod throttles for a large scale workload, increase the QPS and Burst values in your local     "charts/custom-scheduler-eks/values.yaml" file, then install again:
 ```bash
    clientConnection:
       burst: 200
@@ -65,354 +62,22 @@ I1030 23:19:48.258159       1 request.go:697] Waited for 1.93509847s due to clie
 I1030 23:19:58.258457       1 request.go:697] Waited for 1.905177346s due to client-side throttling, not priority and fairness, request: POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...
 ```
 
-Run the following command against **EKS v1.28**:
-
+## View scheduler metrics
+1. Check metrics manually:
 ```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: my-scheduler
-  namespace: kube-system
+kubectl -n kube-system port-forward deploy/custom-scheduler-eks 10259
+curl -k -H "Authorization: Bearer $(kubectl create token -n prometheus amp-iamproxy-ingest-service-account)" https://localhost:10259/metrics | grep "scheduler_"
+```
+Note: we used Prometheus service account token for authentication. Replace "amp-iamproxy-ingest-service-account" and "prometheus" with your actual Prometheus service account and namespace. 
 
-
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: my-scheduler
-rules:
-- apiGroups:
-  - ""
-  - events.k8s.io
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - create
-  - get
-  - list
-  - update
-- apiGroups:
-  - coordination.k8s.io
-  resourceNames:
-  - kube-scheduler
-  resources:
-  - leases
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resourceNames:
-  - kube-scheduler
-  resources:
-  - endpoints
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - delete
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - bindings
-  - pods/binding
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - pods/status
-  verbs:
-  - patch
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - replicationcontrollers
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  - extensions
-  resources:
-  - replicasets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - statefulsets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - policy
-  resources:
-  - poddisruptionbudgets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  - persistentvolumes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - csinodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - csidrivers
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - csistoragecapacities
-  verbs:
-  - get
-  - list
-  - watch
-
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: my-scheduler-as-kube-scheduler
-subjects:
-- kind: ServiceAccount
-  name: my-scheduler
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: my-scheduler
-
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: my-scheduler-as-volume-scheduler
-subjects:
-- kind: ServiceAccount
-  name: my-scheduler
-  namespace: kube-system
-roleRef:
-  kind: ClusterRole
-  name: system:volume-scheduler
-  apiGroup: rbac.authorization.k8s.io
-
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: my-scheduler-config
-  namespace: kube-system
-data:
-  my-scheduler-config.yaml: |
-    apiVersion: kubescheduler.config.k8s.io/v1
-    kind: KubeSchedulerConfiguration
-    profiles:
-      - pluginConfig:
-          - args:
-              apiVersion: kubescheduler.config.k8s.io/v1
-              kind: NodeResourcesFitArgs
-              scoringStrategy:
-                  resources:
-                      - name: cpu
-                        weight: 1
-                      - name: memory
-                        weight: 1
-                  type: MostAllocated
-            name: NodeResourcesFit
-        plugins:
-          score:
-              enabled:
-                  - name: NodeResourcesFit
-                    weight: 1
-              disabled:
-                  - name: "*"
-          multiPoint:
-              enabled:
-                  - name: NodeResourcesFit
-                    weight: 1
-        schedulerName: my-scheduler
-    leaderElection:
-      leaderElect: true
-      resourceNamespace: kube-system
-      resourceName: my-scheduler
-    clientConnection:
-      burst: 200
-      qps: 100
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    component: scheduler
-    tier: control-plane
-  name: my-scheduler
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      component: scheduler
-      tier: control-plane
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        component: scheduler
-        tier: control-plane
-        version: second
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: karpenter.sh/nodepool
-                operator: DoesNotExist
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                component: scheduler
-                tier: control-plane
-            topologyKey: kubernetes.io/hostname
-      serviceAccountName: my-scheduler
-      containers:
-      - command:
-        - /usr/local/bin/kube-scheduler
-        - --bind-address=0.0.0.0
-        - --config=/etc/kubernetes/my-scheduler/my-scheduler-config.yaml
-        - --v=5
-        image: public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-          initialDelaySeconds: 15
-        name: kube-second-scheduler
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-        resources:
-          requests:
-            cpu: '1'
-        securityContext:
-          privileged: false
-        volumeMounts:
-          - name: config-volume
-            mountPath: /etc/kubernetes/my-scheduler
-      hostNetwork: false
-      hostPID: false
-      volumes:
-        - name: config-volume
-          configMap:
-               name: my-scheduler-config
-EOF
+2. Verify targets appear in Prometheus UI
+```bash
+kubectl port-forward svc/prometheus-operated -n prometheus 9090:9090
+# paste the following url to a web browser, then search the metrics by a prefix scheduler_
+http://localhost:9090/query
 ```
 
-
-### Helm deployment
-
-**1. Download the source code from the Github:***
-```shell
-git clone https://github.com/aws/aws-emr-containers-best-practices
-cd ./chart/kube-scheduler
-```
-
-**2. Deploy Helm chart**
-```shell
-helm install kube-scheduler -n <namespace> .
-```
-
-## Validate the Custom Scheduler
+## Validate the custom scheduler
 
 - **Step1:** Launch the node viewer in a terminal:
 ```bash
@@ -425,9 +90,9 @@ sample-job.sh **(last line)**
 ```bash
 aws emr-containers start-job-run \
 --virtual-cluster-id $VIRTUAL_CLUSTER_ID \
---name $app_name \
+--name test-custom-scheduler \
 --execution-role-arn $EMR_ROLE_ARN \
---release-label emr-7.2.0-latest \
+--release-label emr-7.8.0-latest \
 --job-driver '{
 "sparkSubmitJobDriver": {
     "entryPoint": "local:///usr/lib/spark/examples/jars/spark-examples.jar", 
@@ -438,7 +103,6 @@ aws emr-containers start-job-run \
     {
     "classification": "spark-defaults", 
     "properties": {
-        "spark.kubernetes.node.selector.provisioner": "karpenter-binpack-test",
         "spark.kubernetes.scheduler.name": "my-scheduler" }}]}'
 ```
 OR sample-pod-template.yaml **(line #3)**
@@ -446,11 +110,7 @@ OR sample-pod-template.yaml **(line #3)**
 kind: Pod
 spec:
   schedulerName: my-scheduler
-  nodeSelector:
-    provisioner: karpenter-binpack-test
   volumes:
-    # EKS automatically mount EBS or NVMe SSD by
-    # https://github.com/awslabs/amazon-eks-ami/blob/main/templates/al2/runtime/bootstrap.sh 
     - name: spark-local-dir-1
       emptyDir: {}
   containers:
