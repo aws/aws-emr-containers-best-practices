@@ -1353,33 +1353,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-bin-packing-custom-scheduler" class="md-nav__link">
+  <a href="#helm-install-binpacking-custom-scheduler" class="md-nav__link">
     <span class="md-ellipsis">
-      Install Bin-packing custom scheduler
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Install Bin-packing custom scheduler">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#helm-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Helm deployment
+      Helm install Binpacking Custom Scheduler
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#view-scheduler-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      View scheduler metrics
+    </span>
+  </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#validate-the-custom-scheduler" class="md-nav__link">
     <span class="md-ellipsis">
-      Validate the Custom Scheduler
+      Validate the custom scheduler
     </span>
   </a>
   
@@ -1767,33 +1761,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-bin-packing-custom-scheduler" class="md-nav__link">
+  <a href="#helm-install-binpacking-custom-scheduler" class="md-nav__link">
     <span class="md-ellipsis">
-      Install Bin-packing custom scheduler
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Install Bin-packing custom scheduler">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#helm-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Helm deployment
+      Helm install Binpacking Custom Scheduler
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#view-scheduler-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      View scheduler metrics
+    </span>
+  </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#validate-the-custom-scheduler" class="md-nav__link">
     <span class="md-ellipsis">
-      Validate the Custom Scheduler
+      Validate the custom scheduler
     </span>
   </a>
   
@@ -1851,37 +1839,17 @@ brew<span class="w"> </span>install<span class="w"> </span>eks-node-viewer
 <div class="codehilite"><pre><span></span><code>eks-node-viewer<span class="w"> </span>--resources<span class="w"> </span>cpu,memory
 </code></pre></div>
 
-<h2 id="install-bin-packing-custom-scheduler">Install Bin-packing custom scheduler<a class="headerlink" href="#install-bin-packing-custom-scheduler" title="Permanent link">&para;</a></h2>
+<h2 id="helm-install-binpacking-custom-scheduler">Helm install Binpacking Custom Scheduler<a class="headerlink" href="#helm-install-binpacking-custom-scheduler" title="Permanent link">&para;</a></h2>
 <p>In the <a href="https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins">scheduling-plugin</a> <code>NodeResourcesFit</code> of kube-scheduler, there are two scoring strategies that support the bin packing of resources:       <code>MostAllocated</code> and <code>RequestedToCapacityRatio</code>. We created a custom scheduler based on the <strong>MostAllocated strategy</strong>. See the K8s’s <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/resource-bin-packing/">Resource Bin Packing</a> documentation for more details.</p>
-<p>The following customer scheduler named “my-scheduler” is created for EKS version v1.28, as the “kube-scheduler” container image version is required to match with EKS version. The KubeSchedulerConfiguration API version is stable(v1) in Kubernetes 1.25, for those cluster prior to 1.25, should use kubescheduler.config.k8s.io/v1beta2. Please adjust them accordingly if your EKS version is different.  </p>
-<p>We do not recommend build the kube-scheduler by yourself, you can leverage the eks-distro kube-scheduler image. For example:</p>
-<table>
-<thead>
-<tr>
-<th>EKS version</th>
-<th>Image</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1.28</td>
-<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.28.13-eks-1-28-latest</td>
-</tr>
-<tr>
-<td>1.29</td>
-<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.29.8-eks-1-29-latest</td>
-</tr>
-<tr>
-<td>1.30</td>
-<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.30.4-eks-1-30-latest</td>
-</tr>
-<tr>
-<td>1.31</td>
-<td>public.ecr.aws/eks-distro/kubernetes/kube-schedule:v1.31.0-eks-1-31-latest</td>
-</tr>
-</tbody>
-</table>
-<p>NOTE: If your binpacking pod throttles for a large scale workload, please increase the QPS and Burst values in the "configmap" section:</p>
+<p>Run the following command to install the custom scheduler:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># download the project</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/aws-samples/custom-scheduler-eks
+<span class="nb">cd</span><span class="w"> </span>custom-scheduler-eks/deploy
+<span class="c1"># install</span>
+helm<span class="w"> </span>install<span class="w"> </span>my-scheduler<span class="w"> </span>charts/custom-scheduler-eks<span class="w"> </span>--set<span class="w"> </span><span class="nv">eksVersion</span><span class="o">=</span><span class="m">1</span>.33<span class="w"> </span>--set<span class="w"> </span><span class="nv">schedulerName</span><span class="o">=</span>my-scheduler<span class="w"> </span>-n<span class="w"> </span>kube-system
+</code></pre></div>
+
+<p>NOTE: If your binpacking pod throttles for a large scale workload, increase the QPS and Burst values in your local     "charts/custom-scheduler-eks/values.yaml" file, then install again:</p>
 <div class="codehilite"><pre><span></span><code><span class="w">   </span>clientConnection:
 <span class="w">      </span>burst:<span class="w"> </span><span class="m">200</span>
 <span class="w">      </span>qps:<span class="w"> </span><span class="m">100</span>
@@ -1892,348 +1860,24 @@ brew<span class="w"> </span>install<span class="w"> </span>eks-node-viewer
 I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="w">       </span><span class="m">1</span><span class="w"> </span>request.go:697<span class="o">]</span><span class="w"> </span>Waited<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">1</span>.905177346s<span class="w"> </span>due<span class="w"> </span>to<span class="w"> </span>client-side<span class="w"> </span>throttling,<span class="w"> </span>not<span class="w"> </span>priority<span class="w"> </span>and<span class="w"> </span>fairness,<span class="w"> </span>request:<span class="w"> </span>POST:https://10.100.0.1:443/apis/events.k8s.io/v1/namespa...
 </code></pre></div>
 
-<p>Run the following command against <strong>EKS v1.28</strong>:</p>
-<div class="codehilite"><pre><span></span><code>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | kubectl apply -f -</span>
-<span class="s">apiVersion: v1</span>
-<span class="s">kind: ServiceAccount</span>
-<span class="s">metadata:</span>
-<span class="s">  name: my-scheduler</span>
-<span class="s">  namespace: kube-system</span>
-
-
-<span class="s">---</span>
-<span class="s">kind: ClusterRole</span>
-<span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
-<span class="s">metadata:</span>
-<span class="s">  name: my-scheduler</span>
-<span class="s">rules:</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  - events.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - events</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">  - patch</span>
-<span class="s">  - update</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - configmaps</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - coordination.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - leases</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - update</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - coordination.k8s.io</span>
-<span class="s">  resourceNames:</span>
-<span class="s">  - kube-scheduler</span>
-<span class="s">  resources:</span>
-<span class="s">  - leases</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - update</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - endpoints</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resourceNames:</span>
-<span class="s">  - kube-scheduler</span>
-<span class="s">  resources:</span>
-<span class="s">  - endpoints</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - update</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - nodes</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - pods</span>
-<span class="s">  verbs:</span>
-<span class="s">  - delete</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - bindings</span>
-<span class="s">  - pods/binding</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - pods/status</span>
-<span class="s">  verbs:</span>
-<span class="s">  - patch</span>
-<span class="s">  - update</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - replicationcontrollers</span>
-<span class="s">  - services</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - apps</span>
-<span class="s">  - extensions</span>
-<span class="s">  resources:</span>
-<span class="s">  - replicasets</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - apps</span>
-<span class="s">  resources:</span>
-<span class="s">  - statefulsets</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - policy</span>
-<span class="s">  resources:</span>
-<span class="s">  - poddisruptionbudgets</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - persistentvolumeclaims</span>
-<span class="s">  - persistentvolumes</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - authentication.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - tokenreviews</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - authorization.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - subjectaccessreviews</span>
-<span class="s">  verbs:</span>
-<span class="s">  - create</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - storage.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - csinodes</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - &quot;&quot;</span>
-<span class="s">  resources:</span>
-<span class="s">  - namespaces</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - storage.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - csidrivers</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-<span class="s">- apiGroups:</span>
-<span class="s">  - storage.k8s.io</span>
-<span class="s">  resources:</span>
-<span class="s">  - csistoragecapacities</span>
-<span class="s">  verbs:</span>
-<span class="s">  - get</span>
-<span class="s">  - list</span>
-<span class="s">  - watch</span>
-
-
-<span class="s">---</span>
-<span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
-<span class="s">kind: ClusterRoleBinding</span>
-<span class="s">metadata:</span>
-<span class="s">  name: my-scheduler-as-kube-scheduler</span>
-<span class="s">subjects:</span>
-<span class="s">- kind: ServiceAccount</span>
-<span class="s">  name: my-scheduler</span>
-<span class="s">  namespace: kube-system</span>
-<span class="s">roleRef:</span>
-<span class="s">  apiGroup: rbac.authorization.k8s.io</span>
-<span class="s">  kind: ClusterRole</span>
-<span class="s">  name: my-scheduler</span>
-
-
-<span class="s">---</span>
-<span class="s">apiVersion: rbac.authorization.k8s.io/v1</span>
-<span class="s">kind: ClusterRoleBinding</span>
-<span class="s">metadata:</span>
-<span class="s">  name: my-scheduler-as-volume-scheduler</span>
-<span class="s">subjects:</span>
-<span class="s">- kind: ServiceAccount</span>
-<span class="s">  name: my-scheduler</span>
-<span class="s">  namespace: kube-system</span>
-<span class="s">roleRef:</span>
-<span class="s">  kind: ClusterRole</span>
-<span class="s">  name: system:volume-scheduler</span>
-<span class="s">  apiGroup: rbac.authorization.k8s.io</span>
-
-
-<span class="s">---</span>
-<span class="s">apiVersion: v1</span>
-<span class="s">kind: ConfigMap</span>
-<span class="s">metadata:</span>
-<span class="s">  name: my-scheduler-config</span>
-<span class="s">  namespace: kube-system</span>
-<span class="s">data:</span>
-<span class="s">  my-scheduler-config.yaml: |</span>
-<span class="s">    apiVersion: kubescheduler.config.k8s.io/v1</span>
-<span class="s">    kind: KubeSchedulerConfiguration</span>
-<span class="s">    profiles:</span>
-<span class="s">      - pluginConfig:</span>
-<span class="s">          - args:</span>
-<span class="s">              apiVersion: kubescheduler.config.k8s.io/v1</span>
-<span class="s">              kind: NodeResourcesFitArgs</span>
-<span class="s">              scoringStrategy:</span>
-<span class="s">                  resources:</span>
-<span class="s">                      - name: cpu</span>
-<span class="s">                        weight: 1</span>
-<span class="s">                      - name: memory</span>
-<span class="s">                        weight: 1</span>
-<span class="s">                  type: MostAllocated</span>
-<span class="s">            name: NodeResourcesFit</span>
-<span class="s">        plugins:</span>
-<span class="s">          score:</span>
-<span class="s">              enabled:</span>
-<span class="s">                  - name: NodeResourcesFit</span>
-<span class="s">                    weight: 1</span>
-<span class="s">              disabled:</span>
-<span class="s">                  - name: &quot;*&quot;</span>
-<span class="s">          multiPoint:</span>
-<span class="s">              enabled:</span>
-<span class="s">                  - name: NodeResourcesFit</span>
-<span class="s">                    weight: 1</span>
-<span class="s">        schedulerName: my-scheduler</span>
-<span class="s">    leaderElection:</span>
-<span class="s">      leaderElect: true</span>
-<span class="s">      resourceNamespace: kube-system</span>
-<span class="s">      resourceName: my-scheduler</span>
-<span class="s">    clientConnection:</span>
-<span class="s">      burst: 200</span>
-<span class="s">      qps: 100</span>
-
-<span class="s">---</span>
-<span class="s">apiVersion: apps/v1</span>
-<span class="s">kind: Deployment</span>
-<span class="s">metadata:</span>
-<span class="s">  labels:</span>
-<span class="s">    component: scheduler</span>
-<span class="s">    tier: control-plane</span>
-<span class="s">  name: my-scheduler</span>
-<span class="s">  namespace: kube-system</span>
-<span class="s">spec:</span>
-<span class="s">  selector:</span>
-<span class="s">    matchLabels:</span>
-<span class="s">      component: scheduler</span>
-<span class="s">      tier: control-plane</span>
-<span class="s">  replicas: 2</span>
-<span class="s">  template:</span>
-<span class="s">    metadata:</span>
-<span class="s">      labels:</span>
-<span class="s">        component: scheduler</span>
-<span class="s">        tier: control-plane</span>
-<span class="s">        version: second</span>
-<span class="s">    spec:</span>
-<span class="s">      affinity:</span>
-<span class="s">        nodeAffinity:</span>
-<span class="s">          requiredDuringSchedulingIgnoredDuringExecution:</span>
-<span class="s">            nodeSelectorTerms:</span>
-<span class="s">            - matchExpressions:</span>
-<span class="s">              - key: karpenter.sh/nodepool</span>
-<span class="s">                operator: DoesNotExist</span>
-<span class="s">        podAntiAffinity:</span>
-<span class="s">          requiredDuringSchedulingIgnoredDuringExecution:</span>
-<span class="s">          - labelSelector:</span>
-<span class="s">              matchLabels:</span>
-<span class="s">                component: scheduler</span>
-<span class="s">                tier: control-plane</span>
-<span class="s">            topologyKey: kubernetes.io/hostname</span>
-<span class="s">      serviceAccountName: my-scheduler</span>
-<span class="s">      containers:</span>
-<span class="s">      - command:</span>
-<span class="s">        - /usr/local/bin/kube-scheduler</span>
-<span class="s">        - --bind-address=0.0.0.0</span>
-<span class="s">        - --config=/etc/kubernetes/my-scheduler/my-scheduler-config.yaml</span>
-<span class="s">        - --v=5</span>
-<span class="s">        image: public.ecr.aws/eks-distro/kubernetes/kube-scheduler:v1.28.11-eks-1-28-latest</span>
-<span class="s">        livenessProbe:</span>
-<span class="s">          httpGet:</span>
-<span class="s">            path: /healthz</span>
-<span class="s">            port: 10259</span>
-<span class="s">            scheme: HTTPS</span>
-<span class="s">          initialDelaySeconds: 15</span>
-<span class="s">        name: kube-second-scheduler</span>
-<span class="s">        readinessProbe:</span>
-<span class="s">          httpGet:</span>
-<span class="s">            path: /healthz</span>
-<span class="s">            port: 10259</span>
-<span class="s">            scheme: HTTPS</span>
-<span class="s">        resources:</span>
-<span class="s">          requests:</span>
-<span class="s">            cpu: &#39;1&#39;</span>
-<span class="s">        securityContext:</span>
-<span class="s">          privileged: false</span>
-<span class="s">        volumeMounts:</span>
-<span class="s">          - name: config-volume</span>
-<span class="s">            mountPath: /etc/kubernetes/my-scheduler</span>
-<span class="s">      hostNetwork: false</span>
-<span class="s">      hostPID: false</span>
-<span class="s">      volumes:</span>
-<span class="s">        - name: config-volume</span>
-<span class="s">          configMap:</span>
-<span class="s">               name: my-scheduler-config</span>
-<span class="s">EOF</span>
+<h2 id="view-scheduler-metrics">View scheduler metrics<a class="headerlink" href="#view-scheduler-metrics" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Check metrics manually:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>port-forward<span class="w"> </span>deploy/custom-scheduler-eks<span class="w"> </span><span class="m">10259</span>
+curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>kubectl<span class="w"> </span>create<span class="w"> </span>token<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>amp-iamproxy-ingest-service-account<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>https://localhost:10259/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;scheduler_&quot;</span>
 </code></pre></div>
 
-<h3 id="helm-deployment">Helm deployment<a class="headerlink" href="#helm-deployment" title="Permanent link">&para;</a></h3>
-<p><strong>1. Download the source code from the Github:</strong>*</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/aws/aws-emr-containers-best-practices
-<span class="nb">cd</span><span class="w"> </span>./chart/kube-scheduler
+<p>Note: we used Prometheus service account token for authentication. Replace "amp-iamproxy-ingest-service-account" and "prometheus" with your actual Prometheus service account and namespace. </p>
+<ol>
+<li>Verify targets appear in Prometheus UI</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/prometheus-operated<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span><span class="m">9090</span>:9090
+<span class="c1"># paste the following url to a web browser, then search the metrics by a prefix scheduler_</span>
+http://localhost:9090/query
 </code></pre></div>
 
-<p><strong>2. Deploy Helm chart</strong></p>
-<div class="codehilite"><pre><span></span><code>helm<span class="w"> </span>install<span class="w"> </span>kube-scheduler<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>.
-</code></pre></div>
-
-<h2 id="validate-the-custom-scheduler">Validate the Custom Scheduler<a class="headerlink" href="#validate-the-custom-scheduler" title="Permanent link">&para;</a></h2>
+<h2 id="validate-the-custom-scheduler">Validate the custom scheduler<a class="headerlink" href="#validate-the-custom-scheduler" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Step1:</strong> Launch the node viewer in a terminal:</li>
 </ul>
@@ -2246,9 +1890,9 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <p>sample-job.sh <strong>(last line)</strong></p>
 <div class="codehilite"><pre><span></span><code>aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<span class="w"> </span><span class="se">\</span>
 --virtual-cluster-id<span class="w"> </span><span class="nv">$VIRTUAL_CLUSTER_ID</span><span class="w"> </span><span class="se">\</span>
---name<span class="w"> </span><span class="nv">$app_name</span><span class="w"> </span><span class="se">\</span>
+--name<span class="w"> </span>test-custom-scheduler<span class="w"> </span><span class="se">\</span>
 --execution-role-arn<span class="w"> </span><span class="nv">$EMR_ROLE_ARN</span><span class="w"> </span><span class="se">\</span>
---release-label<span class="w"> </span>emr-7.2.0-latest<span class="w"> </span><span class="se">\</span>
+--release-label<span class="w"> </span>emr-7.8.0-latest<span class="w"> </span><span class="se">\</span>
 --job-driver<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">&quot;sparkSubmitJobDriver&quot;: {</span>
 <span class="s1">    &quot;entryPoint&quot;: &quot;local:///usr/lib/spark/examples/jars/spark-examples.jar&quot;, </span>
@@ -2259,7 +1903,6 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <span class="s1">    {</span>
 <span class="s1">    &quot;classification&quot;: &quot;spark-defaults&quot;, </span>
 <span class="s1">    &quot;properties&quot;: {</span>
-<span class="s1">        &quot;spark.kubernetes.node.selector.provisioner&quot;: &quot;karpenter-binpack-test&quot;,</span>
 <span class="s1">        &quot;spark.kubernetes.scheduler.name&quot;: &quot;my-scheduler&quot; }}]}&#39;</span>
 </code></pre></div>
 
@@ -2267,11 +1910,7 @@ I1030<span class="w"> </span><span class="m">23</span>:19:58.258457<span class="
 <div class="codehilite"><pre><span></span><code><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">schedulerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-scheduler</span>
-<span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">karpenter-binpack-test</span>
 <span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># EKS automatically mount EBS or NVMe SSD by</span>
-<span class="w">    </span><span class="c1"># https://github.com/awslabs/amazon-eks-ami/blob/main/templates/al2/runtime/bootstrap.sh </span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spark-local-dir-1</span>
 <span class="w">      </span><span class="nt">emptyDir</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
