@@ -4,7 +4,7 @@ DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle s
 
 **Spark DRA with storage configuration:**  
 
-When using [dynamic provisioning PVC/Volumes](../../storage/docs/spark/ebs.md#dynamic-provisioning) with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the `WaitForFirstConsumer` mode and the reclaim policy is `Retain`. See the exmaple below:
+When using [dynamic provisioning PVC/Volumes](../../storage/docs/spark/ebs.md#dynamic-provisioning) with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the `WaitForFirstConsumer` mode and the reclaim policy is `Delete`. This policy ensures PVs are self-deleted after a Spark job is completed. See the exmaple below:
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -124,7 +124,7 @@ aws emr-containers start-job-run --cli-input-json file:///spark-dra-pvc-demo.jso
 **Observed Behavior:**
 When the job gets started, the driver pod gets created and 10 executors are initially created due to the default batch size by `spark.kubernetes.allocation.batch.size`. The maximun number of executors will reach to 50 (`"spark.dynamicAllocation.maxExecutors":"50"`).
 
-When using `OnDemand` claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the `Retain` claim policy in the storage class gp3, these PVCs persist and cannot be dynamically reduced, even if some executors were removed. The PVCs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.
+When using `OnDemand` claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the setting `spark.kubernetes.driver.ownPersistentVolumeClaim`, these PVCs persist during the Spark job’s lifetime and can not be dynamically reduced, even if some executors were removed. The PVCs and their associated PVs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.
 
 **Configurations to note:**   
 
