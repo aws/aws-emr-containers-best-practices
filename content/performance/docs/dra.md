@@ -14,7 +14,7 @@ parameters:
   fsType: ext4
   type: gp3
 provisioner: kubernetes.io/aws-ebs
-reclaimPolicy: Retain # for pvc reuse
+reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer # avoid multi-attach
 ```
 
