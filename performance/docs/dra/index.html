@@ -1680,7 +1680,7 @@
 <h1 id="dynamic-resource-allocation"><strong>Dynamic Resource Allocation</strong><a class="headerlink" href="#dynamic-resource-allocation" title="Permanent link">&para;</a></h1>
 <p>DRA is available in Spark 3 (EMR 6.x) without the need for an external shuffle service. Spark on Kubernetes doesn't support external shuffle service as of spark 3.1, but DRA can be achieved by enabling <a href="https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation">shuffle tracking</a>.</p>
 <p><strong>Spark DRA with storage configuration:</strong>  </p>
-<p>When using <a href="../../../storage/docs/spark/ebs/#dynamic-provisioning">dynamic provisioning PVC/Volumes</a> with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the <code>WaitForFirstConsumer</code> mode and the reclaim policy is <code>Retain</code>. See the exmaple below:</p>
+<p>When using <a href="../../../storage/docs/spark/ebs/#dynamic-provisioning">dynamic provisioning PVC/Volumes</a> with Spark's DRA, to avoid multi-attach errors from the PVC, ensure your storage class is configured with the <code>WaitForFirstConsumer</code> mode and the reclaim policy is <code>Delete</code>. This policy ensures PVs are self-deleted after a Spark job is completed. See the exmaple below:</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -1689,7 +1689,7 @@
 <span class="w">  </span><span class="nt">fsType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ext4</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gp3</span>
 <span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/aws-ebs</span>
-<span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span><span class="w"> </span><span class="c1"># for pvc reuse</span>
+<span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete</span>
 <span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span><span class="w"> </span><span class="c1"># avoid multi-attach</span>
 </code></pre></div>
 
@@ -1791,7 +1791,7 @@ aws<span class="w"> </span>emr-containers<span class="w"> </span>start-job-run<s
 
 <p><strong>Observed Behavior:</strong>
 When the job gets started, the driver pod gets created and 10 executors are initially created due to the default batch size by <code>spark.kubernetes.allocation.batch.size</code>. The maximun number of executors will reach to 50 (<code>"spark.dynamicAllocation.maxExecutors":"50"</code>).</p>
-<p>When using <code>OnDemand</code> claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the <code>Retain</code> claim policy in the storage class gp3, these PVCs persist and cannot be dynamically reduced, even if some executors were removed. The PVCs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.</p>
+<p>When using <code>OnDemand</code> claimName to create dynamic PVCs, each executor mounts a dedicated Persistent Volume Claim (PVC) with a size of 5GB. In total, 50 PVCs should be created. Due to the setting <code>spark.kubernetes.driver.ownPersistentVolumeClaim</code>, these PVCs persist during the Spark job’s lifetime and can not be dynamically reduced, even if some executors were removed. The PVCs and their associated PVs will only be eligible for cleanup after the entire Spark job completes. This behavior needs to be carefully considered when balancing between storage API throttling and costs for large scale workloads.</p>
 <p><strong>Configurations to note:</strong>   </p>
 <p><code>spark.dynamicAllocation.shuffleTracking.enabled</code> - <code>**</code>Experimental<code>**</code>. Enables shuffle file tracking for executors, which allows dynamic allocation without the need for an external shuffle service. This option will try to keep alive executors that are storing shuffle data for active jobs.</p>
 <p><code>spark.dynamicAllocation.shuffleTracking.timeout</code> - When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data. The default value means that Spark will rely on the shuffles being garbage collected to be able to release executors. If for some reason garbage collection is not cleaning up shuffles quickly enough, this option can be used to control when to time out executors even when they are storing shuffle data.</p>
