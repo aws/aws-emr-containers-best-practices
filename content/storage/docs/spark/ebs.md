@@ -167,7 +167,7 @@ metadata:
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp3
-reclaimPolicy: Retain   # Preserve data on EBS for PVC reuse
+reclaimPolicy: Delete   # delete PVs after a job is completed
 allowVolumeExpansion: true
 mountOptions:
   - debug
