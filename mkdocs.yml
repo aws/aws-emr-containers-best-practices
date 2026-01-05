@@ -44,7 +44,7 @@ nav:
       - Karpenter: 'performance/docs/karpenter.md'
       - EKS Best Practices: 'best-practices-and-recommendations/eks-best-practices.md'
   - Cost Tracking and Optimization:
-      - Cost Optimization using EC2 Spot Instances: 'cost-optimization/docs/cost-optimization.md'
+      - EC2 Spot Instances: 'cost-optimization/docs/cost-optimization.md'
       - Node Decommission: 'cost-optimization/docs/node-decommission.md'
       - PVC Reuse: 'cost-optimization/docs/pvc-reuse.md'
       - Cost Tracking: 'cost-optimization/docs/cost-tracking.md'
