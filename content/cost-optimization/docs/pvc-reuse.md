@@ -130,7 +130,7 @@ If your Spark version < 3.4, do not use PVC reuse until upgraded to 3.4+.
 
 ### Enhanced Setup (Spark 3.4+, EMR 6.12+)
 
-Since version 3.4, Spark counts the total number of PVCs the job can have (= max number of executor pods), and holds new executor creation if the driver owns the maximum number of PVCs. This helps with the transition of the existing PVC from one executor to another executor.
+Since version 3.4, Spark counts the total number of PVCs the job can have, and holds new executor creation if the driver owns the maximum number of PVCs. This helps with the transition of the existing PVC from one executor to another executor.
 
 For PVC-oriented executor allocation with improved stability:
 
@@ -140,37 +140,80 @@ For PVC-oriented executor allocation with improved stability:
 
 ### PVC Volume Configuration
 
+This setting creates a pod-level EBS Volume PVC. The dynamic PVC provioning happens when the job starts.
 ```bash
-# This setting creates a pod-level EBS-based PVC. The dynamic PVC is created when the job starts
 "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName": "OnDemand"
 ```
-
-!!! tip "PVC Type Consideration"
-    To avoid EBS performance limitations, pre-create shareable storage (EFS or FSx). Reconfigure PVC reuse via a static PVC like this: **spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName: example-fsx-pvc**
-
+Use `gp3` storage class with appropriate IOPS and throughput settings for shuffle-heavy workloads. Ensure your storage class has `reclaimPolicy: Delete`.
 ```bash
 "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly": "false"
 "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass": "gp3"
 "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit": "20Gi"
 "spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path": "/data1"
 ```
+!!! tip "PVC Type Consideration"
+    To avoid EBS performance limitations, pre-create shareable storage (EFS or FSx). Reconfigure PVC reuse via a static provisoning like this: **spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName: example-fsx-pvc**
 
-!!! tip "Storage Class Configuration"
-    Use `gp3` storage class with appropriate IOPS and throughput settings for shuffle workloads. Ensure your storage class has `reclaimPolicy: Delete`.
 
-### Executor Registration Tuning
+### Executor Registration Tuning (OPTIONAL)
 
-Since EBS volume attachment can take 2-5 minutes on average, adjust Spark's executor registration timeouts:
+!!! warning "Advanced Configuration - Use with Caution"
+    Improper configuration can lead to jobs starting with insufficient resources or hanging indefinitely. Only adjust after thorough testing and monitoring.
+
+Since EBS volume reattachment can take 2-5 minutes on average, you may need to adjust Spark's executor registration timeouts. **Understand the trade-offs before making changes.**
+
+**Default Behavior:**
+
+- `spark.scheduler.minRegisteredResourcesRatio`: **0.8** (80% of executors must register)
+- `spark.scheduler.maxRegisteredResourcesWaitingTime`: **30s** (maximum wait time)
+
+**Impact of Changes:**
+
+- **Lower ratio**: Job starts faster but with fewer executors → may run slowly or fail
+- **Higher timeout**: Job waits longer before start → may mask infrastructure or high concurrency issues
+
+**Adjust only if:**
+
+- ✅ You've confirmed frequent job failures specifically during PVC reattachment
+- ✅ Your workload tolerates starting with fewer executors
+- ❌ Don't adjust for time-sensitive or mission-critical jobs
+
+**Example Configuration (use cautiously):**
 
 ```bash
-# Wait for 60% of executors before starting (down from default 80%)
+# WARNING: Starting with fewer executors may impact app performance
 "spark.scheduler.minRegisteredResourcesRatio": "0.6"
 
-# Wait up to 30 minutes for executors to register (up from default 30s)
+# WARNING: Long waits may mask infrastructure problems
 "spark.scheduler.maxRegisteredResourcesWaitingTime": "1800s"
 ```
 
-This prevents jobs from failing prematurely while waiting for PVC reattachment.
+**Recommendation:** Start with smaller changes (e.g., `0.7` ratio, `300s` timeout) and adjust incrementally based on observed behavior.
+
+### Executor Pod's Termination Grace Period (OPTIONAL)
+
+!!! danger "Advanced Configuration - Extreme Caution Required"
+    Reducing grace period can cause **data loss, failed shutdowns, and corrupted state**. This controls how long a pod has to shut down cleanly before being forcefully killed.
+
+The default Kubernetes pod's attribute `terminationGracePeriodSeconds` is **30 seconds**. Reducing this speeds up PVC detachment but **comes with risks**.
+
+**Risks by Grace Period:**
+
+- **30s (default)**: ✅ Safe for most workloads
+- **15-20s**: ⚠️ May interrupt task completion, incomplete cleanup
+- **< 15s**: ❌  Risk of data loss, corrupted state
+
+**For most workloads, keep the default 30 seconds.** Only reduce if you've confirmed through testing that executors shut down cleanly in less time, or ensure your job can tolerate abrupt terminations.
+
+-EXAMPLE: executor-pod-template.yaml-
+
+```yaml
+apiVersion: v1
+kind: Pod
+spec:
+  # Recommended: 20s for medium workloads, avoid going below 15s
+  terminationGracePeriodSeconds: 20
+```
 
 ## Key Considerations
 
