@@ -82,7 +82,7 @@ kind: Pod
 
 spec:
   containers:
-    - name: spark-kubernetes-executors
+    - name: spark-kubernetes-executor
       volumeMounts:
         - mountPath: "/var/secrets"
           name: mysql-cred
