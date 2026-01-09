@@ -1,0 +1,3481 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../node-decommission/">
+      
+      
+        <link rel="next" href="../cost-tracking/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>PVC Reuse - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pvc-reuse-for-improved-cost-performance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PVC Reuse
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+          
+  
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+          
+  
+  
+  Submit applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+          
+  
+  
+  Storage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+          
+  
+  
+  Metastore Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+          
+  
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+          
+  
+  
+  Node Placement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../performance/docs/dra/" class="md-tabs__link">
+          
+  
+  
+  Performance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../cost-optimization/" class="md-tabs__link">
+          
+  
+  
+  Cost Tracking and Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scalability/docs/scalaiblity-glossary/" class="md-tabs__link">
+          
+  
+  
+  Scalability
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR on EKS(AWS Outposts)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/chain-role/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chain IAM Roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Submit applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Submit applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pyspark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Multi-arch Docker Image
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EBS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FSx for Lustre
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance Store
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metastore Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Metastore Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive Metastore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Glue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Troubleshooting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark Log Location in S3 and CloudWatch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Log Level
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI via Reverse Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self Hosted SHS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBAC Permissions error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Cluster AutoScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/karpenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Placement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Node Placement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Fargate Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/dra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic Resource Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/binpack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BinPacking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../performance/docs/karpenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking and Optimization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cost Tracking and Optimization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cost-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2 Spot Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../node-decommission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Decommission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PVC Reuse
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PVC Reuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases-and-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases and Recommendations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Cases and Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ When to Use PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-use-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ When NOT to Use PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-pvc-reuse-improves-job-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How PVC Reuse Improves Job Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How PVC Reuse Improves Job Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-without-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Without PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-with-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution With PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative Solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-testing-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Testing Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Testing Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-rate-and-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Rate and Reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-bottleneck-ebs-reattachment-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Bottleneck: EBS Reattachment Latency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-pvc-reuse-improves-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When PVC Reuse Improves Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-recomputation-is-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Recomputation is Faster
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-setup-spark-32-emr-66" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Setup (Spark 3.2+, EMR 6.6+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-setup-spark-34-emr-612" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enhanced Setup (Spark 3.4+, EMR 6.12+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pvc-volume-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PVC Volume Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executor-registration-tuning-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor Registration Tuning (OPTIONAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executor-pods-termination-grace-period-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor Pod's Termination Grace Period (OPTIONAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dynamic-resource-allocation-dra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dynamic Resource Allocation (DRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-data-cache-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Application Data Cache Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pod-churn-amplification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Pod Churn Amplification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring and Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-pvc-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor PVC Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-shuffle-data-reuse-in-spark-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Shuffle Data Reuse in Spark Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-ebs-csi-controller-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor EBS CSI Controller Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cost-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scalability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scalability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/scalaiblity-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary and Terms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/known-factors-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/known-factors-start-job-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for StartJobRun API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/load-test-for-start-job-run-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for StartJobRun
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/load-test-for-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/graphana-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases-and-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases and Recommendations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Cases and Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ When to Use PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-use-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ When NOT to Use PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-pvc-reuse-improves-job-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How PVC Reuse Improves Job Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How PVC Reuse Improves Job Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-without-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Without PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-with-pvc-reuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution With PVC Reuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative Solutions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-testing-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Testing Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Testing Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-rate-and-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Rate and Reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-bottleneck-ebs-reattachment-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Bottleneck: EBS Reattachment Latency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-pvc-reuse-improves-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When PVC Reuse Improves Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-recomputation-is-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Recomputation is Faster
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-setup-spark-32-emr-66" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Setup (Spark 3.2+, EMR 6.6+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-setup-spark-34-emr-612" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enhanced Setup (Spark 3.4+, EMR 6.12+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pvc-volume-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PVC Volume Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executor-registration-tuning-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor Registration Tuning (OPTIONAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executor-pods-termination-grace-period-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor Pod's Termination Grace Period (OPTIONAL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dynamic-resource-allocation-dra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dynamic Resource Allocation (DRA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-application-data-cache-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Application Data Cache Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pod-churn-amplification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Pod Churn Amplification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring and Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-pvc-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor PVC Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-shuffle-data-reuse-in-spark-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Shuffle Data Reuse in Spark Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-ebs-csi-controller-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor EBS CSI Controller Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pvc-reuse-for-improved-cost-performance"><strong>PVC Reuse for Improved Cost Performance</strong><a class="headerlink" href="#pvc-reuse-for-improved-cost-performance" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>PVC (Persistent Volume Claim) Reuse is a Spark feature introduced in Spark 3.2 (EMR 6.6+) that improves job stability by preserving shuffle data on PVCs throughout an entire job runtime. When an executor pod terminates and is replaced, the new executor can reattach to the existing PVC and reuse shuffle data, avoiding costly recomputation and shuffle fetch failures.</p>
+<h2 id="use-cases-and-recommendations">Use Cases and Recommendations<a class="headerlink" href="#use-cases-and-recommendations" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use-pvc-reuse">✅ When to Use PVC Reuse<a class="headerlink" href="#when-to-use-pvc-reuse" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Shuffle-heavy workloads</strong> with frequent shuffle fetch failures</li>
+<li><strong>Workloads on Spot instances</strong> with less pod churn or node interruptions</li>
+<li><strong>Jobs with expensive recomputation</strong> (multi-stage aggregations, joins)</li>
+<li><strong>Medium-scale workloads</strong> (&lt; 30k concurrent executors) on stable-sized Spark clusters</li>
+</ol>
+<h3 id="when-not-to-use-pvc-reuse">❌ When NOT to Use PVC Reuse<a class="headerlink" href="#when-not-to-use-pvc-reuse" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>With DRA + EBS storage</strong> (use EFS/FSx instead if DRA is needed)</li>
+<li><strong>Short-running tasks</strong> where recompute time &lt; 1 minute</li>
+<li><strong>Mission-critical jobs</strong> requiring 100% reliability (use Remote Shuffle Service instead, e.g., Apache Celeborn)</li>
+<li><strong>Extremely large scale</strong> (&gt; 30k concurrent executors)</li>
+</ol>
+<h2 id="how-pvc-reuse-improves-job-performance">How PVC Reuse Improves Job Performance<a class="headerlink" href="#how-pvc-reuse-improves-job-performance" title="Permanent link">&para;</a></h2>
+<h3 id="problem-without-pvc-reuse">Problem Without PVC Reuse<a class="headerlink" href="#problem-without-pvc-reuse" title="Permanent link">&para;</a></h3>
+<p>When an executor pod terminates (due to Out-Of-Memory, Spot interruption, or scaling), its shuffle data could be deleted due to the loss of the executor pod. If you have enabled shuffle tracking (<code>spark.dynamicAllocation.shuffleTracking.enabled</code>), shuffle data could be retained on a local disk attached to the EC2 node, except in the event of "Node Termination" by Karpenter consolidation or Spot Interruption.</p>
+<p>This causes:</p>
+<ol>
+<li><strong>Shuffle fetch failures</strong> when a Spark job tries to read/write shuffle data associated with terminated executor(s)</li>
+<li><strong>Expensive recomputation</strong> of lost shuffle blocks</li>
+<li><strong>Increased job runtime</strong> or job failure</li>
+<li><strong>Cascading failures</strong> when multiple executors fail simultaneously</li>
+</ol>
+<h3 id="solution-with-pvc-reuse">Solution With PVC Reuse<a class="headerlink" href="#solution-with-pvc-reuse" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Driver owns PVCs</strong> instead of executor pods</li>
+<li><strong>PVCs persist</strong> throughout the job lifetime, even when executors terminate</li>
+<li><strong>New executors reattach</strong> to existing PVCs and reuse shuffle data in <code>/${spark.local.dir}/blockmgr-&lt;UUID&gt;/</code></li>
+<li><strong>Reduces shuffle fetch failures</strong> by maintaining high data availability</li>
+</ul>
+<p align="center">
+  <img src="../resources/images/pvc_reuse.gif" width="640" height="400"/>
+</p>
+
+<h2 id="alternative-solutions">Alternative Solutions<a class="headerlink" href="#alternative-solutions" title="Permanent link">&para;</a></h2>
+<p>If PVC reuse doesn't meet your requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Benefit</th>
+<th>Trade-off</th>
+<th>Reliability Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Node Decommissioning</strong></td>
+<td>Proactively copies shuffle data before pod termination</td>
+<td>Increases executor pod's graceful termination period in order to complete data migration. Higher compute cost with a risk of unfinished data migration</td>
+<td>&lt; 50%</td>
+</tr>
+<tr>
+<td><strong>Remote Shuffle Service</strong></td>
+<td>Decouples data storage from compute. Minimizes storage cost while maximizing the compute cost saving in Spark</td>
+<td>Additional add-on cost and maintenance overhead in EKS</td>
+<td>95% - 100%</td>
+</tr>
+</tbody>
+</table>
+<h2 id="performance-testing-results">Performance Testing Results<a class="headerlink" href="#performance-testing-results" title="Permanent link">&para;</a></h2>
+<h3 id="success-rate-and-reliability">Success Rate and Reliability<a class="headerlink" href="#success-rate-and-reliability" title="Permanent link">&para;</a></h3>
+<p>We conducted an internal large-scale load test with a high concurrent submmission rate (2200+ jobs/minute). Gradually ramp-up in 2.5-minute from 0 to 300 users against 10 virtual clusters on a single EKS cluster. The test results <a href="#appendix-load-test-details">in Appendix</a> prove:</p>
+<ul>
+<li><strong>50% - 80% success rate</strong> in preventing shuffle-related failures</li>
+<li><strong>Not 100% reliable</strong> - cannot guarantee job completion in all scenarios</li>
+<li>Works best for medium-scale workload with <strong>moderate executor churn</strong></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Reliability Trade-off</p>
+<p>PVC reuse improves stability but does not guarantee 100% job success. For large-scale or mission-critical workloads, especially shuffle-heavy jobs, consider the <a href="https://github.com/aws-samples/emr-remote-shuffle-service">Remote Shuffle Service (RSS) solution</a> with nearly 100% job stability.</p>
+</div>
+<h3 id="performance-bottleneck-ebs-reattachment-latency">Performance Bottleneck: EBS Reattachment Latency<a class="headerlink" href="#performance-bottleneck-ebs-reattachment-latency" title="Permanent link">&para;</a></h3>
+<p>The primary performance trade-off is <strong>EBS volume detach/reattach latency</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Best case</td>
+<td>30 seconds</td>
+</tr>
+<tr>
+<td>Average</td>
+<td>2-5 minutes</td>
+</tr>
+<tr>
+<td>Worst case</td>
+<td>10 minutes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PVC Reuse Recovery Timeline:</strong></p>
+<div class="codehilite"><pre><span></span><code>Executor failure (seconds)
+  → Pod termination (seconds)
+  → PVC detach from old pod (seconds to minutes)
+  → New pod scheduled (seconds to minutes)
+  → PVC attach to new node (seconds to minutes)
+  → Pod ready (seconds)
+  → Task continues with existing shuffle data
+</code></pre></div>
+
+<p><strong>Total recovery time:</strong> 30 seconds to 10 minutes (including cold start on a newly created node)</p>
+<h3 id="when-pvc-reuse-improves-performance">When PVC Reuse Improves Performance<a class="headerlink" href="#when-pvc-reuse-improves-performance" title="Permanent link">&para;</a></h3>
+<p>PVC reuse provides performance benefits when:</p>
+<p>✅ <strong>Shuffle data is large</strong> (multiple GBs per job stage)</p>
+<p>✅ <strong>Recomputation is expensive</strong> (complex transformations, multiple stages)</p>
+<p>✅ <strong>Shuffle fetch failures are frequent</strong></p>
+<p>✅ <strong>Task duration &gt; 2-5 minutes</strong> (recompute time &gt; PVC detach plus reattach time)</p>
+<h3 id="when-recomputation-is-faster">When Recomputation is Faster<a class="headerlink" href="#when-recomputation-is-faster" title="Permanent link">&para;</a></h3>
+<p>For certain Spark jobs, recomputation can be faster than the PVC reuse process:</p>
+<p>❌ <strong>Short-running stages</strong> (&lt; 2 minutes)</p>
+<p>❌ <strong>Small shuffle partitions</strong> (&lt; 1 GB)</p>
+<p>❌ <strong>Simple transformations</strong></p>
+<p>❌ <strong>Random fetch failures</strong> (increase <code>spark.shuffle.io.retryWait</code> &amp; <code>spark.shuffle.io.maxRetries</code>)</p>
+<p><strong>Recommendation:</strong> Benchmark your selected workload to compare recomputation latency vs. PVC reattachment time.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="basic-setup-spark-32-emr-66">Basic Setup (Spark 3.2+, EMR 6.6+)<a class="headerlink" href="#basic-setup-spark-32-emr-66" title="Permanent link">&para;</a></h3>
+<p>If your Spark version &lt; 3.4, do not use PVC reuse until upgraded to 3.4+.</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.driver.ownPersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>,
+<span class="s2">&quot;spark.kubernetes.driver.reusePersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>,
+<span class="s2">&quot;spark.shuffle.sort.io.plugin.class&quot;</span>:<span class="w"> </span><span class="s2">&quot;org.apache.spark.shuffle.KubernetesLocalDiskShuffleDataIO&quot;</span>
+</code></pre></div>
+
+<h3 id="enhanced-setup-spark-34-emr-612">Enhanced Setup (Spark 3.4+, EMR 6.12+)<a class="headerlink" href="#enhanced-setup-spark-34-emr-612" title="Permanent link">&para;</a></h3>
+<p>Since version 3.4, Spark counts the total number of PVCs the job can have, and holds new executor creation if the driver owns the maximum number of PVCs. This helps with the transition of the existing PVC from one executor to another executor.</p>
+<p>For PVC-oriented executor allocation with improved stability:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.driver.waitToReusePersistentVolumeClaim&quot;</span>:<span class="w"> </span><span class="s2">&quot;true&quot;</span>
+</code></pre></div>
+
+<h3 id="pvc-volume-configuration">PVC Volume Configuration<a class="headerlink" href="#pvc-volume-configuration" title="Permanent link">&para;</a></h3>
+<p>This setting creates a pod-level EBS Volume PVC. The dynamic PVC provioning happens when the job starts.</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName&quot;</span>:<span class="w"> </span><span class="s2">&quot;OnDemand&quot;</span>
+</code></pre></div>
+
+<p>Use <code>gp3</code> storage class with appropriate IOPS and throughput settings for shuffle-heavy workloads. Ensure your storage class has <code>reclaimPolicy: Delete</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.readOnly&quot;</span>:<span class="w"> </span><span class="s2">&quot;false&quot;</span>
+<span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.storageClass&quot;</span>:<span class="w"> </span><span class="s2">&quot;gp3&quot;</span>
+<span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.sizeLimit&quot;</span>:<span class="w"> </span><span class="s2">&quot;20Gi&quot;</span>
+<span class="s2">&quot;spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.mount.path&quot;</span>:<span class="w"> </span><span class="s2">&quot;/data1&quot;</span>
+</code></pre></div>
+
+<div class="admonition tip">
+<p class="admonition-title">PVC Type Consideration</p>
+<p>To avoid EBS performance limitations, pre-create shareable storage (EFS or FSx). Reconfigure PVC reuse via a static provisoning like this: <strong>spark.kubernetes.executor.volumes.persistentVolumeClaim.spark-local-dir-1.options.claimName: example-fsx-pvc</strong></p>
+</div>
+<h3 id="executor-registration-tuning-optional">Executor Registration Tuning (OPTIONAL)<a class="headerlink" href="#executor-registration-tuning-optional" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Advanced Configuration - Use with Caution</p>
+<p>Improper configuration can lead to jobs starting with insufficient resources or hanging indefinitely. Only adjust after thorough testing and monitoring.</p>
+</div>
+<p>Since EBS volume reattachment can take 2-5 minutes on average, you may need to adjust Spark's executor registration timeouts. <strong>Understand the trade-offs before making changes.</strong></p>
+<p><strong>Default Behavior:</strong></p>
+<ul>
+<li><code>spark.scheduler.minRegisteredResourcesRatio</code>: <strong>0.8</strong> (80% of executors must register)</li>
+<li><code>spark.scheduler.maxRegisteredResourcesWaitingTime</code>: <strong>30s</strong> (maximum wait time)</li>
+</ul>
+<p><strong>Impact of Changes:</strong></p>
+<ul>
+<li><strong>Lower ratio</strong>: Job starts faster but with fewer executors → may run slowly or fail</li>
+<li><strong>Higher timeout</strong>: Job waits longer before start → may mask infrastructure or high concurrency issues</li>
+</ul>
+<p><strong>Adjust only if:</strong></p>
+<ul>
+<li>✅ You've confirmed frequent job failures specifically during PVC reattachment</li>
+<li>✅ Your workload tolerates starting with fewer executors</li>
+<li>❌ Don't adjust for time-sensitive or mission-critical jobs</li>
+</ul>
+<p><strong>Example Configuration (use cautiously):</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># WARNING: Starting with fewer executors may impact app performance</span>
+<span class="s2">&quot;spark.scheduler.minRegisteredResourcesRatio&quot;</span>:<span class="w"> </span><span class="s2">&quot;0.6&quot;</span>
+
+<span class="c1"># WARNING: Long waits may mask infrastructure problems</span>
+<span class="s2">&quot;spark.scheduler.maxRegisteredResourcesWaitingTime&quot;</span>:<span class="w"> </span><span class="s2">&quot;1800s&quot;</span>
+</code></pre></div>
+
+<p><strong>Recommendation:</strong> Start with smaller changes (e.g., <code>0.7</code> ratio, <code>300s</code> timeout) and adjust incrementally based on observed behavior.</p>
+<h3 id="executor-pods-termination-grace-period-optional">Executor Pod's Termination Grace Period (OPTIONAL)<a class="headerlink" href="#executor-pods-termination-grace-period-optional" title="Permanent link">&para;</a></h3>
+<div class="admonition danger">
+<p class="admonition-title">Advanced Configuration - Extreme Caution Required</p>
+<p>Reducing grace period can cause <strong>data loss, failed shutdowns, and corrupted state</strong>. This controls how long a pod has to shut down cleanly before being forcefully killed.</p>
+</div>
+<p>The default Kubernetes pod's attribute <code>terminationGracePeriodSeconds</code> is <strong>30 seconds</strong>. Reducing this speeds up PVC detachment but <strong>comes with risks</strong>.</p>
+<p><strong>Risks by Grace Period:</strong></p>
+<ul>
+<li><strong>30s (default)</strong>: ✅ Safe for most workloads</li>
+<li><strong>15-20s</strong>: ⚠️ May interrupt task completion, incomplete cleanup</li>
+<li><strong>&lt; 15s</strong>: ❌  Risk of data loss, corrupted state</li>
+</ul>
+<p><strong>For most workloads, keep the default 30 seconds.</strong> Only reduce if you've confirmed through testing that executors shut down cleanly in less time, or ensure your job can tolerate abrupt terminations.</p>
+<p>-EXAMPLE: executor-pod-template.yaml-</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Recommended: 20s for medium workloads, avoid going below 15s</span>
+<span class="w">  </span><span class="nt">terminationGracePeriodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</code></pre></div>
+
+<h2 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="1-dynamic-resource-allocation-dra">1. Dynamic Resource Allocation (DRA)<a class="headerlink" href="#1-dynamic-resource-allocation-dra" title="Permanent link">&para;</a></h3>
+<p><strong>DRA Amplifies PVC Reuse Slowness</strong>: Try <strong>NOT</strong> to use PVC reuse with DRA when you have a large-scale workload facing shuffle fetch failures. The high pod churn triggered by Spark's DRA amplifies EBS API bottlenecks and slows down the PVC reuse process. If possible, disable DRA or reduce the frequency of pod scaling events. Alternatively, use the <a href="../../../storage/docs/spark/fsx-lustre/#static-provisioning">static PVC provisioning solution</a> backed by EFS or FSx AWS services.</p>
+<p><strong>Solutions for DRA + PVC Reuse:</strong></p>
+<p>Use storage with multi-attach support (ReadWriteMany):</p>
+<table>
+<thead>
+<tr>
+<th>Storage</th>
+<th>Performance Impact</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon EFS</strong></td>
+<td>30-50% slower shuffle I/O</td>
+<td>Medium-scale DRA workloads</td>
+</tr>
+<tr>
+<td><strong>FSx for Lustre</strong></td>
+<td>High-throughput (100+ GB/s)</td>
+<td>Large-scale, performance-critical DRA workloads</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-application-data-cache-loss">2. Application Data Cache Loss<a class="headerlink" href="#2-application-data-cache-loss" title="Permanent link">&para;</a></h3>
+<p>By Spark's design, executor pod termination triggers <strong>ShutdownHookManager</strong> cleanup:</p>
+<p><strong>Deleted:</strong> <code>/${spark.local.dir}/spark-&lt;UUID&gt;/*</code> (JARs, Python resources, temp app data, or S3 fetched data)</p>
+<p><strong>Preserved:</strong> <code>/${spark.local.dir}/blockmgr-&lt;UUID&gt;/*</code> (spill &amp; shuffle data)</p>
+<p><strong>Performance Impact:</strong></p>
+<ul>
+<li>New executors must <strong>re-download non-shuffle application data</strong> cached by the previous executors</li>
+<li>Adds <strong>10-60 seconds latency</strong> per executor restart</li>
+<li>Impacts jobs with large broadcast variables (&gt;100 MB)</li>
+</ul>
+<p><strong>Mitigation (not ideal):</strong> Pre-bake application files into a custom Docker image or a node's AMI image, or disable the fetch cache to accept the overhead.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Bake application files into Docker images</span>
+spark.files<span class="o">=</span>/local-path/to/pre-cache-on-volume
+spark.jars<span class="o">=</span>/local-path/to/pre-load-jars/*<span class="w"> </span>
+
+<span class="c1"># Disable the caching optimizations</span>
+spark.files.useFetchCache<span class="o">=</span><span class="nb">false</span>
+</code></pre></div>
+
+<h3 id="3-pod-churn-amplification">3. Pod Churn Amplification<a class="headerlink" href="#3-pod-churn-amplification" title="Permanent link">&para;</a></h3>
+<p>High pod churn amplifies EBS API bottlenecks and slows PVC reattachment:</p>
+<p><strong>Sources of pod churn:</strong></p>
+<ul>
+<li>Karpenter consolidation</li>
+<li>Spark Dynamic Resource Allocation</li>
+<li>Frequent Spot interruptions</li>
+<li>Aggressive auto-scaling policies</li>
+</ul>
+<p><strong>Mitigation strategies:</strong></p>
+<ul>
+<li>Reduce DRA scaling frequency</li>
+<li>Increase <code>spark.dynamicAllocation.executorIdleTimeout</code> (default 60s)</li>
+<li>(Optional) Use less aggressive Karpenter consolidation to stabilize the Spark cluster, such as <code>WhenEmpty</code> instead of <code>WhenEmptyOrUnderutilized</code> consolidation rule for executor nodes. However, the compute cost will be increased.</li>
+</ul>
+<hr />
+<h2 id="monitoring-and-validation">Monitoring and Validation<a class="headerlink" href="#monitoring-and-validation" title="Permanent link">&para;</a></h2>
+<h3 id="monitor-pvc-status">Monitor PVC Status<a class="headerlink" href="#monitor-pvc-status" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Check bound PVCs (successfully attached)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Bound<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># Check pending PVCs (waiting for attachment)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</code></pre></div>
+
+<p>High pending PVC count indicates EBS attachment bottlenecks.</p>
+<h3 id="verify-shuffle-data-reuse-in-spark-logs">Verify Shuffle Data Reuse in Spark Logs<a class="headerlink" href="#verify-shuffle-data-reuse-in-spark-logs" title="Permanent link">&para;</a></h3>
+<p><strong>Without PVC reuse</strong> (recomputation triggered):</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">07</span><span class="w"> </span><span class="n">ERROR</span><span class="w"> </span><span class="n">TaskSetManager</span><span class="p">:</span><span class="w"> </span><span class="n">FetchFailed</span><span class="p">(</span><span class="n">BlockManagerId</span><span class="p">(</span><span class="mf">...</span><span class="p">),</span><span class="w"> </span><span class="n">shuffleId</span><span class="o">=</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="n">mapId</span><span class="o">=</span><span class="mf">42</span><span class="p">,</span><span class="w"> </span><span class="n">reduceId</span><span class="o">=</span><span class="mf">15</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="mf">...</span><span class="p">)</span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">DAGScheduler</span><span class="p">:</span><span class="w"> </span><span class="n">Resubmitting</span><span class="w"> </span><span class="n">ShuffleMapStage</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="p">)</span><span class="w"> </span><span class="n">due</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">fetch</span><span class="w"> </span><span class="n">failure</span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">25</span><span class="p">:</span><span class="mf">08</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">DAGScheduler</span><span class="p">:</span><span class="w"> </span><span class="n">Recomputing</span><span class="w"> </span><span class="n">lost</span><span class="w"> </span><span class="n">blocks</span><span class="mf">...</span>
+</code></pre></div>
+
+<p><strong>With PVC reuse</strong> (successful recovery):</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">ShuffleStatus</span><span class="p">:</span><span class="w"> </span><span class="n">Recover</span><span class="w"> </span><span class="n">BlockManagerId</span><span class="p">(</span><span class="n">fallback</span><span class="p">,</span><span class="w"> </span><span class="c1">remote, 7337, None)</span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">50</span><span class="w"> </span><span class="n">DEBUG</span><span class="w"> </span><span class="n">BlockManagerMasterEndpoint</span><span class="p">:</span><span class="w"> </span><span class="n">Received</span><span class="w"> </span><span class="n">shuffle</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="mf">52</span><span class="p">,</span><span class="w"> </span><span class="n">updating</span>
+<span class="mf">22</span><span class="o">/</span><span class="mf">12</span><span class="o">/</span><span class="mf">25</span><span class="w"> </span><span class="mf">23</span><span class="p">:</span><span class="mf">42</span><span class="p">:</span><span class="mf">51</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="n">Executor</span><span class="p">:</span><span class="w"> </span><span class="n">Reusing</span><span class="w"> </span><span class="n">shuffle</span><span class="w"> </span><span class="kd">data</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="o">/</span><span class="kd">data</span><span class="mf">1</span><span class="o">/</span><span class="n">blockmgr</span><span class="o">-</span><span class="n">abc123</span><span class="o">/</span>
+</code></pre></div>
+
+<h3 id="monitor-ebs-csi-controller-metrics">Monitor EBS CSI Controller Metrics<a class="headerlink" href="#monitor-ebs-csi-controller-metrics" title="Permanent link">&para;</a></h3>
+<p>Track PVC attachment performance. For more details, see the <a href="https://github.com/aws-samples/load-test-for-emr-on-eks/tree/emr-jobrun-loadtest/grafana/dashboard-template">pre-built Grafana dashboard examples</a>.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Enable EBS CSI controller metrics</span>
+aws<span class="w"> </span>eks<span class="w"> </span>update-addon<span class="w"> </span>--cluster-name<span class="w"> </span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--addon-name<span class="w"> </span>aws-ebs-csi-driver<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--configuration-values<span class="w"> </span><span class="s1">&#39;{&quot;controller&quot;:{&quot;enableMetrics&quot;:true}}&#39;</span>
+
+<span class="c1"># Track the per-second rate of EBS CSI node operations when attaching volumes</span>
+sum<span class="o">(</span>rate<span class="o">(</span>csi_operations_seconds_count<span class="o">{</span><span class="nv">driver_name</span><span class="o">=</span><span class="s2">&quot;ebs.csi.aws.com&quot;</span>,<span class="w"> </span><span class="nv">method_name</span><span class="o">=</span>~<span class="s2">&quot;/csi.v1.Node/NodePublishVolume&quot;</span><span class="o">}[</span>5m<span class="o">]))</span>
+</code></pre></div>
+
+<hr />
+<h1 id="appendix-load-test-details">Appendix: Load Test Details<a class="headerlink" href="#appendix-load-test-details" title="Permanent link">&para;</a></h1>
+<h3 id="github-project-load-test-for-emr-on-eks">GitHub Project: <a href="https://github.com/aws-samples/load-test-for-emr-on-eks/tree/emr-jobrun-loadtest">load-test-for-emr-on-eks</a><a class="headerlink" href="#github-project-load-test-for-emr-on-eks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Main branch</strong> - load test tools for Spark Operator load test</p>
+</li>
+<li>
+<p><strong>emr-jobrun-loadtest branch</strong> -  load test tools for job submissions via the job run API</p>
+</li>
+</ul>
+<h3 id="ebs-api-rate-for-the-test">EBS API Rate For The Test<a class="headerlink" href="#ebs-api-rate-for-the-test" title="Permanent link">&para;</a></h3>
+<p>Test results are based on the following API rates, supporting <strong>maximum 30,000 concurrent EBS Volumes/PVCs reuse, 60,000 concurrent EBS without PVC reuse</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>API Name</th>
+<th>Rate Applied for Load Test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CreateVolume</td>
+<td>L200 (burst) / 100 (qps)</td>
+</tr>
+<tr>
+<td>DetachVolume</td>
+<td>L100 / 75</td>
+</tr>
+<tr>
+<td>AttachVolume</td>
+<td>L100 / 75</td>
+</tr>
+<tr>
+<td>DeleteVolume</td>
+<td>L150 / 60</td>
+</tr>
+<tr>
+<td>DescribeSubnets</td>
+<td>L135 / 70</td>
+</tr>
+<tr>
+<td>DescribeInstances</td>
+<td>L140 / 60</td>
+</tr>
+<tr>
+<td>RunInstances</td>
+<td>L1000 / 4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendation:</strong></p>
+<ul>
+<li>Request EBS API limit increases through AWS Support before large-scale tests or deployments</li>
+<li>Cautiously increase the API QPS rates in the EBS CSI controller. See the example in <a href="https://github.com/aws-samples/load-test-for-emr-on-eks/blob/emr-jobrun-loadtest/resources/ebs/patch_csi-controller.sh">patch-csi-controller.sh</a></li>
+</ul>
+<h3 id="ebs-volume-attachment-limit-per-node">EBS Volume Attachment Limit Per Node<a class="headerlink" href="#ebs-volume-attachment-limit-per-node" title="Permanent link">&para;</a></h3>
+<p>Most Nitro instances support a <strong>maximum of 27 EBS volumes</strong> per node (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/volume_limits.html">AWS documentation</a>).</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Limit executor node pool to <strong>≤ 16xlarge</strong> instance size</li>
+<li>Configure executor sizing (CPU &amp; memory size) to keep <strong>&lt; 27 executor pods per node</strong></li>
+<li>Example: 3 cores + 6GB RAM per executor = max 22 executors on a 64-core EC2 node</li>
+</ul>
+<h3 id="load-test-result">Load Test Result<a class="headerlink" href="#load-test-result" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Test Case</th>
+<th>Compute Provisioner</th>
+<th>Job Submission Rate (per min)</th>
+<th>Test Period</th>
+<th>Spawn Rate</th>
+<th>Total VCs</th>
+<th>Actual Run</th>
+<th>Max Concurrent Jobs</th>
+<th>Total Jobs Submitted</th>
+<th>Executors per Job</th>
+<th>Total Job Nodes</th>
+<th>Max Concurrent Executor Pods (PVCs)</th>
+<th>Job Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline without PVC (Frequent Shuffle Fetch Failure)</td>
+<td>Karpenter</td>
+<td>1,558</td>
+<td>60 mins</td>
+<td>2</td>
+<td>10</td>
+<td>2h 33m</td>
+<td>3,260</td>
+<td>240,503</td>
+<td>30</td>
+<td>2,113</td>
+<td>66,656</td>
+<td>15-122 mins</td>
+</tr>
+<tr>
+<td>PVC reuse with Frequent Shuffle Fetch Failure</td>
+<td>Karpenter</td>
+<td>2,232</td>
+<td>60 mins</td>
+<td>2</td>
+<td>10</td>
+<td>4h 6m</td>
+<td>3,784</td>
+<td>253,373</td>
+<td>30</td>
+<td>1,046</td>
+<td>30,797</td>
+<td>10-140 mins</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tpcds-job-performance-test-result">TPCDS Job Performance Test Result<a class="headerlink" href="#tpcds-job-performance-test-result" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Test Case</th>
+<th>Notes</th>
+<th>Query</th>
+<th>Exec Time (s)</th>
+<th>Total Runtime (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Baseline</strong> (node interruption without PVC)</td>
+<td>Spot interruption without DRA (30 executors)</td>
+<td>q24a-v2.4</td>
+<td>161.04</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td>79.73</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>14.91</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td>768.61</td>
+<td><strong>1024.29</strong></td>
+</tr>
+<tr>
+<td>Node interruption with PVC</td>
+<td></td>
+<td>q24a-v2.4</td>
+<td>19.55</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td>516.11</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>15.38</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td>75.86</td>
+<td><strong>626.9</strong></td>
+</tr>
+<tr>
+<td><strong>Baseline</strong> (30 executors without PVC)</td>
+<td>PVC reuse actually slowed down the job</td>
+<td>q24a-v2.4</td>
+<td>27.3</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td>79.92</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>15.8</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td>316.85</td>
+<td><strong>439.87</strong></td>
+</tr>
+<tr>
+<td>30 executors with PVC</td>
+<td>lost 100% exeuctors with slower PVC recovery</td>
+<td>q24a-v2.4</td>
+<td>23.87</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td>50.56</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>16.16</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td>524.57</td>
+<td><strong>564.6</strong></td>
+</tr>
+<tr>
+<td><strong>Baseline</strong> (DRA without PVC)</td>
+<td>PVC reuse + DRA</td>
+<td>q24a-v2.4</td>
+<td>24.93</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td>471.51</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>13.08</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td><strong>failed</strong></td>
+<td><strong>509.52</strong></td>
+</tr>
+<tr>
+<td>30 executors with PVC</td>
+<td>75% job success rate</td>
+<td>q24a-v2.4</td>
+<td>39.36</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q24b-v2.4</td>
+<td><strong>failed</strong></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q4-v2.4</td>
+<td>13.05</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>q67-v2.4</td>
+<td>450.91</td>
+<td><strong>463.96</strong></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
