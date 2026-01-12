@@ -359,10 +359,10 @@ Most Nitro instances support a **maximum of 27 EBS volumes** per node ([AWS docu
 
 ### Load Test Result
 
-| Test Case | Compute Provisioner | Job Submission Rate (per min) | Test Period | Spawn Rate | Total VCs | Actual Run | Max Concurrent Jobs | Total Jobs Submitted | Executors per Job | Total Job Nodes | Max Concurrent Executor Pods (PVCs) | Job Runtime |
+| Test Case | Compute Provisioner | Job Run Rate (min) | Test Period | Job Submission Rate (min) | Total VCs | Actual Run | Max Concurrent Jobs | Total Jobs Submitted | Executors per Job | Total Job Nodes | Max Concurrent Executor Pods (PVCs) | Job Runtime |
 |-----------|---------------------|-------------------------------|-------------|------------|-----------|------------|---------------------|---------------------|-------------------|-----------------|-------------------------------------|-------------|
-| Baseline without PVC (Frequent Shuffle Fetch Failure) | Karpenter | 1,558 | 60 mins | 2 | 10 | 2h 33m | 3,260 | 240,503 | 30 | 2,113 | 66,656 | 15-122 mins |
-| PVC reuse with Frequent Shuffle Fetch Failure | Karpenter | 2,232 | 60 mins | 2 | 10 | 4h 6m | 3,784 | 253,373 | 30 | 1,046 | 30,797 | 10-140 mins |
+| Baseline without PVC (Frequent Shuffle Fetch Failure) | Karpenter | 1,292 | 60 mins | 780 | 10 | 2h 27m | 2,635 | 190,086 | 30 | 3,303 | 31,434 | 15-122 mins |
+| PVC reuse with Frequent Shuffle Fetch Failure | Karpenter | 1,165 | 60 mins | 790 | 10 | 3h 7m | 2,531 | 218,209 | 30 | 1,136 | 13,986 | 8-163 mins |
 
 ### TPCDS Job Performance Test Result
 
