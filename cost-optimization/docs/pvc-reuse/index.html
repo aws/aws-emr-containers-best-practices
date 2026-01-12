@@ -2832,6 +2832,7 @@
 <li><strong>Workloads on Spot instances</strong> with less pod churn or node interruptions</li>
 <li><strong>Jobs with expensive recomputation</strong> (multi-stage aggregations, joins)</li>
 <li><strong>Medium-scale workloads</strong> (&lt; 30k concurrent executors) on stable-sized Spark clusters</li>
+<li><strong>Medium-size EKS cluster</strong> (&lt; 1500 16xlarge EC2 nodes) <code>The upper limit that EBS CSI Node daemonset can handle as of Dec 2025</code></li>
 </ol>
 <h3 id="when-not-to-use-pvc-reuse">❌ When NOT to Use PVC Reuse<a class="headerlink" href="#when-not-to-use-pvc-reuse" title="Permanent link">&para;</a></h3>
 <ol>
@@ -3194,9 +3195,9 @@ sum<span class="o">(</span>rate<span class="o">(</span>csi_operations_seconds_co
 <tr>
 <th>Test Case</th>
 <th>Compute Provisioner</th>
-<th>Job Submission Rate (per min)</th>
+<th>Job Run Rate (min)</th>
 <th>Test Period</th>
-<th>Spawn Rate</th>
+<th>Job Submission Rate (min)</th>
 <th>Total VCs</th>
 <th>Actual Run</th>
 <th>Max Concurrent Jobs</th>
@@ -3211,32 +3212,32 @@ sum<span class="o">(</span>rate<span class="o">(</span>csi_operations_seconds_co
 <tr>
 <td>Baseline without PVC (Frequent Shuffle Fetch Failure)</td>
 <td>Karpenter</td>
-<td>1,558</td>
+<td>1,292</td>
 <td>60 mins</td>
-<td>2</td>
+<td>780</td>
 <td>10</td>
-<td>2h 33m</td>
-<td>3,260</td>
-<td>240,503</td>
+<td>2h 27m</td>
+<td>2,635</td>
+<td>190,086</td>
 <td>30</td>
-<td>2,113</td>
-<td>66,656</td>
+<td>3,303</td>
+<td>31,434</td>
 <td>15-122 mins</td>
 </tr>
 <tr>
 <td>PVC reuse with Frequent Shuffle Fetch Failure</td>
 <td>Karpenter</td>
-<td>2,232</td>
+<td>1,165</td>
 <td>60 mins</td>
-<td>2</td>
+<td>790</td>
 <td>10</td>
-<td>4h 6m</td>
-<td>3,784</td>
-<td>253,373</td>
+<td>3h 7m</td>
+<td>2,531</td>
+<td>218,209</td>
 <td>30</td>
-<td>1,046</td>
-<td>30,797</td>
-<td>10-140 mins</td>
+<td>1,136</td>
+<td>13,986</td>
+<td>8-163 mins</td>
 </tr>
 </tbody>
 </table>
