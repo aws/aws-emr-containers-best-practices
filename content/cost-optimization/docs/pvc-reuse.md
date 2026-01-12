@@ -12,6 +12,7 @@ PVC (Persistent Volume Claim) Reuse is a Spark feature introduced in Spark 3.2 (
 2. **Workloads on Spot instances** with less pod churn or node interruptions
 3. **Jobs with expensive recomputation** (multi-stage aggregations, joins)
 4. **Medium-scale workloads** (< 30k concurrent executors) on stable-sized Spark clusters
+5. **Medium-size EKS cluster** (< 1500 16xlarge EC2 nodes) `The upper limit that EBS CSI Node daemonset can handle as of Dec 2025`
 
 ### ❌ When NOT to Use PVC Reuse
 
