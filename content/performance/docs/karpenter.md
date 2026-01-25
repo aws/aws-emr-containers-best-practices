@@ -6,6 +6,61 @@ We recommend using Karpenter and Bottlerocket with EKS for data workloads, as it
 
 More details can be found in these blogs [[1](https://aws.amazon.com/blogs/compute/applying-spot-to-spot-consolidation-best-practices-with-karpenter/), [2](https://aws.amazon.com/blogs/containers/using-amazon-ec2-spot-instances-with-karpenter/)]. 
 
+## Key considerations
+1.**[Interruption handling](https://karpenter.sh/preview/reference/cloudformation/#interruption-handling) for Spot** - to use Spot instances with Karpenter, first deploy the infrastructure [CloudFormation template](https://karpenter.sh/v1.8/reference/cloudformation/) that provisions the SQS interruption queue and related EventBridge rules, then install the Karpenter Helm chart configured to use that queue:
+```bash
+export KARPENTER_VERSION="1.8.6"
+curl https://raw.githubusercontent.com/aws/karpenter-provider-aws/v"${KARPENTER_VERSION}"/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml > cloudformation.yaml
+
+aws cloudformation deploy --stack-name "karpenter-infra-${CLUSTER_NAME}" \
+--template-file cloudformation.yaml
+....
+
+helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter \
+....
+--set "settings.interruptionQueue=${CLUSTER_NAME}" \
+....
+```
+This configuration enables Karpenter to watch the SQS interruption queue for Spot interruption warnings, scheduled maintenance, and other involuntary events, and to taint, drain, and replace affected nodes before they are terminated.
+
+
+2.**Separate NodePools for Spark driver and executors** - to balance cost and stability for Spark on Karpenter, create two dedicated NodePools:
+
+**A driver NodePool** - uses `WhenEmpty` consolidation to minimize disruptio
+
+```bash
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: driver-nodepool
+spec:
+  disruption:
+    consolidateAfter: 1m
+    consolidationPolicy: WhenEmpty
+  template:
+    spec:
+      nodeClassRef:
+        name: memory-optimized-ec2
+        .....
+```
+**An executor NodePool** - consolidate executor nodes `WhenEmptyOrUnderutilized` for aggressive cost savings.
+```bash
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: executor-nodepool
+spec:  
+  disruption:
+    consolidateAfter: 1m
+    consolidationPolicy: WhenEmptyOrUnderutilized
+  template:
+    spec:
+      nodeClassRef:
+        name: memory-optimized-ec2
+        .....
+```
+
+
 ## Cost optimization with Karpenter, Spot and Graviton
 
 To achieve high cost optimizations with Spark, we recommend using the following Karpenter nodepool configurations. 
