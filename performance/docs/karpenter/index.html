@@ -1673,6 +1673,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cost-optimization-with-karpenter-spot-and-graviton" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2203,6 +2214,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cost-optimization-with-karpenter-spot-and-graviton" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2292,6 +2314,55 @@
 <p>Karpenter is an open-source node provisioning tool for Kubernetes. It can help improve the efficiency and cost of running large-scale data workloads. Karpenter's ability to dynamically provision optimal resources for heterogeneous workloads, efficiently manage large numbers of clusters, <a href="https://aws.amazon.com/blogs/compute/applying-spot-to-spot-consolidation-best-practices-with-karpenter/">optimize cost through consolidation</a>, and prioritize EC2 Spot instances make it the preferred auto-scaler for workloads on Amazon Elastic Kubernetes Service (EKS).</p>
 <p>We recommend using Karpenter and Bottlerocket with EKS for data workloads, as it aligns with EC2 Spot best practices of diversification, using allocation strategy, and can manage the Spot lifecycle seamlessly. As documented in the <a href="https://awslabs.github.io/data-on-eks/docs/blueprints/data-analytics/spark-operator-yunikorn">Spark Operator with YuniKorn DoEKS blueprint</a>, Karpenter integrates seamlessly with Kubernetes, providing automatic, real-time adjustments to the cluster size based on observed workloads and scaling events. This enables a more efficient and cost-effective EKS cluster design that adapts to the ever-changing demands of Spark applications and other data workloads. </p>
 <p>More details can be found in these blogs [<a href="https://aws.amazon.com/blogs/compute/applying-spot-to-spot-consolidation-best-practices-with-karpenter/">1</a>, <a href="https://aws.amazon.com/blogs/containers/using-amazon-ec2-spot-instances-with-karpenter/">2</a>]. </p>
+<h2 id="key-considerations">Key considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h2>
+<p>1.<strong><a href="https://karpenter.sh/preview/reference/cloudformation/#interruption-handling">Interruption handling</a> for Spot</strong> - to use Spot instances with Karpenter, first deploy the infrastructure <a href="https://karpenter.sh/v1.8/reference/cloudformation/">CloudFormation template</a> that provisions the SQS interruption queue and related EventBridge rules, then install the Karpenter Helm chart configured to use that queue:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">KARPENTER_VERSION</span><span class="o">=</span><span class="s2">&quot;1.8.6&quot;</span>
+curl<span class="w"> </span>https://raw.githubusercontent.com/aws/karpenter-provider-aws/v<span class="s2">&quot;</span><span class="si">${</span><span class="nv">KARPENTER_VERSION</span><span class="si">}</span><span class="s2">&quot;</span>/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml<span class="w"> </span>&gt;<span class="w"> </span>cloudformation.yaml
+
+aws<span class="w"> </span>cloudformation<span class="w"> </span>deploy<span class="w"> </span>--stack-name<span class="w"> </span><span class="s2">&quot;karpenter-infra-</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+--template-file<span class="w"> </span>cloudformation.yaml
+....
+
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>karpenter<span class="w"> </span>oci://public.ecr.aws/karpenter/karpenter<span class="w"> </span><span class="se">\</span>
+....
+--set<span class="w"> </span><span class="s2">&quot;settings.interruptionQueue=</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+....
+</code></pre></div>
+
+<p>This configuration enables Karpenter to watch the SQS interruption queue for Spot interruption warnings, scheduled maintenance, and other involuntary events, and to taint, drain, and replace affected nodes before they are terminated.</p>
+<p>2.<strong>Separate NodePools for Spark driver and executors</strong> - to balance cost and stability for Spark on Karpenter, create two dedicated NodePools:</p>
+<p><strong>A driver NodePool</strong> - uses <code>WhenEmpty</code> consolidation to minimize disruptio</p>
+<div class="codehilite"><pre><span></span><code>apiVersion:<span class="w"> </span>karpenter.sh/v1
+kind:<span class="w"> </span>NodePool
+metadata:
+<span class="w">  </span>name:<span class="w"> </span>driver-nodepool
+spec:
+<span class="w">  </span>disruption:
+<span class="w">    </span>consolidateAfter:<span class="w"> </span>1m
+<span class="w">    </span>consolidationPolicy:<span class="w"> </span>WhenEmpty
+<span class="w">  </span>template:
+<span class="w">    </span>spec:
+<span class="w">      </span>nodeClassRef:
+<span class="w">        </span>name:<span class="w"> </span>memory-optimized-ec2
+<span class="w">        </span>.....
+</code></pre></div>
+
+<p><strong>An executor NodePool</strong> - consolidate executor nodes <code>WhenEmptyOrUnderutilized</code> for aggressive cost savings.</p>
+<div class="codehilite"><pre><span></span><code>apiVersion:<span class="w"> </span>karpenter.sh/v1
+kind:<span class="w"> </span>NodePool
+metadata:
+<span class="w">  </span>name:<span class="w"> </span>executor-nodepool
+spec:<span class="w">  </span>
+<span class="w">  </span>disruption:
+<span class="w">    </span>consolidateAfter:<span class="w"> </span>1m
+<span class="w">    </span>consolidationPolicy:<span class="w"> </span>WhenEmptyOrUnderutilized
+<span class="w">  </span>template:
+<span class="w">    </span>spec:
+<span class="w">      </span>nodeClassRef:
+<span class="w">        </span>name:<span class="w"> </span>memory-optimized-ec2
+<span class="w">        </span>.....
+</code></pre></div>
+
 <h2 id="cost-optimization-with-karpenter-spot-and-graviton">Cost optimization with Karpenter, Spot and Graviton<a class="headerlink" href="#cost-optimization-with-karpenter-spot-and-graviton" title="Permanent link">&para;</a></h2>
 <p>To achieve high cost optimizations with Spark, we recommend using the following Karpenter nodepool configurations. </p>
 <div class="codehilite"><pre><span></span><code><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">sh</span><span class="o">/</span><span class="nx">capacity</span><span class="o">-</span><span class="k">type</span>
