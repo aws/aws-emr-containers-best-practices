@@ -24,9 +24,9 @@ helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter \
 This configuration enables Karpenter to watch the SQS interruption queue for Spot interruption warnings, scheduled maintenance, and other involuntary events, and to taint, drain, and replace affected nodes before they are terminated.
 
 
-2.**Separate NodePools for Spark driver and executors** - to balance cost and stability for Spark on Karpenter, create two dedicated NodePools:
+2.**Separate NodePools for Spark driver and executors** - to balance cost and stability for Spark on EKS with Karpenter, create two dedicated NodePools:
 
-**A driver NodePool** - uses `WhenEmpty` consolidation to minimize disruptio
+**A driver NodePool** - uses `WhenEmpty` consolidation to minimize disruption
 
 ```bash
 apiVersion: karpenter.sh/v1
