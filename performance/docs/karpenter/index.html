@@ -2330,8 +2330,8 @@ helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class=
 </code></pre></div>
 
 <p>This configuration enables Karpenter to watch the SQS interruption queue for Spot interruption warnings, scheduled maintenance, and other involuntary events, and to taint, drain, and replace affected nodes before they are terminated.</p>
-<p>2.<strong>Separate NodePools for Spark driver and executors</strong> - to balance cost and stability for Spark on Karpenter, create two dedicated NodePools:</p>
-<p><strong>A driver NodePool</strong> - uses <code>WhenEmpty</code> consolidation to minimize disruptio</p>
+<p>2.<strong>Separate NodePools for Spark driver and executors</strong> - to balance cost and stability for Spark on EKS with Karpenter, create two dedicated NodePools:</p>
+<p><strong>A driver NodePool</strong> - uses <code>WhenEmpty</code> consolidation to minimize disruption</p>
 <div class="codehilite"><pre><span></span><code>apiVersion:<span class="w"> </span>karpenter.sh/v1
 kind:<span class="w"> </span>NodePool
 metadata:
