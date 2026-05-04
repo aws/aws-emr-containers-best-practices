@@ -89,7 +89,7 @@ CoreDNS is a deployment, which means it runs a fixed number of replicas and thus
 
 #### **Monitor CoreDNS metrics**
 
-CoreDNS is a deployment, which means it runs a fixed number of replicas and thus does not scale out with the cluster. This can cause workloads to timeout with unknownHostException as spark-executors will do a lot of DNS lookups which registering themselves to spark-driver. One simple solution to fix this is to install [dns-autoscaler](https://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/#enablng-dns-horizontal-autoscaling), which adjusts the number of replicas of the CoreDNS deployment as the cluster grows and shrinks.
+CoreDNS is a deployment, which means it runs a fixed number of replicas and thus does not scale out with the cluster. This can cause workloads to timeout with unknownHostException as spark-executors will do a lot of DNS lookups while registering themselves to spark-driver. One simple solution to fix this is to install [dns-autoscaler](https://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/#enablng-dns-horizontal-autoscaling), which adjusts the number of replicas of the CoreDNS deployment as the cluster grows and shrinks.
 
 ## **Cluster Autoscaler Best practices**
 
