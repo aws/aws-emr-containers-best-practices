@@ -17,9 +17,11 @@ When <code>spark.decommission.enabled</code> is true, Spark will try its best to
 |spark.storage.decommission.maxReplicationFailuresPerBlock|Maximum number of failures which can be handled for migrating shuffle blocks when block manager is decommissioning and trying to move its existing blocks.|3|
 |spark.storage.decommission.shuffleBlocks.maxThreads|Maximum number of threads to use in migrating shuffle files.|8|
 
-This feature can currently be enabled through a temporary workaround on EMR 6.3.0+ releases. To enable it, Spark’s decom.sh file permission must be modified using a [custom image](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html). Once the code is fixed, the page will be updated.
+For EMR on EKS 6.6.0 and later, no custom image is required. The `/usr/bin/decom.sh` file is already owned by the `hadoop` user in these releases, so you can enable the feature with the standard EMR image.
 
-**Dockerfile for custom image:**
+For EMR on EKS 6.3.0 through 6.5.0, `/usr/bin/decom.sh` is owned by `root`. To use this feature on these releases, change the file owner to `hadoop` with a [custom image](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/docker-custom-images.html).
+
+**Dockerfile for custom image (EMR on EKS 6.3.0 through 6.5.0 only):**
 
 ```
 FROM <release account id>.dkr.ecr.<aws region>.amazonaws.com/spark/<release>
@@ -49,7 +51,7 @@ cat >spark-python-with-node-decommissioning.json << EOF
    "name": "my-job-run-with-node-decommissioning",
    "virtualClusterId": "<virtual-cluster-id>",
    "executionRoleArn": "<execution-role-arn>",
-   "releaseLabel": "emr-6.3.0-latest", 
+   "releaseLabel": "emr-6.6.0-latest", 
    "jobDriver": {
     "sparkSubmitJobDriver": {
       "entryPoint": "s3://<s3 prefix>/trip-count.py", 
@@ -61,7 +63,6 @@ cat >spark-python-with-node-decommissioning.json << EOF
       {
        "classification": "spark-defaults",
        "properties": {
-       "spark.kubernetes.container.image": "<account_id>.dkr.ecr.<region>.amazonaws.com/<custom_image_repo>",
        "spark.executor.instances": "5",
         "spark.decommission.enabled": "true",
         "spark.storage.decommission.rddBlocks.enabled": "true",
