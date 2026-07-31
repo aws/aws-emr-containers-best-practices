@@ -2,6 +2,13 @@
 
 In this section, you will learn how to send Spark event logs to your own S3 bucket and self host Spark History Server. You no longer have to choose between the Persistent App UI on the AWS Console and having event logs in your own bucket: both can be used together.
 
+!!! tip "You likely don't need a self-hosted Spark History Server"
+    With `persistentAppUI: ENABLED`, the **Spark UI** button in the AWS Console renders your job's Spark UI directly from the event logs in your S3 bucket — no self-hosted Spark History Server required. Setting an event-log directory no longer obligates you to run your own SHS.
+
+    Self-host a Spark History Server only if the console / job-level Spark UI doesn't meet a specific need (for example, aggregating many applications in one view, or custom event-log retention).
+
+    Previously, once you configured an event-log directory you had to stand up a self-hosted SHS to view the UI. That is no longer the case — the console Spark UI button works with `persistentAppUI: ENABLED`.
+
 ## Send event logs to your own S3 bucket
 
 EMR on EKS supports delivering Spark event logs to a custom S3 location with the `logging.eventLog.dir` property under the `emr-containers-defaults` classification. In your StartJobRun call, set:
