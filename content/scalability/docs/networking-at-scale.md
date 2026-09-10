@@ -66,8 +66,7 @@ Considerations before adopting IPv6:
 
 1. **Organizational readiness.** Many enterprises have adopted IPv6 only for internet-facing services. Internal service-to-service paths (DNS, proxies, firewalls, on-premises connectivity) must support IPv6 or provide translation (NAT64/DNS64, or the egress-only IPv4 support built into EKS IPv6 clusters).
 2. **Service support.** Verify that the EMR on EKS release and features you depend on support IPv6 clusters, and check the current status in the [EMR on EKS documentation](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html) before committing to a migration.
-3. **Application stack support.** Validate open-source components — including Apache Spark and its shuffle, RPC, and UI layers — against IPv6 in a staging environment. Bind-address and address-parsing assumptions in JVM applications are a common source of issues.
-4. IPv6 mode is set at **cluster creation time** and cannot be changed later, so adoption means standing up new clusters and migrating workloads.
+3. IPv6 mode is set at **cluster creation time** and cannot be changed later, so adoption means standing up new clusters and migrating workloads.
 
 ### **Option 2: Secondary CIDR Ranges with Custom Networking**
 
