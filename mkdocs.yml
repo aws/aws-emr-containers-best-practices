@@ -55,6 +55,7 @@ nav:
       - Recommendation for StartJobRun: 'scalability/docs/load-test-for-start-job-run-api.md'
       - Recommendation for Spark Operator: 'scalability/docs/load-test-for-spark-operator.md'
       - Grafana Dashboard: 'scalability/docs/graphana-dashboard.md'
+      - Networking at Scale: 'scalability/docs/networking-at-scale.md'
 markdown_extensions:
   - toc:
       permalink: true
