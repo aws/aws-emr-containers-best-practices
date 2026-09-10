@@ -81,11 +81,15 @@ A related, lower-friction variant: if your pods do not need separate subnets/sec
 
 ## **Summary of Recommendations**
 
-1. **Raise and monitor the NAU quota** for any VPC hosting large EMR on EKS deployments; alarm well before exhaustion.
-2. **Enable prefix delegation** with `WARM_PREFIX_TARGET=1` on all EMR on EKS clusters — it is the highest-leverage, lowest-risk change.
-3. **Watch per-subnet contiguous-prefix availability**, not just free IP counts; keep subnets uniform and spread node placement.
-4. **Plan a structural fix before you need it.** If your workload growth is sustained, IPv4 subnet expansion only buys time. Evaluate IPv6 as the long-term direction, and secondary CIDRs with custom networking as the intermediate step.
-5. **Avoid sharding clusters across network segments** purely for IP capacity unless you have exhausted the options above — the operational overhead compounds.
+If you are a data engineer or Spark developer rather than a networking specialist, here is the short version. Every Spark driver and executor pod needs its own network address, the same way every job needs memory and CPU. Your AWS network (the VPC) has a fixed pool of those addresses, and when the pool runs dry, new executors simply fail to start — the job queue backs up even though you have plenty of compute available. Think of network addresses as one more cluster resource to plan and monitor, alongside vCPUs and memory.
+
+With that framing, the recommendations are:
+
+1. **Know your address budget and watch it like a resource metric.** Ask your networking team to raise the VPC's Network Address Usage (NAU) quota, turn on the NAU CloudWatch metrics, and set an alarm well before the pool is exhausted. Running out of addresses is a whole-VPC outage, not a single-job failure.
+2. **Turn on prefix delegation everywhere.** It is a one-line configuration change (`ENABLE_PREFIX_DELEGATION=true`, `WARM_PREFIX_TARGET=1`) that hands out addresses in blocks of 16 instead of one at a time. It roughly multiplies how many Spark pods the same network can hold, with very little risk. Do this first.
+3. **Monitor the right thing: free address blocks per subnet, not just free addresses.** A subnet can look half-empty yet have no contiguous 16-address blocks left, and executors will fail to schedule there. Keep subnets similar in size and let nodes spread across them evenly.
+4. **Decide on a long-term plan before you hit the wall.** If your Spark usage keeps growing, one-time network expansions only buy months. Moving to IPv6 removes address limits permanently and is the recommended destination; adding secondary address ranges (custom networking) is the proven intermediate step that can add roughly 3 million pod addresses to a VPC without touching your company's main address plan.
+5. **Resist splitting into more clusters or networks just to get more addresses.** Every extra network segment means more deployment pipelines, more firewall rules, and more ways for jobs to fail mysteriously. Use the options above first; treat splitting as a last resort.
 
 ## **References**
 
