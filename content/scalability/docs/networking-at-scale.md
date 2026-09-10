@@ -56,7 +56,7 @@ Sharding EMR on EKS clusters across multiple VPCs or network segments is sometim
 
 Running EKS clusters in [IPv6 mode](https://docs.aws.amazon.com/eks/latest/userguide/cni-ipv6.html) permanently removes IP address scarcity:
 
-1. IPv6 eliminates the address shortage problem outright — each subnet gets a /64, which is more address space than any cluster can consume.
+1. IPv6 eliminates the address shortage problem outright. An EKS IPv6 cluster VPC receives a /56 CIDR, and every subnet is a fixed /64 — **2^64 (roughly 18 quintillion) addresses per subnet**. IP capacity effectively ceases to be a planning dimension.
 2. Each node receives a single IPv6 prefix that is large enough for all of its pods, so nodes never need to request additional prefixes at runtime. This removes prefix-allocation latency during scale-out and the associated EC2 API throttling risk.
 3. NAU efficiency improves further: one prefix per node, one NAU unit per node — regardless of how many pods the node runs.
 4. Uneven prefix utilization across subnets disappears, because subnets can no longer run out of prefixes.
@@ -71,26 +71,21 @@ Considerations before adopting IPv6:
 
 ### **Option 2: Secondary CIDR Ranges with Custom Networking**
 
-You can extend an IPv4 VPC by associating secondary CIDR blocks — commonly from the RFC 6598 carrier-grade NAT range `100.64.0.0/10`, which rarely conflicts with corporate address plans — and using [VPC CNI custom networking](https://docs.aws.amazon.com/eks/latest/best-practices/custom-networking.html) to place pods in those subnets while nodes remain in the primary ranges.
+You can extend an IPv4 VPC by associating secondary CIDR blocks — the [EKS best practices guide](https://docs.aws.amazon.com/eks/latest/best-practices/ip-opt.html) recommends the RFC 6598 carrier-grade NAT range `100.64.0.0/10`, which rarely conflicts with corporate address plans — and using [VPC CNI custom networking](https://docs.aws.amazon.com/eks/latest/best-practices/custom-networking.html) to place pods in those subnets while nodes remain in the primary ranges.
 
+* **IP capacity:** each secondary CIDR block can be at most a /16 (65,536 addresses), but you can associate multiple blocks (default quota: 5 CIDR blocks per VPC, adjustable up to 50). Drawing from `100.64.0.0/10` alone, a VPC at the maximum quota can reach **~3.2 million pod IP addresses (50 × /16)** — and the full `100.64.0.0/10` range holds ~4.2 million addresses if spread across VPCs. For most Spark fleets, the practical ceiling arrives first at the NAU limit or the route/CIDR quotas, not the address space itself.
 * This provides significant new pod address space without touching the primary corporate address allocation.
 * Trade-offs: pods in non-routable ranges need NAT for traffic leaving the VPC, custom networking disables the primary ENI for pods (slightly reducing per-node pod density), and it adds configuration complexity (`ENIConfig` per AZ).
 * Note that secondary-CIDR addresses still consume NAU units, so this addresses IPv4 scarcity but not the NAU ceiling — combine it with prefix delegation.
 
-### **Option 3: Class E Address Space (240.0.0.0/4)**
-
-Some very large Kubernetes operators have used the reserved Class E range (`240.0.0.0/4`) as VPC CIDR space to obtain vast private IPv4 capacity. Approach this with caution:
-
-* The range is usable within a VPC for private communication, but it is not routable on the internet and is rejected by some operating systems, network appliances, and on-premises equipment.
-* It is best suited to fully self-contained east-west traffic (for example, Spark executor-to-executor communication) where all endpoints are known to tolerate it.
-* Test thoroughly against every device and OS in the traffic path before adopting it.
+A related, lower-friction variant: if your pods do not need separate subnets/security groups from nodes, [enhanced subnet discovery](https://aws.amazon.com/blogs/containers/amazon-vpc-cni-introduces-enhanced-subnet-discovery/) (VPC CNI ≥ 1.18, `ENABLE_SUBNET_DISCOVERY=true` by default) lets the CNI automatically use additional tagged subnets from new CIDR blocks without `ENIConfig` objects.
 
 ## **Summary of Recommendations**
 
 1. **Raise and monitor the NAU quota** for any VPC hosting large EMR on EKS deployments; alarm well before exhaustion.
 2. **Enable prefix delegation** with `WARM_PREFIX_TARGET=1` on all EMR on EKS clusters — it is the highest-leverage, lowest-risk change.
 3. **Watch per-subnet contiguous-prefix availability**, not just free IP counts; keep subnets uniform and spread node placement.
-4. **Plan a structural fix before you need it.** If your workload growth is sustained, IPv4 subnet expansion only buys time. Evaluate IPv6 as the long-term direction, and secondary CIDRs (or, with caution, Class E space) as intermediate steps.
+4. **Plan a structural fix before you need it.** If your workload growth is sustained, IPv4 subnet expansion only buys time. Evaluate IPv6 as the long-term direction, and secondary CIDRs with custom networking as the intermediate step.
 5. **Avoid sharding clusters across network segments** purely for IP capacity unless you have exhausted the options above — the operational overhead compounds.
 
 ## **References**
@@ -99,4 +94,6 @@ Some very large Kubernetes operators have used the reserved Class E range (`240.
 * [Prefix Mode for Linux — Amazon EKS Best Practices Guide](https://docs.aws.amazon.com/eks/latest/best-practices/prefix-mode-linux.html)
 * [Assign IPv6 addresses to clusters, pods, and services — Amazon EKS User Guide](https://docs.aws.amazon.com/eks/latest/userguide/cni-ipv6.html)
 * [Custom Networking — Amazon EKS Best Practices Guide](https://docs.aws.amazon.com/eks/latest/best-practices/custom-networking.html)
+* [Optimizing IP Address Utilization — Amazon EKS Best Practices Guide](https://docs.aws.amazon.com/eks/latest/best-practices/ip-opt.html)
+* [VPC CIDR blocks — Amazon VPC User Guide](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html)
 * Public case studies from large-scale EKS adopters such as Mobileye and Pinterest describe production experience with IPv6 and large-scale IP management on EKS (see the AWS Containers Blog).
