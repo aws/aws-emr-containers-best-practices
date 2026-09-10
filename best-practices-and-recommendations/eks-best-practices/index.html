@@ -1,0 +1,2885 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../performance/docs/karpenter/">
+      
+      
+        <link rel="next" href="../../cost-optimization/docs/cost-optimization/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>EKS Best Practices - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eks-best-practices-and-recommendations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              EKS Best Practices
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../security/docs/spark/encryption/" class="md-tabs__link">
+          
+  
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+          
+  
+  
+  Submit applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../storage/docs/spark/ebs/" class="md-tabs__link">
+          
+  
+  
+  Storage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+          
+  
+  
+  Metastore Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+          
+  
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+          
+  
+  
+  Node Placement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../performance/docs/dra/" class="md-tabs__link">
+          
+  
+  
+  Performance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+          
+  
+  
+  Cost Tracking and Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../scalability/docs/scalaiblity-glossary/" class="md-tabs__link">
+          
+  
+  
+  Scalability
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR on EKS(AWS Outposts)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/docs/spark/encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/docs/spark/data-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/docs/spark/chain-role/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chain IAM Roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Submit applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Submit applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pyspark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Multi-arch Docker Image
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../storage/docs/spark/ebs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EBS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FSx for Lustre
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../storage/docs/spark/instance-store/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance Store
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metastore Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Metastore Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive Metastore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Glue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Troubleshooting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark Log Location in S3 and CloudWatch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Log Level
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI via Reverse Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self Hosted SHS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBAC Permissions error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Cluster AutoScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/docs/karpenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Placement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Node Placement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Fargate Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/docs/dra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic Resource Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/docs/binpack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BinPacking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/docs/karpenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Best Practices
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-vpc-cni-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC CNI Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon VPC CNI Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-1-improve-ip-address-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation 1: Improve IP Address Utilization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-2-prevent-ec2-vpc-api-throttling-from-assignprivateipaddresses-attachnetworkinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation 2: Prevent EC2 VPC API throttling from AssignPrivateIpAddresses &amp; AttachNetworkInterface
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-recommendations-for-amazon-vpc-cni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Recommendations for Amazon VPC CNI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Recommendations for Amazon VPC CNI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan for growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-ip-address-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor IP address inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snat-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNAT setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coredns-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CoreDNS Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CoreDNS Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prevent-coredns-from-being-overwhelmed-unknownhostexception-in-spark-jobs-and-other-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent CoreDNS from being overwhelmed (UnknownHostException in spark jobs and other pods)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-coredns-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor CoreDNS metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-autoscaler-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Autoscaler Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cluster Autoscaler Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#increase-cluster-autoscaler-memory-to-avoid-unnecessary-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Increase cluster-autoscaler memory to avoid unnecessary exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-job-failures-when-cluster-autoscaler-attempts-scale-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid job failures when Cluster Autoscaler attempts scale-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure overprovisioning with Cluster Autoscaler for higher priority jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eks-control-plane-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EKS Control Plane Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EKS Control Plane Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-server-overwhelmed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API server overwhelmed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-control-plane-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Control Plane Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        etcd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking and Optimization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cost Tracking and Optimization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2 Spot Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Decommission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost-optimization/docs/pvc-reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PVC Reuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cost-optimization/docs/cost-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scalability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scalability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/scalaiblity-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary and Terms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/known-factors-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/known-factors-start-job-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for StartJobRun API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/load-test-for-start-job-run-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for StartJobRun
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/load-test-for-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/graphana-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scalability/docs/networking-at-scale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking at Scale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-vpc-cni-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC CNI Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon VPC CNI Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-1-improve-ip-address-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation 1: Improve IP Address Utilization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-2-prevent-ec2-vpc-api-throttling-from-assignprivateipaddresses-attachnetworkinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation 2: Prevent EC2 VPC API throttling from AssignPrivateIpAddresses &amp; AttachNetworkInterface
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-recommendations-for-amazon-vpc-cni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Recommendations for Amazon VPC CNI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Recommendations for Amazon VPC CNI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan for growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-ip-address-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor IP address inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snat-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNAT setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coredns-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CoreDNS Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CoreDNS Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prevent-coredns-from-being-overwhelmed-unknownhostexception-in-spark-jobs-and-other-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent CoreDNS from being overwhelmed (UnknownHostException in spark jobs and other pods)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-coredns-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor CoreDNS metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-autoscaler-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Autoscaler Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cluster Autoscaler Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#increase-cluster-autoscaler-memory-to-avoid-unnecessary-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Increase cluster-autoscaler memory to avoid unnecessary exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-job-failures-when-cluster-autoscaler-attempts-scale-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid job failures when Cluster Autoscaler attempts scale-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure overprovisioning with Cluster Autoscaler for higher priority jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eks-control-plane-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EKS Control Plane Best practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EKS Control Plane Best practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-server-overwhelmed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API server overwhelmed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-control-plane-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Control Plane Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etcd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        etcd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="eks-best-practices-and-recommendations"><strong>EKS Best Practices and Recommendations</strong><a class="headerlink" href="#eks-best-practices-and-recommendations" title="Permanent link">&para;</a></h1>
+<p>Amazon EMR on EKS team has run scale tests on EKS cluster and has compiled a list of recommendations. The purpose of this document is to share our recommendations for running large scale EKS clusters supporting EMR on EKS.</p>
+<h3 id="amazon-vpc-cni-best-practices"><strong>Amazon VPC CNI Best practices</strong><a class="headerlink" href="#amazon-vpc-cni-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="recommendation-1-improve-ip-address-utilization"><strong>Recommendation 1: Improve IP Address Utilization</strong><a class="headerlink" href="#recommendation-1-improve-ip-address-utilization" title="Permanent link">&para;</a></h4>
+<p>EKS clusters can run out of IP addresses for pods when they reached between 400 and 500 nodes. With the default CNI settings, each node can request more IP addresses than is required. To ensure that you don’t run out of IP addresses, there are two solutions:</p>
+<ol>
+<li>
+<p>Set <strong>MINIMUM_IP_TARGET</strong> and <strong>WARM_IP_TARGET</strong> instead of the default setting of <strong>WARM_ENI_TARGET=1</strong>. The values of these settings will depend on your instance type, expected pod density, and workload. More info about these CNI settings can be found <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md">here</a>. The maximum number of IP addresses per node (and thus maximum number of pods per node) depends on instance type and can be looked up <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">here</a>.</p>
+</li>
+<li>
+<p>If you have found the right CNI settings as described above, the subnets created by eksctl still do not provide enough addresses (by default eksctl creates a “/19” subnet for each nodegroup, which contains ~8.1k addresses). You can configure CNI to take addresses from (larger) subnets that you create. For example, you could create a few “/16” subnets, which contain ~65k IP addresses per subnet. You should implement this option after you have configured the CNI settings as described in #1. To configure your pods to use IP addresses from larger manually-created subnets, use CNI custom networking (see below for more information):</p>
+</li>
+</ol>
+<p><strong>CNI custom networking</strong></p>
+<p>By default, the CNI assigns the Pod’s IP address from the worker node's primary elastic network interface's (ENI) security groups and subnet. If you don’t have enough IP addresses in the worker node subnet, or prefer that the worker nodes and Pods reside in separate subnets to avoid IP address allocation conflicts between Pods and other resources in the VPC, you can use <a href="https://docs.aws.amazon.com/eks/latest/userguide/cni-custom-network.html">CNI custom networking</a>.</p>
+<p>Enabling a custom network removes an available elastic network interface (and all of its available IP addresses for pods) from each worker node that uses it. The worker node's primary network interface is not used for pod placement when a custom network is enabled.</p>
+<p>If you want the CNI to assign IP addresses for Pods from a different subnet, you can set <code>AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG</code> environment variable to <code>true</code>.</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span><span class="se">\</span>
+-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+<p>When <code>AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG=true</code>, the CNI will assign Pod IP address from a subnet defined in <code>ENIConfig</code>. The <code>ENIConfig</code> custom resource is used to define the subnet in which Pods will be scheduled. </p>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crd.k8s.amazonaws.com/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENIConfig</span>
+<span class="nt">metadata</span><span class="p">:</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2a</span>
+<span class="nt">spec</span><span class="p">:</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">securityGroups</span><span class="p">:</span><span class="w"> </span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sg-0dff111a1d11c1c11</span>
+<span class="w">  </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subnet-011b111c1f11fdf11</span>
+</code></pre></div>
+
+<p>You will need to create an <code>ENIconfig</code> custom resource for each subnet you want to use for Pod networking. </p>
+<ul>
+<li>
+<p>The <code>securityGroups</code> field should have the ID of the security group attached to the worker nodes. </p>
+</li>
+<li>
+<p>The <code>name</code> field should be the name of the Availability Zone in your VPC. If you name your ENIConfig custom resources after each Availability Zone in your VPC, you can enable Kubernetes to automatically apply the corresponding ENIConfig for the worker node Availability Zone with the following command.</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span>aws-node<span class="w"> </span><span class="se">\</span>
+-n<span class="w"> </span>kube-system<span class="w"> </span><span class="nv">ENI_CONFIG_LABEL_DEF</span><span class="o">=</span>failure-domain.beta.kubernetes.io/zone
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Upon creating the <code>ENIconfig</code> custom resources, you will need to create new worker nodes. The existing worker nodes and Pods will remain unaffected.</p>
+</div>
+<h4 id="recommendation-2-prevent-ec2-vpc-api-throttling-from-assignprivateipaddresses-attachnetworkinterface"><strong>Recommendation 2: Prevent EC2 VPC API throttling from AssignPrivateIpAddresses &amp; AttachNetworkInterface</strong><a class="headerlink" href="#recommendation-2-prevent-ec2-vpc-api-throttling-from-assignprivateipaddresses-attachnetworkinterface" title="Permanent link">&para;</a></h4>
+<p>Often EKS cluster scale-out time can increase because the CNI is being throttled by the EC2 VPC APIs. The following steps can be taken to prevent these issues:</p>
+<ol>
+<li>
+<p>Use CNI version 1.8.0 or later as it reduces the calls to EC2 VPC APIs than earlier versions.</p>
+</li>
+<li>
+<p>Configure the <strong>MINIMUM_IP_TARGET</strong> and <strong>WARM_IP_TARGET</strong> parameters instead of the default parameter of <strong>WARM_ENI_TARGET=1</strong>. Only those IP addresses that are necessary are requested from EC2. The values of these settings will depend on your instance type and expected pod density. More info about these settings <a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md">here</a>.</p>
+</li>
+<li>
+<p>Request an API limit increase on the EC2 VPC APIs that are getting throttled. This option should be considered only after steps 1 &amp; 2 have been done.</p>
+</li>
+</ol>
+<h3 id="other-recommendations-for-amazon-vpc-cni"><strong>Other Recommendations for Amazon VPC CNI</strong><a class="headerlink" href="#other-recommendations-for-amazon-vpc-cni" title="Permanent link">&para;</a></h3>
+<h4 id="plan-for-growth"><strong>Plan for growth</strong><a class="headerlink" href="#plan-for-growth" title="Permanent link">&para;</a></h4>
+<p>Size the subnets you will use for Pod networking for growth. If you have insufficient IP addresses available in the subnet that the CNI uses, your pods will not get an IP address. The pods will remain in the pending state until an IP address becomes available. This may impact application autoscaling and compromise its availability.</p>
+<h4 id="monitor-ip-address-inventory"><strong>Monitor IP address inventory</strong><a class="headerlink" href="#monitor-ip-address-inventory" title="Permanent link">&para;</a></h4>
+<p>You can monitor the IP addresses inventory of subnets using the <a href="https://docs.aws.amazon.com/eks/latest/userguide/cni-metrics-helper.html">CNI Metrics Helper</a>, and set <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html">CloudWatch alarms</a> to get notified if a subnet is running out of IP addresses.</p>
+<h4 id="snat-setting"><strong>SNAT setting</strong><a class="headerlink" href="#snat-setting" title="Permanent link">&para;</a></h4>
+<p>Source Network Address Translation (source-nat or SNAT) allows traffic from a private network to go out to the internet. Virtual machines launched on a private network can get to the internet by going through a gateway capable of performing SNAT. If your Pods with private IP address need to communicate with other private IP address spaces (for example, Direct Connect, VPC Peering or Transit VPC), then you should enable <a href="https://docs.aws.amazon.com/eks/latest/userguide/external-snat.html">external SNAT</a> in the CNI:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>daemonset<span class="w"> </span><span class="se">\</span>
+-n<span class="w"> </span>kube-system<span class="w"> </span>aws-node<span class="w"> </span><span class="nv">AWS_VPC_K8S_CNI_EXTERNALSNAT</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+<h3 id="coredns-best-practices"><strong>CoreDNS Best practices</strong><a class="headerlink" href="#coredns-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="prevent-coredns-from-being-overwhelmed-unknownhostexception-in-spark-jobs-and-other-pods"><strong>Prevent CoreDNS from being overwhelmed (UnknownHostException in spark jobs and other pods)</strong><a class="headerlink" href="#prevent-coredns-from-being-overwhelmed-unknownhostexception-in-spark-jobs-and-other-pods" title="Permanent link">&para;</a></h4>
+<p>CoreDNS is a deployment, which means it runs a fixed number of replicas and thus does not scale out with the cluster. This can be a problem for workloads that do a lot of DNS lookups. One simple solution is to install <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/#enablng-dns-horizontal-autoscaling">dns-autoscaler</a>, which adjusts the number of replicas of the CoreDNS deployment as the cluster grows and shrinks.</p>
+<h4 id="monitor-coredns-metrics"><strong>Monitor CoreDNS metrics</strong><a class="headerlink" href="#monitor-coredns-metrics" title="Permanent link">&para;</a></h4>
+<p>CoreDNS is a deployment, which means it runs a fixed number of replicas and thus does not scale out with the cluster. This can cause workloads to timeout with unknownHostException as spark-executors will do a lot of DNS lookups while registering themselves to spark-driver. One simple solution to fix this is to install <a href="https://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/#enablng-dns-horizontal-autoscaling">dns-autoscaler</a>, which adjusts the number of replicas of the CoreDNS deployment as the cluster grows and shrinks.</p>
+<h2 id="cluster-autoscaler-best-practices"><strong>Cluster Autoscaler Best practices</strong><a class="headerlink" href="#cluster-autoscaler-best-practices" title="Permanent link">&para;</a></h2>
+<h4 id="increase-cluster-autoscaler-memory-to-avoid-unnecessary-exceptions"><strong>Increase cluster-autoscaler memory to avoid unnecessary exceptions</strong><a class="headerlink" href="#increase-cluster-autoscaler-memory-to-avoid-unnecessary-exceptions" title="Permanent link">&para;</a></h4>
+<p>Cluster-autoscaler can require a lot of memory to run because it stores a lot of information about the state of the cluster, such as data about every pod and every node. If the cluster-autoscaler has insufficient memory, it can lead to the cluster-autoscaler crashing.  Ensure that you provide the cluster-autoscaler deployment more memory, e.g., 1Gi memory instead of the default 300Mi. Useful information about configuring the cluster-autoscaler for improved scalability and performance can be found <a href="https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html#ca-deployment-considerations">here</a></p>
+<h4 id="avoid-job-failures-when-cluster-autoscaler-attempts-scale-in"><strong>Avoid job failures when Cluster Autoscaler attempts scale-in</strong><a class="headerlink" href="#avoid-job-failures-when-cluster-autoscaler-attempts-scale-in" title="Permanent link">&para;</a></h4>
+<p>Cluster Autoscaler will attempt scale-in action for any under utilized instance within your EKScluster. When scale-in action is performed, all pods from that instance is relocated to another node. This could cause disruption for critical workloads. For example, if driver pod is restarted, the entire job needs to restart. For this reason, we recommend using Kubernetes annotations on all critical pods (especially driver pods) and for cluster autoscaler deployment. Please see <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-types-of-pods-can-prevent-ca-from-removing-a-node">here</a> for more info</p>
+<div class="codehilite"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">cluster-autoscaler.kubernetes.io/safe-to-evict=false</span>
+</code></pre></div>
+
+<h4 id="configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs"><strong>Configure overprovisioning with Cluster Autoscaler for higher priority jobs</strong><a class="headerlink" href="#configure-overprovisioning-with-cluster-autoscaler-for-higher-priority-jobs" title="Permanent link">&para;</a></h4>
+<p>If the required resources is not available in the cluster, pods go into pending state. Cluster Autoscaler uses this metric to scale out the cluster and this activity can be time-consuming (several minutes) for higher priority jobs. In order to minimize time required for scaling, we recommend <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-can-i-configure-overprovisioning-with-cluster-autoscaler">overprovisioning</a> resources. You can launch pause pods(dummy workloads which sleeps until it receives SIGINT or SIGTERM) with negative priority to reserve EC2 capacity. Once the higher priority jobs are scheduled, these pause pods are preempted to make room for high priority pods which in turn scales out additional capacity as a buffer. You need to be aware that this is a trade-off as it adds slightly higher cost while minimizing scheduling latency. You can read more about over provisioning best practice <a href="https://aws.github.io/aws-eks-best-practices/cluster-autoscaling/#overprovisioning">here</a>.</p>
+<h2 id="eks-control-plane-best-practices">EKS Control Plane Best practices<a class="headerlink" href="#eks-control-plane-best-practices" title="Permanent link">&para;</a></h2>
+<h4 id="api-server-overwhelmed"><strong>API server overwhelmed</strong><a class="headerlink" href="#api-server-overwhelmed" title="Permanent link">&para;</a></h4>
+<p>System pods, workload pods, and external systems can make many calls to the Kubernetes API server. This can decrease performance and also increase EMR on EKS job failures. There are multiple ways to avoid API server availability issues including but not limited to:</p>
+<ul>
+<li>
+<p>By default, the EKS API servers are automatically scaled to meet your workload demand. If you see increased latencies, please contact AWS via a support ticket and work with engineering team to resolve the issue.</p>
+</li>
+<li>
+<p>Consider reducing the scan interval of <a href="https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-does-scale-up-work">cluster-autoscaler from the 10 second</a> default value. Each time the cluster-autoscaler runs, it makes many calls to the API server. However, this will result in the cluster scaling-out less frequently and in larger steps (and same with scaling back in when load is reduced). More information can be found about the cluster-autoscaler <a href="https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html#ca-deployment-considerations">here</a>. This is not recommended if you need jobs to start ASAP.</p>
+</li>
+<li>
+<p>If you are running your own deployment of fluentd, an increased load on the APIserver can be observed. Consider using fluent-bit instead which makes fewer calls to the API server. More info can be found <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-logs.html">here</a></p>
+</li>
+</ul>
+<h4 id="monitor-control-plane-metrics"><strong>Monitor Control Plane Metrics</strong><a class="headerlink" href="#monitor-control-plane-metrics" title="Permanent link">&para;</a></h4>
+<p>Monitoring Kubernetes API metrics can give you insights into control plane performance and identify issues. An unhealthy control plane can compromise the availability of the workloads running inside the cluster. For example, poorly written controllers can overload the API servers, affecting your application's availability.</p>
+<p>Kubernetes exposes control plane metrics at the  <code>/metrics</code> endpoint. </p>
+<p>You can view the metrics exposed using <code>kubectl</code>:</p>
+<div class="codehilite"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>--raw<span class="w"> </span>/metrics
+</code></pre></div>
+
+<p>These metrics are represented in a <a href="https://github.com/prometheus/docs/blob/master/content/docs/instrumenting/exposition_formats.md">Prometheus text format</a>. </p>
+<p>You can use Prometheus to collect and store these metrics. In May 2020, CloudWatch added support for monitoring Prometheus metrics in CloudWatch Container Insights. So you can also use Amazon CloudWatch to monitor the EKS control plane. You can follow the <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights-Prometheus-Setup-configure.html#ContainerInsights-Prometheus-Setup-new-exporters">Tutorial for Adding a New Prometheus Scrape Target: Prometheus KPI Server Metrics</a> to collect metrics and create CloudWatch dashboard to monitor your cluster’s control plane.</p>
+<p>You can also find Kubernetes API server metrics <a href="https://github.com/kubernetes/apiserver/blob/master/pkg/endpoints/metrics/metrics.go">here</a>. For example, <code>apiserver_request_duration_seconds</code> can indicate how long API requests are taking to run. </p>
+<p>Consider monitoring these control plane metrics:</p>
+<h3 id="api-server">API Server<a class="headerlink" href="#api-server" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>apiserver_request_total</code></td>
+<td style="text-align: left;">Counter of apiserver requests broken out for each verb, dry run value, group, version, resource, scope, component, client, and HTTP response contentType and code.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>apiserver_request_duration_seconds*</code></td>
+<td style="text-align: left;">Response latency distribution in seconds for each verb, dry run value, group, version, resource, subresource, scope, and component.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rest_client_request_duration_seconds</code></td>
+<td style="text-align: left;">Request latency in seconds. Broken down by verb and URL.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>apiserver_admission_controller_admission_duration_seconds</code></td>
+<td style="text-align: left;">Admission controller latency histogram in seconds, identified by name and broken out for each operation and API resource and type (validate or admit).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rest_client_request_duration_seconds</code></td>
+<td style="text-align: left;">Request latency in seconds. Broken down by verb and URL.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rest_client_requests_total</code></td>
+<td style="text-align: left;">Number of HTTP requests, partitioned by status code, method, and host.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="etcd">etcd<a class="headerlink" href="#etcd" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>etcd_request_duration_seconds</code></td>
+<td style="text-align: left;">Etcd request latency in seconds for each operation and object type.</td>
+</tr>
+</tbody>
+</table>
+<p>You can visualize and monitor these Kubernetes API server requests, latency and etcD metrics on Grafana via <a href="https://grafana.com/grafana/dashboards/12006">Grafana dashboard 12006</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2676 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../binpack/">
+      
+      
+        <link rel="next" href="../../../best-practices-and-recommendations/eks-best-practices/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Karpenter - EMR Containers Best Practices Guides</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#karpenter-best-practices" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-header__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            EMR Containers Best Practices Guides
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Karpenter
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../security/docs/spark/encryption/" class="md-tabs__link">
+          
+  
+  
+  Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../submit-applications/docs/spark/pyspark/" class="md-tabs__link">
+          
+  
+  
+  Submit applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../storage/docs/spark/ebs/" class="md-tabs__link">
+          
+  
+  
+  Storage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-tabs__link">
+          
+  
+  
+  Metastore Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-tabs__link">
+          
+  
+  
+  Troubleshooting
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../node-placement/docs/eks-node-placement/" class="md-tabs__link">
+          
+  
+  
+  Node Placement
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../dra/" class="md-tabs__link">
+          
+  
+  
+  Performance
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cost-optimization/docs/cost-optimization/" class="md-tabs__link">
+          
+  
+  
+  Cost Tracking and Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scalability/docs/scalaiblity-glossary/" class="md-tabs__link">
+          
+  
+  
+  Scalability
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="EMR Containers Best Practices Guides" class="md-nav__button md-logo" aria-label="EMR Containers Best Practices Guides" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    EMR Containers Best Practices Guides
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-emr-containers-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aws/aws-emr-containers-best-practices
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../outposts/emr-containers-on-outposts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EMR on EKS(AWS Outposts)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/data-encryption/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Encryption
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/network-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../security/docs/spark/chain-role/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chain IAM Roles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Submit applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Submit applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/pyspark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pyspark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../submit-applications/docs/spark/multi-arch-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Multi-arch Docker Image
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/ebs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EBS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/fsx-lustre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FSx for Lustre
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../storage/docs/spark/instance-store/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance Store
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metastore Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Metastore Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/hive-metastore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hive Metastore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metastore-integrations/docs/aws-glue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Glue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Troubleshooting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/where-to-look-for-spark-logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark Log Location in S3 and CloudWatch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/change-log-level/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Log Level
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/connect-spark-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/reverse-proxy-sparkui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect to Spark UI via Reverse Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/self-hosted-shs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self Hosted SHS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/rbac-permissions-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RBAC Permissions error
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/eks-cluster-auto-scaler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Cluster AutoScaler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../troubleshooting/docs/karpenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Placement
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Node Placement
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/eks-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../node-placement/docs/fargate-node-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Fargate Node placement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic Resource Allocation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binpack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BinPacking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Karpenter
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Karpenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-optimization-with-karpenter-spot-and-graviton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost optimization with Karpenter, Spot and Graviton
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-proper-consolidation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure proper consolidation policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-management-and-prioritize-instance-types-based-your-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity management and prioritize instance types based your workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#carefully-configure-resource-requests-and-limits-for-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carefully configure resource requests and limits for workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pressure-testing-with-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pressure testing with Karpenter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avoid-using-pod-anti-affinity-for-large-scale-with-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid using pod anti-affinity for large scale with Karpenter
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../best-practices-and-recommendations/eks-best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EKS Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking and Optimization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cost Tracking and Optimization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EC2 Spot Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/node-decommission/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Decommission
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/pvc-reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PVC Reuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cost-optimization/docs/cost-tracking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cost Tracking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scalability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scalability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/scalaiblity-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary and Terms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/known-factors-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/known-factors-start-job-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Factors for StartJobRun API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/load-test-for-start-job-run-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for StartJobRun
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/load-test-for-spark-operator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recommendation for Spark Operator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/graphana-dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../scalability/docs/networking-at-scale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking at Scale
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-optimization-with-karpenter-spot-and-graviton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost optimization with Karpenter, Spot and Graviton
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-proper-consolidation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure proper consolidation policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-management-and-prioritize-instance-types-based-your-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity management and prioritize instance types based your workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#carefully-configure-resource-requests-and-limits-for-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carefully configure resource requests and limits for workloads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pressure-testing-with-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pressure testing with Karpenter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avoid-using-pod-anti-affinity-for-large-scale-with-karpenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid using pod anti-affinity for large scale with Karpenter
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="karpenter-best-practices"><strong>Karpenter Best Practices</strong><a class="headerlink" href="#karpenter-best-practices" title="Permanent link">&para;</a></h1>
+<p>Karpenter is an open-source node provisioning tool for Kubernetes. It can help improve the efficiency and cost of running large-scale data workloads. Karpenter's ability to dynamically provision optimal resources for heterogeneous workloads, efficiently manage large numbers of clusters, <a href="https://aws.amazon.com/blogs/compute/applying-spot-to-spot-consolidation-best-practices-with-karpenter/">optimize cost through consolidation</a>, and prioritize EC2 Spot instances make it the preferred auto-scaler for workloads on Amazon Elastic Kubernetes Service (EKS).</p>
+<p>We recommend using Karpenter and Bottlerocket with EKS for data workloads, as it aligns with EC2 Spot best practices of diversification, using allocation strategy, and can manage the Spot lifecycle seamlessly. As documented in the <a href="https://awslabs.github.io/data-on-eks/docs/blueprints/data-analytics/spark-operator-yunikorn">Spark Operator with YuniKorn DoEKS blueprint</a>, Karpenter integrates seamlessly with Kubernetes, providing automatic, real-time adjustments to the cluster size based on observed workloads and scaling events. This enables a more efficient and cost-effective EKS cluster design that adapts to the ever-changing demands of Spark applications and other data workloads. </p>
+<p>More details can be found in these blogs [<a href="https://aws.amazon.com/blogs/compute/applying-spot-to-spot-consolidation-best-practices-with-karpenter/">1</a>, <a href="https://aws.amazon.com/blogs/containers/using-amazon-ec2-spot-instances-with-karpenter/">2</a>]. </p>
+<h2 id="key-considerations">Key considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h2>
+<p>1.<strong><a href="https://karpenter.sh/preview/reference/cloudformation/#interruption-handling">Interruption handling</a> for Spot</strong> - to use Spot instances with Karpenter, first deploy the infrastructure <a href="https://karpenter.sh/v1.8/reference/cloudformation/">CloudFormation template</a> that provisions the SQS interruption queue and related EventBridge rules, then install the Karpenter Helm chart configured to use that queue:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">KARPENTER_VERSION</span><span class="o">=</span><span class="s2">"1.8.6"</span>
+curl<span class="w"> </span>https://raw.githubusercontent.com/aws/karpenter-provider-aws/v<span class="s2">"</span><span class="si">${</span><span class="nv">KARPENTER_VERSION</span><span class="si">}</span><span class="s2">"</span>/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml<span class="w"> </span>&gt;<span class="w"> </span>cloudformation.yaml
+
+aws<span class="w"> </span>cloudformation<span class="w"> </span>deploy<span class="w"> </span>--stack-name<span class="w"> </span><span class="s2">"karpenter-infra-</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+--template-file<span class="w"> </span>cloudformation.yaml
+....
+
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>karpenter<span class="w"> </span>oci://public.ecr.aws/karpenter/karpenter<span class="w"> </span><span class="se">\</span>
+....
+--set<span class="w"> </span><span class="s2">"settings.interruptionQueue=</span><span class="si">${</span><span class="nv">CLUSTER_NAME</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+....
+</code></pre></div>
+
+<p>This configuration enables Karpenter to watch the SQS interruption queue for Spot interruption warnings, scheduled maintenance, and other involuntary events, and to taint, drain, and replace affected nodes before they are terminated.</p>
+<p>2.<strong>Separate NodePools for Spark driver and executors</strong> - to balance cost and stability for Spark on EKS with Karpenter, create two dedicated NodePools:</p>
+<p><strong>A driver NodePool</strong> - uses <code>WhenEmpty</code> consolidation to minimize disruption</p>
+<div class="codehilite"><pre><span></span><code>apiVersion:<span class="w"> </span>karpenter.sh/v1
+kind:<span class="w"> </span>NodePool
+metadata:
+<span class="w">  </span>name:<span class="w"> </span>driver-nodepool
+spec:
+<span class="w">  </span>disruption:
+<span class="w">    </span>consolidateAfter:<span class="w"> </span>1m
+<span class="w">    </span>consolidationPolicy:<span class="w"> </span>WhenEmpty
+<span class="w">  </span>template:
+<span class="w">    </span>spec:
+<span class="w">      </span>nodeClassRef:
+<span class="w">        </span>name:<span class="w"> </span>memory-optimized-ec2
+<span class="w">        </span>.....
+</code></pre></div>
+
+<p><strong>An executor NodePool</strong> - consolidate executor nodes <code>WhenEmptyOrUnderutilized</code> for aggressive cost savings.</p>
+<div class="codehilite"><pre><span></span><code>apiVersion:<span class="w"> </span>karpenter.sh/v1
+kind:<span class="w"> </span>NodePool
+metadata:
+<span class="w">  </span>name:<span class="w"> </span>executor-nodepool
+spec:<span class="w">  </span>
+<span class="w">  </span>disruption:
+<span class="w">    </span>consolidateAfter:<span class="w"> </span>1m
+<span class="w">    </span>consolidationPolicy:<span class="w"> </span>WhenEmptyOrUnderutilized
+<span class="w">  </span>template:
+<span class="w">    </span>spec:
+<span class="w">      </span>nodeClassRef:
+<span class="w">        </span>name:<span class="w"> </span>memory-optimized-ec2
+<span class="w">        </span>.....
+</code></pre></div>
+
+<h2 id="cost-optimization-with-karpenter-spot-and-graviton">Cost optimization with Karpenter, Spot and Graviton<a class="headerlink" href="#cost-optimization-with-karpenter-spot-and-graviton" title="Permanent link">&para;</a></h2>
+<p>To achieve high cost optimizations with Spark, we recommend using the following Karpenter nodepool configurations. </p>
+<div class="codehilite"><pre><span></span><code><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">sh</span><span class="o">/</span><span class="nx">capacity</span><span class="o">-</span><span class="k">type</span>
+<span class="w">  </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">  </span><span class="nx">values</span><span class="p">:</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">on</span><span class="o">-</span><span class="nx">demand</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">spot</span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="nx">kubernetes</span><span class="p">.</span><span class="nx">io</span><span class="o">/</span><span class="nx">arch</span>
+<span class="w">  </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">  </span><span class="nx">values</span><span class="p">:</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">amd64</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">arm64</span>
+</code></pre></div>
+
+<p>For pod specs:</p>
+<div class="codehilite"><pre><span></span><code>nodeAffinity:
+ preferedDuringSchedulingIgnoredDuringExecution:
+  - weight: 1
+    preference:
+     matchExpressions:
+        - key:beta.kubernetes.io/arch
+          operator: In
+          values:
+            - arm64
+</code></pre></div>
+
+<p>By applying this configuration, Karpenter should select the instance type in the following order, and fallback to another instance type immediately if the instance type is not available:</p>
+<ul>
+<li>arm spot</li>
+<li>x86 spot</li>
+<li>arm on-demand</li>
+<li>x86 on-demand</li>
+</ul>
+<h2 id="configure-proper-consolidation-policy">Configure proper consolidation policy<a class="headerlink" href="#configure-proper-consolidation-policy" title="Permanent link">&para;</a></h2>
+<p>For Spark workloads, configure the executor nodepool:</p>
+<ul>
+<li>Enable Pod bin packing for batch jobs</li>
+<li>Configure Karpenter's Consolidation to "WhenEmptyOrUnderutilized"</li>
+<li>Increase "consolidateAfter" if needed</li>
+<li>Set expiry time to longest-running EMR on EKS job duration (Example: Set to 4 hours if that's your longest job run time over the entire workload)</li>
+</ul>
+<h2 id="capacity-management-and-prioritize-instance-types-based-your-workloads">Capacity management and prioritize instance types based your workloads<a class="headerlink" href="#capacity-management-and-prioritize-instance-types-based-your-workloads" title="Permanent link">&para;</a></h2>
+<p><strong>Capacity Management</strong></p>
+<p>AWS brings a large number of instance types, but there are some circumstances that some instance types are not available due to EC2 capacity, We suggest configure instance type as many as you can especially for Spot instances. Allowing Karpenter to provision nodes from a large, diverse set of instance types will help you to stay on Spot longer and lower your costs due to Spot’s discounted pricing. Moreover, if Spot capacity becomes constrained, this instance type diversity will also increase the chances that you’ll be able to continue to launch On-Demand capacity for your workloads.</p>
+<p>Multi-arch support is also recommended for capacity management, it will increase the instance diversity along with the performance improvement by Graviton.</p>
+<p><strong>Prioritize instance types based your workloads</strong></p>
+<p>Workloads have different requirements, for example, Spark workloads need high memory ratios. You can create weighted nodepools to prioritize some specific instance types like the following, Karpenter will first try using <code>nodepool-high-weight</code>.</p>
+<p><strong><em>Nodepool with weight to 50</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">sh</span><span class="o">/</span><span class="nx">v1</span>
+<span class="nx">kind</span><span class="p">:</span><span class="w"> </span><span class="nx">NodePool</span>
+<span class="nx">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nx">name</span><span class="p">:</span><span class="w"> </span><span class="nx">nodepool</span><span class="o">-</span><span class="nx">high</span><span class="o">-</span><span class="nx">weight</span>
+<span class="nx">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nx">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nx">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">billing</span><span class="o">-</span><span class="nx">team</span><span class="p">:</span><span class="w"> </span><span class="nx">my</span><span class="o">-</span><span class="nx">team</span>
+<span class="w">      </span><span class="nx">annotations</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">example</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">owner</span><span class="p">:</span><span class="w"> </span><span class="s">"my-team"</span>
+<span class="w">    </span><span class="nx">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nx">nodeClassRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">group</span><span class="p">:</span><span class="w"> </span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">k8s</span><span class="p">.</span><span class="nx">aws</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="nx">Updated</span><span class="w"> </span><span class="nx">since</span><span class="w"> </span><span class="nx">only</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">single</span><span class="w"> </span><span class="nx">version</span><span class="w"> </span><span class="nx">will</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">served</span>
+<span class="w">        </span><span class="nx">kind</span><span class="p">:</span><span class="w"> </span><span class="nx">EC2NodeClass</span>
+<span class="w">        </span><span class="nx">name</span><span class="p">:</span><span class="w"> </span><span class="k">default</span>
+<span class="w">      </span><span class="nx">taints</span><span class="p">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="nx">example</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">special</span><span class="o">-</span><span class="nx">taint</span>
+<span class="w">          </span><span class="nx">effect</span><span class="p">:</span><span class="w"> </span><span class="nx">NoSchedule</span>
+
+<span class="w">      </span><span class="nx">expireAfter</span><span class="p">:</span><span class="w"> </span><span class="nx">Never</span>
+<span class="w">      </span><span class="nx">requirements</span><span class="p">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-category"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"c"</span><span class="p">,</span><span class="w"> </span><span class="s">"m"</span><span class="p">,</span><span class="w"> </span><span class="s">"r"</span><span class="p">]</span>
+<span class="w">          </span><span class="err">#</span><span class="w"> </span><span class="nx">minValues</span><span class="w"> </span><span class="nx">here</span><span class="w"> </span><span class="nx">enforces</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">scheduler</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">consider</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">least</span><span class="w"> </span><span class="nx">that</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">unique</span><span class="w"> </span><span class="nx">instance</span><span class="o">-</span><span class="nx">category</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">schedule</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">pods</span><span class="p">.</span>
+<span class="w">          </span><span class="err">#</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="nx">field</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">ALPHA</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">can</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">dropped</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">replaced</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">any</span><span class="w"> </span><span class="nx">time</span>
+<span class="w">          </span><span class="nx">minValues</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-family"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"r7g"</span><span class="p">,</span><span class="s">"r6g"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-cpu"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"4"</span><span class="p">,</span><span class="w"> </span><span class="s">"8"</span><span class="p">,</span><span class="w"> </span><span class="s">"16"</span><span class="p">,</span><span class="w"> </span><span class="s">"32"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-hypervisor"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"nitro"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-generation"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">Gt</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"2"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"topology.kubernetes.io/zone"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"us-west-2a"</span><span class="p">,</span><span class="w"> </span><span class="s">"us-west-2b"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes.io/arch"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"arm64"</span><span class="p">,</span><span class="w"> </span><span class="s">"amd64"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.sh/capacity-type"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"spot"</span><span class="p">,</span><span class="w"> </span><span class="s">"on-demand"</span><span class="p">,</span><span class="w"> </span><span class="s">"reserved"</span><span class="p">]</span>
+<span class="w">  </span><span class="nx">disruption</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">consolidationPolicy</span><span class="p">:</span><span class="w"> </span><span class="nx">WhenEmpty</span>
+<span class="w">    </span><span class="nx">consolidateAfter</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="nx">m</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Never</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="nx">Added</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">allow</span><span class="w"> </span><span class="nx">additional</span><span class="w"> </span><span class="nx">control</span><span class="w"> </span><span class="nx">over</span><span class="w"> </span><span class="nx">consolidation</span><span class="w"> </span><span class="nx">aggressiveness</span>
+<span class="w">    </span><span class="nx">budgets</span><span class="p">:</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">nodes</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="o">%</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0 9 * * mon-fri"</span>
+<span class="w">      </span><span class="nx">duration</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="nx">h</span>
+<span class="w">      </span><span class="nx">nodes</span><span class="p">:</span><span class="w"> </span><span class="s">"0"</span>
+<span class="w">  </span><span class="nx">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"1000"</span>
+<span class="w">    </span><span class="nx">memory</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="nx">Gi</span>
+<span class="w">  </span><span class="nx">weight</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
+</code></pre></div>
+
+<p><strong><em>Nodepool with weight to 10</em></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">sh</span><span class="o">/</span><span class="nx">v1</span>
+<span class="nx">kind</span><span class="p">:</span><span class="w"> </span><span class="nx">NodePool</span>
+<span class="nx">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nx">name</span><span class="p">:</span><span class="w"> </span><span class="nx">nodepool</span><span class="o">-</span><span class="nx">high</span><span class="o">-</span><span class="nx">weight</span>
+<span class="nx">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nx">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nx">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">billing</span><span class="o">-</span><span class="nx">team</span><span class="p">:</span><span class="w"> </span><span class="nx">my</span><span class="o">-</span><span class="nx">team</span>
+<span class="w">      </span><span class="nx">annotations</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">example</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">owner</span><span class="p">:</span><span class="w"> </span><span class="s">"my-team"</span>
+<span class="w">    </span><span class="nx">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nx">nodeClassRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">group</span><span class="p">:</span><span class="w"> </span><span class="nx">karpenter</span><span class="p">.</span><span class="nx">k8s</span><span class="p">.</span><span class="nx">aws</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="nx">Updated</span><span class="w"> </span><span class="nx">since</span><span class="w"> </span><span class="nx">only</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">single</span><span class="w"> </span><span class="nx">version</span><span class="w"> </span><span class="nx">will</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">served</span>
+<span class="w">        </span><span class="nx">kind</span><span class="p">:</span><span class="w"> </span><span class="nx">EC2NodeClass</span>
+<span class="w">        </span><span class="nx">name</span><span class="p">:</span><span class="w"> </span><span class="k">default</span>
+<span class="w">      </span><span class="nx">taints</span><span class="p">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="nx">example</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">special</span><span class="o">-</span><span class="nx">taint</span>
+<span class="w">          </span><span class="nx">effect</span><span class="p">:</span><span class="w"> </span><span class="nx">NoSchedule</span>
+
+<span class="w">      </span><span class="nx">expireAfter</span><span class="p">:</span><span class="w"> </span><span class="nx">Never</span>
+<span class="w">      </span><span class="nx">requirements</span><span class="p">:</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-category"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"c"</span><span class="p">,</span><span class="w"> </span><span class="s">"m"</span><span class="p">,</span><span class="w"> </span><span class="s">"r"</span><span class="p">]</span>
+<span class="w">          </span><span class="err">#</span><span class="w"> </span><span class="nx">minValues</span><span class="w"> </span><span class="nx">here</span><span class="w"> </span><span class="nx">enforces</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">scheduler</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">consider</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">least</span><span class="w"> </span><span class="nx">that</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">unique</span><span class="w"> </span><span class="nx">instance</span><span class="o">-</span><span class="nx">category</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">schedule</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">pods</span><span class="p">.</span>
+<span class="w">          </span><span class="err">#</span><span class="w"> </span><span class="nx">This</span><span class="w"> </span><span class="nx">field</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">ALPHA</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">can</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">dropped</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">replaced</span><span class="w"> </span><span class="nx">at</span><span class="w"> </span><span class="nx">any</span><span class="w"> </span><span class="nx">time</span>
+<span class="w">          </span><span class="nx">minValues</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-family"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"c5"</span><span class="p">,</span><span class="s">"c6i"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-cpu"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"4"</span><span class="p">,</span><span class="w"> </span><span class="s">"8"</span><span class="p">,</span><span class="w"> </span><span class="s">"16"</span><span class="p">,</span><span class="w"> </span><span class="s">"32"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-hypervisor"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"nitro"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.k8s.aws/instance-generation"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">Gt</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"2"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"topology.kubernetes.io/zone"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"us-west-2a"</span><span class="p">,</span><span class="w"> </span><span class="s">"us-west-2b"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"kubernetes.io/arch"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"arm64"</span><span class="p">,</span><span class="w"> </span><span class="s">"amd64"</span><span class="p">]</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="nx">key</span><span class="p">:</span><span class="w"> </span><span class="s">"karpenter.sh/capacity-type"</span>
+<span class="w">          </span><span class="nx">operator</span><span class="p">:</span><span class="w"> </span><span class="nx">In</span>
+<span class="w">          </span><span class="nx">values</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">"spot"</span><span class="p">,</span><span class="w"> </span><span class="s">"on-demand"</span><span class="p">,</span><span class="w"> </span><span class="s">"reserved"</span><span class="p">]</span>
+<span class="w">  </span><span class="nx">disruption</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">consolidationPolicy</span><span class="p">:</span><span class="w"> </span><span class="nx">WhenEmpty</span>
+<span class="w">    </span><span class="nx">consolidateAfter</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="nx">m</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Never</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="nx">Added</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">allow</span><span class="w"> </span><span class="nx">additional</span><span class="w"> </span><span class="nx">control</span><span class="w"> </span><span class="nx">over</span><span class="w"> </span><span class="nx">consolidation</span><span class="w"> </span><span class="nx">aggressiveness</span>
+<span class="w">    </span><span class="nx">budgets</span><span class="p">:</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">nodes</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="o">%</span>
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nx">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0 9 * * mon-fri"</span>
+<span class="w">      </span><span class="nx">duration</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="nx">h</span>
+<span class="w">      </span><span class="nx">nodes</span><span class="p">:</span><span class="w"> </span><span class="s">"0"</span>
+<span class="w">  </span><span class="nx">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nx">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"1000"</span>
+<span class="w">    </span><span class="nx">memory</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="nx">Gi</span>
+<span class="w">  </span><span class="nx">weight</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+</code></pre></div>
+
+<h2 id="carefully-configure-resource-requests-and-limits-for-workloads">Carefully configure resource requests and limits for workloads<a class="headerlink" href="#carefully-configure-resource-requests-and-limits-for-workloads" title="Permanent link">&para;</a></h2>
+<p>Rightsizing and optimizing your cluster is a shared responsibility. Karpenter effectively optimizes and scales infrastructure, but the end result depends on how well you have rightsized your pod requests and any other Kubernetes scheduling constraints. Karpenter does not consider limits or resource utilization. For most workloads with non-compressible resources, such as memory, it is generally recommended to set requests==limits because if a workload tries to burst beyond the available memory of the host, an out-of-memory (OOM) error occurs. Karpenter consolidation can increase the probability of this as it proactively tries to reduce total allocatable resources for a Kubernetes cluster. For help with rightsizing your Kubernetes pods, consider exploring Kubecost, Vertical Pod Autoscaler configured in recommendation mode, or an open source tool such as Goldilocks.</p>
+<p>For each instance type, Karpenter reports max allocatable <a href="https://karpenter.sh/docs/reference/instance-types/">resources</a> with some assumptions and after the instance overhead has been subtracted, for example, the m6g.8xlarge max allocatable resources(defaults) are as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Quantity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu</td>
+<td>31850m</td>
+</tr>
+<tr>
+<td>ephemeral-storage</td>
+<td>17Gi</td>
+</tr>
+<tr>
+<td>memory</td>
+<td>118253Mi</td>
+</tr>
+<tr>
+<td>pods</td>
+<td>234</td>
+</tr>
+<tr>
+<td>vpc.amazonaws.com/pod-eni</td>
+<td>54</td>
+</tr>
+</tbody>
+</table>
+<p>For some circumstances, you may want the Karpenter to provide more resources than the defaults or the rest of the resources can not host one pod, you can adjust the <code>VM_MEMORY_OVERHEAD_PERCENT</code> to 0.07. The guidance is by adjusting <code>VM_MEMORY_OVERHEAD_PERCENT</code>, one more pod can be scheduled on the Karpenter node.</p>
+<h2 id="pressure-testing-with-karpenter">Pressure testing with Karpenter<a class="headerlink" href="#pressure-testing-with-karpenter" title="Permanent link">&para;</a></h2>
+<p>If using a new account with Karpenter or a account that has not too much EC2 scaling especially for Spark workloads, we recommend do some pressure testing with Karpenter to know your account EC2 api throttling before go production based on your EC2 scale size because of Karpenter is extremely fast to call the following EC2 api.</p>
+<p>The following api calls are mainly called by Karpenter</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ModifyNetworkingInterfaceAttribute</span>
+<span class="n">CreateTags</span>
+<span class="n">AssignPrivateIpAddress</span>
+<span class="n">DescribeNetworkInterfaces</span>
+<span class="n">DescribeIamInstanceProfileAssociations</span>
+<span class="n">DescribeInstances</span>
+<span class="n">CreateFleet</span>
+<span class="n">DescribeTags</span>
+<span class="n">DeleteSecurityGroup</span>
+<span class="n">UnassignPrivateIpAddress</span>
+<span class="n">DeleteLaunchTemplate</span>
+</code></pre></div>
+
+<h2 id="avoid-using-pod-anti-affinity-for-large-scale-with-karpenter">Avoid using pod anti-affinity for large scale with Karpenter<a class="headerlink" href="#avoid-using-pod-anti-affinity-for-large-scale-with-karpenter" title="Permanent link">&para;</a></h2>
+<p>Karpenter will have more time to do the simulation of scheduling pods if there is pod anti-affinity. Starting with Karpenter v0.32.6, there are performance improvements around using hostname topologies. But we recommend do not use pod anti-affinity for large scale.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
