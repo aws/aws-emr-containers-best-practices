@@ -36,7 +36,4 @@ ls site
 
 10. With a repo admin permission, we can merge the pull request into the main branch.
 
-11. Most importantly, as a repo admin, we must run the deploy command to copy the './site' content to 'gh-pages' branch and pushing to GitHub. Without this step, the website content won't be refreshed.
-```bash
-mkdocs gh-deploy
-``` 
+11. The repo's GitHub Actions workflow (.github/workflows/deploy-docs.yml) runs `gh-deploy` automatically on every merges to main branch. It copies the './site' content from 'main' to 'gh-pages' branch and pushing to GitHub. Without this step, the website content won't be refreshed.
