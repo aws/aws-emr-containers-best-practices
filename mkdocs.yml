@@ -38,6 +38,7 @@ nav:
   - Node Placement:
       - EKS Node placement: 'node-placement/docs/eks-node-placement.md'
       - EKS Fargate Node placement: 'node-placement/docs/fargate-node-placement.md'
+      - Single-AZ placement for FGAC jobs: 'node-placement/docs/fgac-single-az-placement.md'
   - Performance:
       - Dynamic Resource Allocation: 'performance/docs/dra.md'
       - BinPacking: 'performance/docs/binpack.md'
