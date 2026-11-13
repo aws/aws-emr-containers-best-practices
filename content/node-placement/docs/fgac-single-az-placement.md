@@ -134,6 +134,11 @@ spec:
                 matchExpressions:
                   - key: emr-containers.amazonaws.com/job.id
                     operator: Exists
+      preconditions:
+        all:
+          - key: '{{ request.object.spec.nodeSelector."topology.kubernetes.io/zone" || '''' }}'
+            operator: Equals
+            value: ""
       mutate:
         patchStrategicMerge:
           spec:
